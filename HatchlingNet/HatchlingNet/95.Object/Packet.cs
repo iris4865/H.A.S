@@ -77,7 +77,7 @@ namespace HatchlingNet
             Int16 len = BitConverter.ToInt16(this.buffer, this.position);
             this.position += sizeof(Int16);
 
-            string data = System.Text.Encoding.UTF8.GetString(this.buffer, this.position, len);
+            string data = System.Text.Encoding.Unicode.GetString(this.buffer, this.position, len);
             this.position += len;
 
             return data;
@@ -122,7 +122,7 @@ namespace HatchlingNet
 
         public void Push(string data)
         {//왜 문자열일때만 문자열의 크기를 따로 저장하는 코드가 있는거지?
-            byte[] tempBuffer = Encoding.UTF8.GetBytes(data);
+            byte[] tempBuffer = Encoding.Unicode.GetBytes(data);
             Int16 len = (Int16)tempBuffer.Length;
 
             byte[] lenBuffer = BitConverter.GetBytes(len);
