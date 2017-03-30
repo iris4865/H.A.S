@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 //https://msdn.microsoft.com/ko-kr/library/bb517542(v=vs.100).aspx
 
-namespace HatchlingNet.Manager
+namespace HatchlingNet
 {
     // This class creates a single large buffer which can be divided up 
     // and assigned to SocketAsyncEventArgs objects for use with each 

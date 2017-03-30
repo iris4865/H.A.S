@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace HatchlingNet
 {
@@ -32,14 +31,10 @@ namespace HatchlingNet
         public Listener(NetworkService networkService)
         {
             this.networkService = networkService;
-        }
-
-        public void Initialize()
-        {
-            //userList = new List<HighUser>();
             userList = new List<UserToken>();
             this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
         }
+
 
         public void Start(string host, int port, int backlog)//backlog : 대기큐의 크기
         {

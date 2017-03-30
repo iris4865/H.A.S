@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
+
 
 //https://msdn.microsoft.com/ko-kr/library/system.net.sockets.socketasynceventargs.socketasynceventargs(v=vs.110).aspx
 

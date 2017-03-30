@@ -1,5 +1,4 @@
 ﻿using HatchlingNet;
-using INTERFACE;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +11,12 @@ namespace client
 {
     class Program
     {
-        static List<Peer> gameServer = new List<Peer>();
+        static List<IPeer> gameServer = new List<IPeer>();
         static NetworkService service;
 
         static void Main(string[] args)
         {
             Initialize();
-
-
         }
 
         static public void Initialize()
@@ -29,8 +26,6 @@ namespace client
 
             Connector connector = new Connector(service);
             connector.callbackConnect += CallConnectGameserver;
-
-
 
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7979);
             connector.connect(endPoint);//리시브도 이안에서 해결
@@ -60,7 +55,7 @@ namespace client
             {
                 // Peer server = new CRemote
 
-                Peer server = new RemoteServerPeer(serverToken);
+                IPeer server = new RemoteServerPeer(serverToken);
                 gameServer.Add(server);
 
             }

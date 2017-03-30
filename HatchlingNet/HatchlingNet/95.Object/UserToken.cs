@@ -1,10 +1,8 @@
-﻿using INTERFACE;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HatchlingNet
 {
@@ -18,7 +16,7 @@ namespace HatchlingNet
 
         int bufferSize;
 
-        Peer peer;
+        IPeer peer;
 
         Queue<Packet> sendingQueue;
         private object csSendingQueue;
@@ -31,26 +29,24 @@ namespace HatchlingNet
             this.sendingQueue = new Queue<Packet>();
         }
 
-        public void SetPeer(Peer peer)
+        public void SetPeer(IPeer peer)
         {
             this.peer = peer;
         }
 
         public void OpenMessage(byte[] buffer, int offset, int transferred)
         {
-            this.messageTranslator.Translate(buffer, offset, transferred, OnMessage);
+            this.messageTranslator.Translate(buffer, offset, transferred, CompleteMessage);
         }
 
-        void OnMessage(byte[] buffer)//피어에게 패킷이 완성됬음을 알린다
-        {                           //피어는 메인에서 결정됨
+        void CompleteMessage(byte[] buffer)//프로그램을 실행시킨 피어에게 수신패킷이 완성됬음을 알린다
+        {                               //피어는 메인에서 결정됨
             Console.WriteLine("메세지완성!");
 
             if (this.peer != null)
             {
                 this.peer.OnMessage(buffer);
             }
-
-
         }
 
 

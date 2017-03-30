@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HatchlingNet
 {
-    class Define
+    class Macro
     {
-        public static readonly short HEADERSIZE = 2;
-
     }
 }

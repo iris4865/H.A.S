@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HatchlingNet
 {
-    class Program
+    class Define
     {
+        public static readonly short HEADERSIZE = 2;
 
-        static void Main(string[] args)
-        {
-
-        }
     }
 }

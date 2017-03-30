@@ -13,8 +13,6 @@ namespace HatchlingNet
         static NetworkService networkService;
         static List<GameUser> userList;
 
-        
-
 
         static void Main(string[] args)
         {
@@ -33,8 +31,6 @@ namespace HatchlingNet
             networkService = new NetworkService();
             networkService.Initialize();
             networkService.callbackSessionCreate += CallSessionCreate;
-
-
         }
 
         static public void Update()

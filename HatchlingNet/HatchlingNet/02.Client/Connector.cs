@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using HatchlingNet;
 using System.Net.Sockets;
-
-namespace client
+            
+namespace HatchlingNet
 {
-    class Connector
+    public class Connector
     {
         private NetworkService networkService;
         private Socket client;

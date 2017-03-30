@@ -1,10 +1,9 @@
 ﻿using System;
 using HatchlingNet;
-using INTERFACE;
 
 namespace client
 {
-    public class RemoteServerPeer : Peer
+    public class RemoteServerPeer : IPeer
     {
         public UserToken serverToken { get; private set; }
 
@@ -32,8 +31,16 @@ namespace client
             }
         }
 
+        public void Send(Packet msg)
+        {
+            this.serverToken.Send(msg);
+        }
 
-        public void Destroy()
+        public void Receive()
+        {
+            throw new NotImplementedException();
+        }
+        public  void Destroy()
         {
             
         }
@@ -45,15 +52,5 @@ namespace client
             this.serverToken.socket.Disconnect(false);
         }
 
-
-        public void Receive()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Send(Packet msg)
-        {
-            this.serverToken.Send(msg);
-        }
     }
 }

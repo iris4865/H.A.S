@@ -1,15 +1,13 @@
-﻿using INTERFACE;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HatchlingNet
 {
     public class Packet
     {
-        public Peer owner { get; private set; }
+        public IPeer owner { get; private set; }
         public byte[] buffer { get; private set; }
         public int position { get; private set; }
 
@@ -20,7 +18,7 @@ namespace HatchlingNet
         //    Packet packet = 
         //}
 
-        public Packet(byte[] buffer, Peer owner)
+        public Packet(byte[] buffer, IPeer owner)
         {
             this.buffer = buffer;
             this.position = Define.HEADERSIZE;

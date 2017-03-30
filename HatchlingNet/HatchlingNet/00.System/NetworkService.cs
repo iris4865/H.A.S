@@ -1,10 +1,9 @@
-﻿using HatchlingNet.Manager;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace HatchlingNet
 {
@@ -28,7 +27,7 @@ namespace HatchlingNet
             this.connectionCount = 0;
         }
 
-        public void Initialize()
+        public void Initialize()//서버에서만 호출...클라에선 안호출...
         {
             this.maxConnection = 10000;
             this.bufferSize = 1024;
@@ -38,7 +37,6 @@ namespace HatchlingNet
 
             this.buffer_manager = new BufferManager(this.maxConnection * this.bufferSize * this.preAllocCount, this.bufferSize);
             this.buffer_manager.InitBuffer();
-
 
             SocketAsyncEventArgs arg;
 
@@ -50,7 +48,7 @@ namespace HatchlingNet
                 {
                     //Pre-allocate a set of reusable SocketAsyncEventArgs
                     arg = new SocketAsyncEventArgs();
-                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveComplete);
+                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
                     arg.UserToken = token;
 
                     this.buffer_manager.SetBuffer(arg);
@@ -62,7 +60,7 @@ namespace HatchlingNet
                 {
                     //Pre-allocate a set of reusable SocketAsyncEventArgs
                     arg = new SocketAsyncEventArgs();
-                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendComplete);
+                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(CallSendComplete);
                     arg.UserToken = token;
 
                     this.buffer_manager.SetBuffer(arg);
@@ -70,25 +68,20 @@ namespace HatchlingNet
                     this.sendEventArgsPool.Push(arg);
                 }
             }
-
-       
         }
 
-        public void ConnectProcess(Socket clientSocket, UserToken token)
+        public void ConnectProcess(Socket clientSocket, UserToken token)//클라에서 Initialize대신 사용
         {
-
-
             SocketAsyncEventArgs receiveEventArg = new SocketAsyncEventArgs();
-            receiveEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveComplete);
+            receiveEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
             receiveEventArg.UserToken = token;
             receiveEventArg.SetBuffer(new Byte[1204], 0, 1024);
 
             SocketAsyncEventArgs sendEventArg = new SocketAsyncEventArgs();
-            sendEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendComplete);
+            sendEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CallSendComplete);
             sendEventArg.UserToken = token;
             sendEventArg.SetBuffer(new Byte[1024], 0, 1024);
 
-//            token.receiveEventArgs = receiveEventArg;
 
             BeginReceive(clientSocket, receiveEventArg, sendEventArg);
         }
@@ -99,7 +92,7 @@ namespace HatchlingNet
         public void Listen(string host, int port, int backlog)
         {
             Listener listener = new Listener(this);
-            listener.Initialize();
+            
             listener.receiveBeginTrigger = BeginReceive;
 
             listener.Start(host, port, backlog);
@@ -121,12 +114,12 @@ namespace HatchlingNet
             }
         }
 
-        public void OnReceiveComplete(object sender, SocketAsyncEventArgs receiveArgs)
+        public void CallReceiveComplete(object sender, SocketAsyncEventArgs receiveArgs)
         {
             if (receiveArgs.LastOperation == SocketAsyncOperation.Receive)
             {
-                Console.WriteLine("콜백 리시브컴플리트!");
                 ProcessReceive(receiveArgs);
+                Console.WriteLine("콜백 리시브컴플리트!");
                 return;
             }
             else
@@ -176,7 +169,7 @@ namespace HatchlingNet
             }
         }
 
-        public void OnSendComplete(object sender, SocketAsyncEventArgs sendArgs)
+        public void CallSendComplete(object sender, SocketAsyncEventArgs sendArgs)
         {
             UserToken token = sendArgs.UserToken as UserToken;
 
