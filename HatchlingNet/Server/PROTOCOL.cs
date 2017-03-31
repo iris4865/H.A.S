@@ -8,7 +8,7 @@ namespace HatchlingNet
 {
     public enum PROTOCOL
     {
-        LoginReq = 1000,
+        LoginReq = 1000, LoginAck, LoginRej,
         ChatReq = 2000, ChatAck,
 
         END

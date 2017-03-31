@@ -55,7 +55,6 @@
     <Compile Include="99.Etc\MessageTranslator.cs" />
     <Compile Include="95.Object\Packet.cs" />
     <Compile Include="96.Manager\PacketBufferManager.cs" />
-    <Compile Include="98.Header\PROTOCOL.cs" />
     <Compile Include="95.Object\UserToken.cs" />
     <Compile Include="96.Manager\BufferManager.cs" />
     <Compile Include="00.System\NetworkService.cs" />
