@@ -74,16 +74,16 @@
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
     <Reference Include="HatchlingNet">
-      <HintPath>Assets\HatchlingNet\HatchlingNet.dll</HintPath>
+      <HintPath>Assets\HatchlingNet\Engine\HatchlingNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Fonts\Script\scriptTexttest.cs" />
-    <Compile Include="Assets\HatchlingNet\HatchlingNetEventManager.cs" />
-    <Compile Include="Assets\HatchlingNet\HatchlingNetUnityService.cs" />
+    <Compile Include="Assets\HatchlingNet\Engine\HatchlingNetEventManager.cs" />
+    <Compile Include="Assets\HatchlingNet\Engine\HatchlingNetUnityService.cs" />
+    <Compile Include="Assets\HatchlingNet\Engine\RemoteServerPeer.cs" />
     <Compile Include="Assets\HatchlingNet\NetworkManager.cs" />
     <Compile Include="Assets\HatchlingNet\PROTOCOL.cs" />
-    <Compile Include="Assets\HatchlingNet\RemoteServerPeer.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Player2.cs" />
     <Compile Include="Assets\Scripts\game_join_click.cs" />
