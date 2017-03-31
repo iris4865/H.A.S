@@ -44,7 +44,26 @@ namespace Server
                         Send(response);
                     }
                     break;
-                    
+
+                case PROTOCOL.LoginReq:
+                    {
+                        Console.WriteLine("들어옴");
+
+                        bool isUser = true;
+
+                        if (isUser == true)
+                        {
+                            Packet loginResult = PacketBufferManager.Pop((short)PROTOCOL.LoginAck);
+                            Send(loginResult);
+                        }
+                        else
+                        {
+                            Packet loginResult = PacketBufferManager.Pop((short)PROTOCOL.LoginRej);
+                            Send(loginResult);
+                        }
+
+                    }
+                    break;
             }
         }
 
