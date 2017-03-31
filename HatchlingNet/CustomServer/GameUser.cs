@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server
+namespace CustomServer
 {
     class GameUser : IPeer
     {
@@ -62,7 +62,6 @@ namespace Server
 
         public void Destroy()
         {
-            Program.RemoveUser(this);
         }
 
         public void Disconnect()
@@ -72,11 +71,6 @@ namespace Server
         }
 
         public void ProcessUserOperation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ProcessUserOperation(Packet msg)
         {
             throw new NotImplementedException();
         }

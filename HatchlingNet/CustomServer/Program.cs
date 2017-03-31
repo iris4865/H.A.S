@@ -1,4 +1,4 @@
-﻿using Server;
+﻿using HatchlingNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +6,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HatchlingNet
+namespace CustomServer
 {
     class Program
     {
+        static GameServer gameMain;
         static NetworkService networkService;
         static List<GameUser> userList;
 
@@ -57,6 +58,7 @@ namespace HatchlingNet
             lock (userList)
             {
                 userList.Remove(user);
+                gameMain.userDiconnec
             }
         }
 

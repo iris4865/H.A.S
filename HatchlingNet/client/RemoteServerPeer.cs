@@ -18,7 +18,7 @@ namespace client
         public void OnMessage(byte[] buffer)
         {
             Packet msg = new Packet(buffer, this);
-            PROTOCOL protocol_id = (PROTOCOL)msg.PopProtocol_id();
+            PROTOCOL protocol_id = (PROTOCOL)msg.PopProtocolType();
 
             switch (protocol_id)
             {
@@ -52,5 +52,9 @@ namespace client
             this.serverToken.socket.Disconnect(false);
         }
 
+        public void ProcessUserOperation(Packet msg)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

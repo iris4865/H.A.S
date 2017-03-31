@@ -13,7 +13,7 @@ namespace HatchlingNet
         private Socket client;
 
         public delegate void ConnectHandler(UserToken token);
-        public ConnectHandler callbackConnect { get; set; }
+        public ConnectHandler callbackConnect { get; set; }//클라 main로직에서 직접적으로 처리되야하는것들 정의한 함수 호출할 핸들러
 
 
         public Connector(NetworkService networkService)
