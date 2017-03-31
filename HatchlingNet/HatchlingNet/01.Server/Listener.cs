@@ -154,6 +154,7 @@ namespace HatchlingNet
                 //}
 
                 //BeginReceive(clientSocket, receiveArgs, sendArgs);
+                flowController.Set();
 
                 return;
             }
@@ -161,9 +162,6 @@ namespace HatchlingNet
             {
                 Console.WriteLine("Failed to Accept client");
             }
-
-
-            flowController.Set();
         }
 
 
