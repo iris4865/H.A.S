@@ -74,5 +74,10 @@ namespace CustomServer
         {
             throw new NotImplementedException();
         }
+
+        public void ProcessUserOperation(Packet msg)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
