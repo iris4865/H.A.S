@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 //클라에게 제공하게될 인터페이스가 되겠네
 
+
 public class NetworkManager : MonoBehaviour {
 
     HatchlingNetUnityService gameserver;
@@ -13,6 +14,7 @@ public class NetworkManager : MonoBehaviour {
 
     void Awake()
     {
+        DontDestroyOnLoad(this);
         this.gameserver = gameObject.AddComponent<HatchlingNetUnityService>();
         this.gameserver.callbackAppStatusChanged += CallStatusChange;
         this.gameserver.callbackAppReceiveMessage += CallMessage;

@@ -5,9 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class game_wait_click : MonoBehaviour {
 
+    object networkManager;
+
 	// Use this for initialization
 	void Start () {
-		
+        networkManager = GameObject.FindWithTag("eNetworkManager");
 	}
 	
 	// Update is called once per frame

@@ -86,10 +86,24 @@ public class HatchlingNetUnityService : MonoBehaviour
     //정상종료시 아래메소드에서 disconnect를 호출해줘야 유니티가 hang(?)되지 않는다고 한다
     void OnApplicationQuit()
     {
+        Debug.Log("앱콰이트1");
+
         if (this.gameserver != null)
         {
+            Debug.Log("앱콰이트2");
             ((RemoteServerPeer)this.gameserver).serverToken.disconnect();
         }
     }
+
+    //void OnDestroy()
+    //{
+    //    Debug.Log("앱콰이트1");
+
+    //    if (this.gameserver != null)
+    //    {
+    //        Debug.Log("앱콰이트2");
+    //        ((RemoteServerPeer)this.gameserver).serverToken.disconnect();
+    //    }
+    //}
 
 }

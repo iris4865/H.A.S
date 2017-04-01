@@ -70,10 +70,6 @@ namespace CustomServer
             this.userToken.socket.Disconnect(false);
         }
 
-        public void ProcessUserOperation()
-        {
-            throw new NotImplementedException();
-        }
 
         public void ProcessUserOperation(Packet msg)
         {
