@@ -36,25 +36,8 @@ public class RemoteServerPeer : IPeer {
 
         Packet msg = new Packet(app_buffer, this);
 
-        //PROTOCOL protocol = (PROTOCOL)msg.PopProtocolType();
-        //Debug.Log("온메세지에서 프로토콜 확인 : " + protocol);
-            
-        //Debug.Log("온메세지" + System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length));
-
         (this.hatchlingnetEventManager.Target as HatchlingNetEventManager).EnqueueNetworkMessage(msg);
-
-        //PROTOCOL protocol_id = (PROTOCOL)msg.PopProtocol_id();
-        //switch (protocol_id)
-        //{
-        //    case PROTOCOL.ChatAck:
-        //        {
-        //            string text = msg.PopString();
-        //            Console.WriteLine(string.Format("text {0}", text));
-        //        }
-        //        break;
-        //}
     }
-
 
     public void Destroy()
     {
@@ -65,7 +48,6 @@ public class RemoteServerPeer : IPeer {
     {
 
     }
-
 
     public void Receive()
     {

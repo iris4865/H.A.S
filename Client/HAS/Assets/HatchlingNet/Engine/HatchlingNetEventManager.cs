@@ -5,8 +5,6 @@ using UnityEngine;
 
 namespace HatchlingNet
 {
-
-
     /// <summary>
     /// 네트워크 엔진에서 발생된 이벤트들을 큐잉시킨다.
     /// 워커 스레드와 메인 스레드 양쪽에서 호출될 수 있으므로 스레드 동기화 처리를 적용하였다.

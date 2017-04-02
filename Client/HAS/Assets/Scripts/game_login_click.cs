@@ -16,6 +16,7 @@ public class game_login_click : MonoBehaviour {
     public void click()
     {
         GameObject networkManager = GameObject.Find("networkManager");
+
         if (networkManager != null)
         {
             Packet msg = PacketBufferManager.Pop((short)PROTOCOL.LoginReq);

@@ -10,7 +10,6 @@ using UnityEngine.SceneManagement;
 public class NetworkManager : MonoBehaviour {
 
     HatchlingNetUnityService gameserver;
-    object targetComponent;
 
     void Awake()
     {
@@ -18,7 +17,6 @@ public class NetworkManager : MonoBehaviour {
         this.gameserver = gameObject.AddComponent<HatchlingNetUnityService>();
         this.gameserver.callbackAppStatusChanged += CallStatusChange;
         this.gameserver.callbackAppReceiveMessage += CallMessage;
-//        guide = GameObject.Find("networkGuide").GetComponent<NetworkGuide>();
 
     }
 
@@ -54,8 +52,6 @@ public class NetworkManager : MonoBehaviour {
 
     void CallMessage(Packet msg)
     {
-        //        msg.position = 2;
-//        Packet msg = new Packet(test.buffer, null);
         PROTOCOL protocolType = (PROTOCOL)msg.PopProtocolType();
         Debug.Log("콜메세지 " + protocolType);
 
@@ -64,9 +60,6 @@ public class NetworkManager : MonoBehaviour {
             case PROTOCOL.ChatAck:
                 {
                     string text = msg.PopString();
-//                    GameObject.Find("networkGuide").GetComponent<NetworkGuide>().CallReceiveChatMsg(text);
-                    //굳이 이렇게 매번 파인드할필요가 있나? 
-                    //거슬러 가는게 원칙에 위배되서 그런걸수도...
                 }
                 break;
 
