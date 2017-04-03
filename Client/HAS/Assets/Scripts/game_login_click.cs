@@ -2,11 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class game_login_click : MonoBehaviour {
 
-	void Start () {
+    public InputField id;
+    public InputField password;
+
+    string id_s;
+    string password_s;
+
+    void Start () {
+        id = GetComponent<InputField>();
+        password = GetComponent<InputField>();
     }
 	
 	void Update () {
@@ -15,6 +24,15 @@ public class game_login_click : MonoBehaviour {
 
     public void click()
     {
+        id_s = id.text;
+        password_s = password.text;
+
+        if(id_s == null || password_s == null)
+        {
+            //id나password를 입력하라는 메시지 출력.
+            return;
+        }
+
         GameObject networkManager = GameObject.Find("networkManager");
 
         if (networkManager != null)

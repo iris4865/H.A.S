@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Player2 : MonoBehaviour {
 
-    public float speed = 10f;
+    float speed = 5f;
     float h;
     float v;
+    float rotateSpeed = 10f;
 
     Rigidbody rigdbody;
     Animator ani;
@@ -19,12 +20,18 @@ public class Player2 : MonoBehaviour {
         ani = GetComponentInChildren<Animator>();
 	}
 	
-	// Update is called once per frame
-	void FixedUpdate () {
+    void Update()
+    {
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
 
+        AnimationUpdate();
+    }
+
+	// Update is called once per frame
+	void FixedUpdate () {
         run(h, v);
+        turn();
     }
 
     void AnimationUpdate()
@@ -45,5 +52,17 @@ public class Player2 : MonoBehaviour {
         movement = movement.normalized * speed * Time.deltaTime;
 
         rigdbody.MovePosition(transform.position + movement);
+    }
+
+    void turn()
+    {
+        if(h == 0 && v == 0)
+        {
+            return;
+        }
+
+        Quaternion newRotation = Quaternion.LookRotation(movement);
+
+        rigdbody.rotation = Quaternion.Slerp(rigdbody.rotation, newRotation, rotateSpeed * Time.deltaTime);
     }
 }
