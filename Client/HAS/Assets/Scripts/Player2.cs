@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using HatchlingNet;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,11 +14,16 @@ public class Player2 : MonoBehaviour {
 
     Vector3 movement;
 
+    NetworkManager networkManager;
+
 	// Use this for initialization
 	void Awake () {
         rigdbody = GetComponent<Rigidbody>();
         ani = GetComponentInChildren<Animator>();
-	}
+        networkManager = GameObject.FindWithTag("eNetworkManager").GetComponent<NetworkManager>() ;
+
+
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
@@ -25,6 +31,8 @@ public class Player2 : MonoBehaviour {
         v = Input.GetAxisRaw("Vertical");
 
         run(h, v);
+
+        NetUpdate();
     }
 
     void AnimationUpdate()
@@ -45,5 +53,15 @@ public class Player2 : MonoBehaviour {
         movement = movement.normalized * speed * Time.deltaTime;
 
         rigdbody.MovePosition(transform.position + movement);
+    }
+
+    void NetUpdate()
+    {
+        //Vector3 position = transform.position;
+
+        //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq, (short)SEND_TYPE.BroadcastWithMe);
+        //msg.Push(position.x, position.y, position.z);
+
+        //networkManager.Send(msg);
     }
 }

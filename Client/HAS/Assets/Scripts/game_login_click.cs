@@ -19,7 +19,7 @@ public class game_login_click : MonoBehaviour {
 
         if (networkManager != null)
         {
-            Packet msg = PacketBufferManager.Pop((short)PROTOCOL.LoginReq);
+            Packet msg = PacketBufferManager.Pop((short)PROTOCOL.LoginReq, (short)SEND_TYPE.Single);
             msg.Push("abc|abcd");
 
             networkManager.GetComponent<NetworkManager>().Send(msg);

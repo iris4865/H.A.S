@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace HatchlingNet
 {
     public class Packet
@@ -83,6 +84,32 @@ namespace HatchlingNet
             return data;
         }
 
+        public float PopFloat()
+        {
+            float data = BitConverter.ToSingle(this.buffer, this.position);
+            this.position += sizeof(float);
+
+            return data;
+        }
+
+        public MyVector3 PopVector()
+        {
+            MyVector3 data;
+            data.x = BitConverter.ToSingle(this.buffer, this.position); this.position += sizeof(float);
+            data.y = BitConverter.ToSingle(this.buffer, this.position); this.position += sizeof(float);
+            data.z = BitConverter.ToSingle(this.buffer, this.position); this.position += sizeof(float);
+
+            return data;
+        }
+
+        public double PopDouble()
+        {
+            double data = BitConverter.ToDouble(this.buffer, this.position);
+            this.position += sizeof(double);
+
+            return data;
+        }
+
         public string PopString()
         {
             Int16 len = BitConverter.ToInt16(this.buffer, this.position);
@@ -138,6 +165,52 @@ namespace HatchlingNet
             tempBuffer.CopyTo(this.buffer, this.position);
             this.position += tempBuffer.Length;
         }
+
+
+        public void Push(float data)
+        {
+            byte[] tempBuffer = BitConverter.GetBytes(data);
+            tempBuffer.CopyTo(this.buffer, this.position);
+            this.position += tempBuffer.Length;
+        }
+
+        public void Push(float x, float y, float z)
+        {
+            byte[] tempBuffer = BitConverter.GetBytes(x);
+            tempBuffer.CopyTo(this.buffer, this.position);
+            this.position += tempBuffer.Length;
+
+            tempBuffer = BitConverter.GetBytes(y);
+            tempBuffer.CopyTo(this.buffer, this.position);
+            this.position += tempBuffer.Length;
+
+            tempBuffer = BitConverter.GetBytes(z);
+            tempBuffer.CopyTo(this.buffer, this.position);
+            this.position += tempBuffer.Length;
+        }
+
+        public void Push(MyVector3 data)
+        {
+            byte[] tempBuffer = BitConverter.GetBytes(data.x);
+            tempBuffer.CopyTo(this.buffer, this.position);
+            this.position += tempBuffer.Length;
+
+            tempBuffer = BitConverter.GetBytes(data.y);
+            tempBuffer.CopyTo(this.buffer, this.position);
+            this.position += tempBuffer.Length;
+
+            tempBuffer = BitConverter.GetBytes(data.z);
+            tempBuffer.CopyTo(this.buffer, this.position);
+            this.position += tempBuffer.Length;
+        }
+
+        public void Push(double data)
+        {
+            byte[] tempBuffer = BitConverter.GetBytes(data);
+            tempBuffer.CopyTo(this.buffer, this.position);
+            this.position += tempBuffer.Length;
+        }
+
 
         public void Push(string data)
         {//왜 문자열일때만 문자열의 크기를 따로 저장하는 코드가 있는거지?
