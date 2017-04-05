@@ -18,9 +18,10 @@ namespace client
         public void OnMessage(byte[] buffer)
         {
             Packet msg = new Packet(buffer, this);
-            PROTOCOL protocol_id = (PROTOCOL)msg.PopProtocolType();
+            PROTOCOL protocolType = (PROTOCOL)msg.PopProtocolType();
+            SEND_TYPE sendType = (SEND_TYPE)msg.PopSendType();
 
-            switch (protocol_id)
+            switch (protocolType)
             {
                 case PROTOCOL.ChatAck:
                     {

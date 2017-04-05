@@ -12,11 +12,7 @@ namespace HatchlingNet
         public int position { get; private set; }
 
         public Int16 protocolType { get; private set; }
-
-        //public static Packet Create(Int16 protocol_id)
-        //{
-        //    Packet packet = 
-        //}
+        public Int16 sendType { get; private set; }
 
         public Packet(byte[] buffer, IPeer owner)
         {
@@ -37,9 +33,15 @@ namespace HatchlingNet
             return PopInt16();
         }
 
+        public Int16 PopSendType()
+        {
+            return PopInt16();
+        }
+
         public void CopyTo(Packet target)
         {
             target.SetProtocol(this.protocolType);
+            target.SetSendType(this.sendType);
             target.OverWrite(this.buffer, this.position);
         }
 
@@ -60,7 +62,7 @@ namespace HatchlingNet
 
         public Int16 PopInt16()
         {
-            Int16 data = BitConverter.ToInt16(this.buffer, this.position);
+            Int16 data = BitConverter.ToInt16(this.buffer, this.position);//this.buffer[this.position]에서 Int16만큼 변환
             this.position += sizeof(Int16);
 
             return data;
@@ -85,13 +87,21 @@ namespace HatchlingNet
             return data;
         }
 
-        public void SetProtocol(Int16 protocol_id)
+        public void SetProtocol(Int16 protocolType)
         {
-            this.protocolType = protocol_id;
+            this.protocolType = protocolType;
             this.position = Define.HEADERSIZE;            //헤더는 나중에 넣을것이므로 데이터부터 넣을수 있도록 위치를 점프 시켜놓는다
-
-            Push(protocol_id);
+                                                            //RecordSize호출 위치 참고
+            Push(protocolType);
         }
+
+        public void SetSendType(Int16 sendType)
+        {
+            this.sendType = sendType;
+            this.position = Define.HEADERSIZE + Define.PROTOCOLSIZE;            
+            Push(sendType);
+        }
+
 
         public void RecordSize()
         {//패킷의 헤더부분에 body의 크기를 입력한다

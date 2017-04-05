@@ -54,7 +54,7 @@ namespace client
                 }
                 */
 
-                Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq);
+                Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq, (short)SEND_TYPE.Single);
                 msg.Push(line);
                 Thread.Sleep(1000);
                 gameServer[0].Send(msg);
