@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 
 namespace DataBase
 {
@@ -9,7 +10,6 @@ namespace DataBase
         private class MySQLAdapter
         {
             MySqlConnection connection;
-            public bool connectDatabase { get; private set; }
 
             public string databaseName { get; set; }
             public string tableName { get; set; }
@@ -72,11 +72,9 @@ namespace DataBase
                 }
                 catch (MySqlException)
                 {
-                    this.connectDatabase = false;
                     return false;
                 }
 
-                this.connectDatabase = true;
                 return true;
             }
 
@@ -85,7 +83,7 @@ namespace DataBase
                 return SendQuery("SHOW TABLES;");
             }
 
-            public bool CreateTable(string primaryKeyId)
+            public bool CreateTable(string tableName, string primaryKeyId)
             {
                 SendNoQuery(
                     $"CREATE TABLE {tableName} (" +
@@ -112,26 +110,40 @@ namespace DataBase
                 return IsExist($"SHOW TABLES LIKE '{tableName}'");
             }
 
-            public bool addColumns(MySQLDataType type, string columnId, int size, bool defaultNull)
+            public bool AddColumns(MySQLDataType type, string columnId, int size, bool defaultNull)
             {
-                string queryString = $"alter table {tableName} add {columnId} {type.ToString()}({size.ToString()}) DEFALUT ";
-                if (defaultNull)
-                    queryString += "NULL;";
-                else
+                string queryString = $"ALTER TABLE {tableName} add {columnId} {type.ToString()}({size.ToString()}) ";
+                if (!defaultNull)
                     queryString += "NOT NULL;";
 
                 SendNoQuery(queryString);
                 return true;
             }
 
-            public List<string> showColumns()
+            public List<string> ShowColumnNames()
             {
                 return SendQuery($"SHOW COLUMNS FROM {tableName};");
             }
 
-            public List<string> showColumn(string field)
+            public List<string> ShowColumn(string columnName)
             {
-                return SendQuery("SELECT ");
+                return SendQuery($"SELECT {columnName} FROM {tableName}");
+            }
+
+            public bool IsField(string columnName, string findName)
+            {
+                return IsExist($"SELECT * FROM {tableName} WHERE {columnName}='{findName}';");
+            }
+
+            public bool CheckLogin(string id, string password)
+            {
+                return IsExist($"SELECT * FROM {tableName} WHERE id='{id}' AND password='{password}'");
+            }
+
+            public bool AddField(string id, string password)
+            {
+                SendNoQuery($"INSERT INTO {tableName} (id, password) VALUES ('{id}','{password}');");
+                return true;
             }
 
             private int SendNoQuery(string sqlQuery)
@@ -148,16 +160,29 @@ namespace DataBase
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
-                    {
-                        string row = "";
-
-                        for (int i = 0; i < reader.FieldCount; i++)
-                            row += reader.GetString(i) + "\t";
-
-                        resultList.Add(row);
-                    }
+                        resultList.Add(GetLineString(reader));
                 }
                 return resultList;
+            }
+
+            private string GetLineString(MySqlDataReader reader)
+            {
+                string line = "";
+
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    try
+                    {
+                        line += reader.GetString(i);
+                    }
+                    catch (SqlNullValueException)
+                    {
+                        line += "Null";
+                    }
+                    line += "\t";
+                }
+
+                return line;
             }
         }
     }

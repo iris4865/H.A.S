@@ -22,22 +22,21 @@ namespace DataBase
             return true;
         }
 
-        public void SelectDatabase(string databaseName)
-        {
-            mySQL.databaseName = databaseName;
-        }
-
         public bool CreateDatabase(string databaseName)
         {
-            if (mySQL.IsDataBase(databaseName))
+            if (mySQL.IsDataBase())
                 return false;
             return mySQL.createDataBase(databaseName);
         }
 
-        public bool ConnectDatabase()
+        public bool ConnectDatabase(string databaseName)
         {
+            mySQL.databaseName = databaseName;
+
             if (mySQL.IsDataBase())
                 return mySQL.ConnectDataBase();
+
+            mySQL.databaseName = "";
             return false;
         }
 
@@ -46,32 +45,54 @@ namespace DataBase
             return mySQL.ShowTables();
         }
 
-        public void SelectTable(string tableName)
+        public bool ConnectTable(string tableName)
         {
             mySQL.tableName = tableName;
+
+            if (mySQL.IsTable())
+                return true;
+
+            mySQL.tableName = "";
+            return false;
         }
 
-        public bool CreateTable(string primaryKeyId)
+        public bool CreateTable(string tableName, string primaryKeyId)
         {
             if (mySQL.IsTable())
                 return false;
 
-            return mySQL.CreateTable(primaryKeyId);
+            return mySQL.CreateTable(tableName, primaryKeyId);
         }
 
-        public List<string> ShowColumns()
+        public List<string> ShowColumnNames()
         {
             if (mySQL.IsTable())
-                return mySQL.showColumns();
+                return mySQL.ShowColumnNames();
 
             return null;
         }
 
-        public bool addColumn(MySQLDataType type, string columnId, int size, bool notNull)
+        public bool AddColumn(MySQLDataType type, string columnId, int size, bool notNull)
         {
-            return true;
+            return mySQL.AddColumns(type, columnId, size, notNull);
         }
 
+        public bool Login(string id, string password)
+        {
+            return mySQL.CheckLogin(id, password);
+        }
+
+        public bool SignUp(string id, string password)
+        {
+            if (mySQL.IsField("id", id))
+                return false;
+
+            return mySQL.AddField(id, password);
+        }
+
+        /*
+         * Query test method
+         */
         public void ExcuteQuery(string query)
         {
             List<string> result;
@@ -109,17 +130,6 @@ namespace DataBase
         public List<string> ReadAllUser()
         {
             return mySQL.showColumn("id");
-        }
-
-        public bool Login(string id, string password)
-        {
-            return true;
-        }
-
-        public bool SignUp(string id, string password)
-        {
-
-            return true;
         }
         */
     }
