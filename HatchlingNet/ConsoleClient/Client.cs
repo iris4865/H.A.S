@@ -40,10 +40,11 @@ namespace client
             while (true)
             {
                 count++;
-                //Console.Write("> ");
-                //string line = Console.ReadLine();
-                string line = index + ". ?";
-                Console.WriteLine("send: "+line);
+                Console.Write("> ");
+                string line = Console.ReadLine();
+
+                //string line = index + ". ?";
+                //Console.WriteLine("send: "+line);
 
 
                 /*
@@ -54,7 +55,7 @@ namespace client
                 }
                 */
 
-                Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq, (short)SEND_TYPE.Single);
+                Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq, (short)SEND_TYPE.BroadcastWithMe);
                 msg.Push(line);
                 Thread.Sleep(1000);
                 gameServer[0].Send(msg);

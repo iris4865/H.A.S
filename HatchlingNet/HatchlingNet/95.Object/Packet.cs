@@ -38,6 +38,13 @@ namespace HatchlingNet
             return PopInt16();
         }
 
+        public Int16 PeekSendType()
+        {
+            Int16 data = BitConverter.ToInt16(this.buffer, Define.HEADERSIZE + Define.PROTOCOLSIZE);//this.buffer[this.position]에서 Int16만큼 변환
+
+            return data;
+        }
+
         public void CopyTo(Packet target)
         {
             target.SetProtocol(this.protocolType);

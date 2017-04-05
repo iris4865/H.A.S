@@ -43,7 +43,7 @@ namespace HatchlingNet
             for (int i = 0; i < this.maxConnection; ++i)
             {
                 UserToken token = new UserToken();
-
+//                token.callbackBroadcast = Call
                 //receive pool
                 {
                     //Pre-allocate a set of reusable SocketAsyncEventArgs
@@ -91,11 +91,11 @@ namespace HatchlingNet
 
         public void Listen(string host, int port, int backlog)
         {
-            Listener listener = new Listener(this);
-            
-            listener.receiveBeginTrigger = BeginReceive;
+            clientListener = new Listener(this);
 
-            listener.Start(host, port, backlog);
+            clientListener.receiveBeginTrigger = BeginReceive;
+
+            clientListener.Start(host, port, backlog);
         }
 
         public void BeginReceive(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)

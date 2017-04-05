@@ -40,7 +40,7 @@ namespace Server
                         string text = msg.PopString();
                         Console.WriteLine(string.Format("text {0}", text));
                         
-                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)SEND_TYPE.Single);
+                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)sendType);
 
                         response.Push(text);
                         Send(response);
@@ -66,6 +66,7 @@ namespace Server
 
                     }
                     break;
+
             }
         }
 
@@ -73,7 +74,23 @@ namespace Server
 
         public void Send(Packet msg)
         {
-            userToken.Send(msg);
+            switch ((SEND_TYPE)msg.PeekSendType())
+            {
+                case SEND_TYPE.Single:
+                    userToken.Send(msg);
+                    break;
+
+                case SEND_TYPE.BroadcastWithoutMe:
+
+                    break;
+
+                case SEND_TYPE.BroadcastWithMe:
+                    userToken.callbackBroadcast(msg);
+
+                    break;
+
+            }
+
         }
         
         public void Receive()

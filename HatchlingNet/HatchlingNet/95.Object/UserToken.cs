@@ -21,6 +21,9 @@ namespace HatchlingNet
         Queue<Packet> sendingQueue;
         private object csSendingQueue;
 
+        public delegate void BradcastHandler(Packet msg);
+        public BradcastHandler callbackBroadcast { get; set; }
+
         public UserToken()
         {
             this.csSendingQueue = new object();//락 조건용
