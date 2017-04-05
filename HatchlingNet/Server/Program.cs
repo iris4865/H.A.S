@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using DataBase;
 
 namespace HatchlingNet
 {
@@ -13,11 +14,31 @@ namespace HatchlingNet
 
         static void Main(string[] args)
         {
-            Initialize();
+            //Initialize();
+
+            MySQLConnecter mysql = new MySQLConnecter("localhost", "anstjd");
+            mysql.Open();
+            mysql.SelectDatabase("test");
+            mysql.ConnectDatabase();
+
+            while (true)
+            {
+                try
+                {
+                    Console.Write("input: ");
+                    mysql.ExcuteQuery(Console.ReadLine());
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("ERROR");
+                }
+            }
+            mysql.SelectTable("userinfo");
+            mysql.ShowColumns();
 
             Console.WriteLine("Server Start");
 
-            Update();
+            //Update();
         }
 
         static public void Initialize()

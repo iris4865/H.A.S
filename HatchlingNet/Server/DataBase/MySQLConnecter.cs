@@ -22,7 +22,57 @@ namespace DataBase
             return true;
         }
 
-        public void excuteQuery(string query)
+        public void SelectDatabase(string databaseName)
+        {
+            mySQL.databaseName = databaseName;
+        }
+
+        public bool CreateDatabase(string databaseName)
+        {
+            if (mySQL.IsDataBase(databaseName))
+                return false;
+            return mySQL.createDataBase(databaseName);
+        }
+
+        public bool ConnectDatabase()
+        {
+            if (mySQL.IsDataBase())
+                return mySQL.ConnectDataBase();
+            return false;
+        }
+
+        public List<String> ShowTables()
+        {
+            return mySQL.ShowTables();
+        }
+
+        public void SelectTable(string tableName)
+        {
+            mySQL.tableName = tableName;
+        }
+
+        public bool CreateTable(string primaryKeyId)
+        {
+            if (mySQL.IsTable())
+                return false;
+
+            return mySQL.CreateTable(primaryKeyId);
+        }
+
+        public List<string> ShowColumns()
+        {
+            if (mySQL.IsTable())
+                return mySQL.showColumns();
+
+            return null;
+        }
+
+        public bool addColumn(MySQLDataType type, string columnId, int size, bool notNull)
+        {
+            return true;
+        }
+
+        public void ExcuteQuery(string query)
         {
             List<string> result;
             try
@@ -35,21 +85,10 @@ namespace DataBase
                 return;
             }
 
-
             foreach (string line in result)
-            {
                 Console.WriteLine(line);
-            }
         }
         /*
-        public bool CreateTable(string tableName, string primaryKeyId)
-        {
-            if (mySQL.IsTable(tableName))
-                return false;
-
-            return mySQL.CreateTable(tableName, primaryKeyId);
-        }
-
         public bool useTable(string tableName)
         {
             if (!mySQL.IsTable(tableName))
@@ -59,30 +98,12 @@ namespace DataBase
             return true;
         }
 
-        public List<String> showTables()
-        {
-            return mySQL.showTables();
-        }
-
         public bool removeTable(string tableName)
         {
             if (mySQL.IsTable(tableName))
                 return mySQL.removeTable();
 
             return false;
-        }
-
-        public bool addColumn(MySQLDataType type, string columnId, int size, bool notNull)
-        {
-            return true;
-        }
-
-        public List<string> showColumns()
-        {
-            if (mySQL.IsTable(mySQL.tableName))
-                return mySQL.showColumns();
-
-            return null;
         }
 
         public List<string> ReadAllUser()

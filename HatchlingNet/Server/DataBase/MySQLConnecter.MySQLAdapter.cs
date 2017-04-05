@@ -9,9 +9,9 @@ namespace DataBase
         private class MySQLAdapter
         {
             MySqlConnection connection;
-            string databaseName;
-
             public bool connectDatabase { get; private set; }
+
+            public string databaseName { get; set; }
             public string tableName { get; set; }
 
             public void Connect(string remoteAddress, string Password)
@@ -36,21 +36,16 @@ namespace DataBase
 
             public bool IsDataBase()
             {
+                if (string.IsNullOrEmpty(databaseName))
+                    return false;
+
                 return this.IsExist($"SHOW DATABASES LIKE '{databaseName}'");
             }
 
-            public bool ConnectDataBase(string databaseName)
+            public bool IsDataBase(string databaseName)
             {
                 this.databaseName = databaseName;
-                connection.ChangeDatabase(databaseName);
-                this.connectDatabase = true;
-                return true;
-            }
-
-            public bool createDataBase()
-            {
-                SendNoQuery($"CREATE DATABASE {databaseName};");
-                return true;
+                return this.IsExist($"SHOW DATABASES LIKE '{databaseName}'");
             }
 
             private bool IsExist(string sqlQuery)
@@ -63,7 +58,34 @@ namespace DataBase
                 return exist;
             }
 
-            public bool CreateTable(string tableName, string primaryKeyId)
+            public bool createDataBase(string databaseName)
+            {
+                SendNoQuery($"CREATE DATABASE {databaseName};");
+                return true;
+            }
+
+            public bool ConnectDataBase()
+            {
+                try
+                {
+                    connection.ChangeDatabase(databaseName);
+                }
+                catch (MySqlException)
+                {
+                    this.connectDatabase = false;
+                    return false;
+                }
+
+                this.connectDatabase = true;
+                return true;
+            }
+
+            public List<string> ShowTables()
+            {
+                return SendQuery("SHOW TABLES;");
+            }
+
+            public bool CreateTable(string primaryKeyId)
             {
                 SendNoQuery(
                     $"CREATE TABLE {tableName} (" +
@@ -74,41 +96,42 @@ namespace DataBase
                 return true;
             }
 
-            public List<string> showTables()
-            {
-                return SendQuery("SHOW TABLES;");
-            }
-
-            public bool removeTable()
+            public bool RemoveTable()
             {
                 SendNoQuery($"DROP TABLE {tableName};");
                 return true;
             }
 
+            public bool IsTable()
+            {
+                return IsExist($"SHOW TABLES LIKE '{tableName}'");
+            }
+
+            public bool IsTable(string tableName)
+            {
+                return IsExist($"SHOW TABLES LIKE '{tableName}'");
+            }
+
             public bool addColumns(MySQLDataType type, string columnId, int size, bool defaultNull)
             {
-                string queryString = "alter table " + this.tableName + " add " + columnId + " " + type.ToString() + "(" + size.ToString() + ") DEFALUT ";
+                string queryString = $"alter table {tableName} add {columnId} {type.ToString()}({size.ToString()}) DEFALUT ";
                 if (defaultNull)
                     queryString += "NULL;";
                 else
                     queryString += "NOT NULL;";
+
                 SendNoQuery(queryString);
                 return true;
             }
 
             public List<string> showColumns()
             {
-                return SendQuery($"SHOW COLUMNS from '{tableName}';");
+                return SendQuery($"SHOW COLUMNS FROM {tableName};");
             }
 
             public List<string> showColumn(string field)
             {
                 return SendQuery("SELECT ");
-            }
-
-            public bool IsTable(string tableName)
-            {
-                return IsExist($"SHOW TABLES LIKE '{tableName}'");
             }
 
             private int SendNoQuery(string sqlQuery)
@@ -128,8 +151,8 @@ namespace DataBase
                     {
                         string row = "";
 
-                        for(int i=0; i< reader.FieldCount; i++)
-                            row += reader.GetString(i)+"\t";
+                        for (int i = 0; i < reader.FieldCount; i++)
+                            row += reader.GetString(i) + "\t";
 
                         resultList.Add(row);
                     }
