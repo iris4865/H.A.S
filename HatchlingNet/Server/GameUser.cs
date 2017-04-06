@@ -75,13 +75,12 @@ namespace Server
                         if (isSignup == true)
                         {
                             response = PacketBufferManager.Pop((short)PROTOCOL.SignupAck, (short)SEND_TYPE.Single);
-                            Send(response);
                         }
                         else
                         {
                             response = PacketBufferManager.Pop((short)PROTOCOL.SignupRej, (short)SEND_TYPE.Single);
-                            Send(response);
                         }
+                        Send(response);
 
                     }
                     break;
