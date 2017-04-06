@@ -40,12 +40,11 @@ namespace client
             while (true)
             {
                 count++;
-                Console.Write("> ");
-                string line = Console.ReadLine();
 
                 //string line = index + ". ?";
                 //Console.WriteLine("send: "+line);
-
+                //Console.Write("> ");
+                //string line = Console.ReadLine();
 
                 /*
 
@@ -55,8 +54,23 @@ namespace client
                 }
                 */
 
-                Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq, (short)SEND_TYPE.BroadcastWithMe);
-                msg.Push(line);
+                //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq, (short)SEND_TYPE.BroadcastWithMe);
+                //msg.Push(line);
+
+
+
+                Console.Write("ID > ");
+                string id = Console.ReadLine();
+
+                Console.Write("password > ");
+                string password = Console.ReadLine();
+
+                Packet msg = PacketBufferManager.Pop((short)PROTOCOL.SignupReq, (short)SEND_TYPE.Single);
+                msg.Push(id);
+                msg.Push(password);
+
+
+
                 Thread.Sleep(1000);
                 gameServer[0].Send(msg);
             }

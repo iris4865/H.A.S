@@ -1,4 +1,5 @@
-﻿using HatchlingNet;
+﻿using DataBase;
+using HatchlingNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,15 +36,48 @@ namespace Server
 
             switch (protocol)
             {
-                case PROTOCOL.ChatReq:
+                case PROTOCOL.SignupReq:
                     {
-                        string text = msg.PopString();
-                        Console.WriteLine(string.Format("text {0}", text));
-                        
-                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)sendType);
+                        string id = msg.PopString();
+                        string password = msg.PopString();
 
-                        response.Push(text);
-                        Send(response);
+                        MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
+                        mysql.Open();
+
+                        string databaseName = "HatchlingDB";//디비 생성
+                        if (!mysql.ConnectDatabase(databaseName))
+                            mysql.CreateDatabase(databaseName);
+
+
+                        string tableName = "userinfo";          //테이블 생성
+                        if (!mysql.ConnectTable(tableName))
+                        {
+                            mysql.CreateTable(tableName, "no.");
+
+                            if (!mysql.ConnectTable("userinfo"))//혹시모를 예외처리
+                                Console.WriteLine("i don't know");
+
+                            mysql.AddColumn(MySQLDataType.VARCHAR, "id", 20, false);
+                            mysql.AddColumn(MySQLDataType.VARCHAR, "password", 20, false);
+                        }
+
+
+
+                        bool isSignup = mysql.SignUp(id, password);
+
+                        Packet response;
+
+                        if (isSignup == true)
+                        {
+                            response = PacketBufferManager.Pop((short)PROTOCOL.SignupAck, (short)SEND_TYPE.Single);
+                            Send(response);
+                        }
+                        else
+                        {
+                            response = PacketBufferManager.Pop((short)PROTOCOL.SignupRej, (short)SEND_TYPE.Single);
+                            Send(response);
+                        }
+
                     }
                     break;
 
@@ -52,6 +86,9 @@ namespace Server
                         Console.WriteLine("들어옴");
 
                         bool isUser = true;
+
+
+
 
                         if (isUser == true)
                         {
@@ -64,6 +101,19 @@ namespace Server
                             Send(loginResult);
                         }
 
+                    }
+                    break;
+
+
+                case PROTOCOL.ChatReq:
+                    {
+                        string text = msg.PopString();
+                        Console.WriteLine(string.Format("text {0}", text));
+
+                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)sendType);
+
+                        response.Push(text);
+                        Send(response);
                     }
                     break;
 

@@ -29,6 +29,13 @@ namespace client
                         Console.WriteLine(string.Format("text {0}", text));
                     }
                     break;
+
+                case PROTOCOL.SignupAck:
+                    {
+
+
+                    }
+                    break;
             }
         }
 
