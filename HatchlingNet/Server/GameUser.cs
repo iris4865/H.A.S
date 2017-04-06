@@ -41,21 +41,26 @@ namespace Server
                         string id = msg.PopString();
                         string password = msg.PopString();
 
-                        MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
+                        MySQLConnecter mysql = new MySQLConnecter("localhost", "anstjd");
                         mysql.Open();
 
                         string databaseName = "HatchlingDB";//디비 생성
                         if (!mysql.ConnectDatabase(databaseName))
+                        {
                             mysql.CreateDatabase(databaseName);
+
+                            if (!mysql.ConnectDatabase(databaseName))
+                                Console.WriteLine("where is database?");
+                        }
 
 
                         string tableName = "userinfo";          //테이블 생성
                         if (!mysql.ConnectTable(tableName))
                         {
-                            mysql.CreateTable(tableName, "no.");
+                            mysql.CreateTable(tableName, "no");
 
                             if (!mysql.ConnectTable("userinfo"))//혹시모를 예외처리
-                                Console.WriteLine("i don't know");
+                                Console.WriteLine("where is table?");
 
                             mysql.AddColumn(MySQLDataType.VARCHAR, "id", 20, false);
                             mysql.AddColumn(MySQLDataType.VARCHAR, "password", 20, false);

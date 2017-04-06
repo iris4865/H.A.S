@@ -55,6 +55,8 @@ namespace DataBase
                 bool exist = reader.HasRows;
                 reader.Close();
 
+                Console.WriteLine("????????");
+
                 return exist;
             }
 
