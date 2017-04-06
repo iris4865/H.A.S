@@ -11,6 +11,7 @@ namespace Server
     class GameUser : IPeer
     {
         UserToken userToken;
+        public MySQLConnecter mysql;
 
         public GameUser(UserToken userToken)
         {
@@ -41,8 +42,8 @@ namespace Server
                         string id = msg.PopString();
                         string password = msg.PopString();
 
-                        MySQLConnecter mysql = new MySQLConnecter("localhost", "anstjd");
-                        mysql.Open();
+                        //MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
+                        //mysql.Open();
 
                         string databaseName = "HatchlingDB";//디비 생성
                         if (!mysql.ConnectDatabase(databaseName))
@@ -89,10 +90,10 @@ namespace Server
                     {
                         Console.WriteLine("들어옴");
 
-                        bool isUser = true;
+                        string id = msg.PopString();
+                        string password = msg.PopString();
 
-
-
+                        bool isUser = mysql.Login(id, password);
 
                         if (isUser == true)
                         {

@@ -32,10 +32,17 @@ namespace client
 
                 case PROTOCOL.SignupAck:
                     {
-
-
+                        Console.WriteLine(string.Format("가입완료!"));
                     }
                     break;
+
+                case PROTOCOL.SignupRej:
+                    {
+                        Console.WriteLine(string.Format("가입불허...!"));
+                    }
+                    break;
+
+
             }
         }
 

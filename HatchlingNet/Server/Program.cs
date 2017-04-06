@@ -10,7 +10,7 @@ namespace HatchlingNet
     {
         static NetworkService networkService;
         static List<GameUser> userList;
-
+        static MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
 
         static void Main(string[] args)
         {
@@ -23,6 +23,8 @@ namespace HatchlingNet
 
         static public void Initialize()
         {
+            mysql.Open();
+
             PacketBufferManager.Initialize(2000);
             userList = new List<GameUser>();
 
@@ -44,6 +46,8 @@ namespace HatchlingNet
         static void CallSessionCreate(Socket socket, UserToken token)
         {
             GameUser user = new GameUser(token);
+            user.mysql = mysql;
+
             lock (userList)
             {
                 userList.Add(user);
