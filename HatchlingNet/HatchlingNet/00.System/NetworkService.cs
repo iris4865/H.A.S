@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 
 
 namespace HatchlingNet
@@ -10,6 +7,7 @@ namespace HatchlingNet
     public class NetworkService
     {
         Listener clientListener;
+
         public SocketAsyncEventArgsPool receiveEventArgsPool;//메시지 수신객체, 풀링해서 사용예정
         public SocketAsyncEventArgsPool sendEventArgsPool;//메시지 전송객체, 풀링해서 사용예정
         BufferManager buffer_manager;//나중에가면 패킷매니저 씀...일단은 에코서버 될때까지 놔두자
@@ -20,7 +18,7 @@ namespace HatchlingNet
         readonly int preAllocCount = 2;
 
         public delegate void SessionHandler(Socket socket, UserToken token);
-        public SessionHandler callbackSessionCreate { get; set; }
+        public SessionHandler CallbackSessionCreate { get; set; }
 
         public NetworkService()
         {
@@ -29,21 +27,21 @@ namespace HatchlingNet
 
         public void Initialize()//서버에서만 호출...클라에선 안호출...
         {
-            this.maxConnection = 10000;
-            this.bufferSize = 1024;
+            maxConnection = 10000;
+            bufferSize = 1024;
 
-            this.receiveEventArgsPool = new SocketAsyncEventArgsPool(this.maxConnection);
-            this.sendEventArgsPool = new SocketAsyncEventArgsPool(this.maxConnection);
+            receiveEventArgsPool = new SocketAsyncEventArgsPool(maxConnection);
+            sendEventArgsPool = new SocketAsyncEventArgsPool(maxConnection);
 
-            this.buffer_manager = new BufferManager(this.maxConnection * this.bufferSize * this.preAllocCount, this.bufferSize);
-            this.buffer_manager.InitBuffer();
+            buffer_manager = new BufferManager(maxConnection * bufferSize * preAllocCount, bufferSize);
+            buffer_manager.InitBuffer();
 
             SocketAsyncEventArgs arg;
 
             for (int i = 0; i < this.maxConnection; ++i)
             {
                 UserToken token = new UserToken();
-//                token.callbackBroadcast = Call
+                //                token.callbackBroadcast = Call
                 //receive pool
                 {
                     //Pre-allocate a set of reusable SocketAsyncEventArgs
@@ -132,7 +130,7 @@ namespace HatchlingNet
         {
             UserToken token = receiveArgs.UserToken as UserToken;
 
-            if (receiveArgs.BytesTransferred > 0 )
+            if (receiveArgs.BytesTransferred > 0)
             {
                 //e.Buffer : 클라로부터 수신된 데이터, e.offset : 버퍼의 포지션, e.ByesTransferred : 이번에 수신된 바이트의 수
                 token.OpenMessage(receiveArgs.Buffer, receiveArgs.Offset, receiveArgs.BytesTransferred);
