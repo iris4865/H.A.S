@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 
@@ -17,16 +15,18 @@ namespace HatchlingNet
 
         public Packet(byte[] buffer, IPeer owner)
         {
-            this.buffer = buffer;
-            this.position = Define.HEADERSIZE;
             this.owner = owner;
+            this.buffer = buffer;
+
+            position = Define.HEADERSIZE;
         }
 
-        public Packet()//인자없는건 버퍼에 메모리 할당하고 인자 있는생성자는 메모리 할당 안한다는걸 주의
-                        //패켓버퍼매니저에서 메모리 풀링할때 인자없는생성자 사용해서 미리 다 해놓고
-                        //인자있는건 보통 일회용으로 잠깐 패킷 해석할때 쓴다
+        //인자없는건 버퍼에 메모리 할당하고 인자 있는생성자는 메모리 할당 안한다는걸 주의
+        //패킷버퍼매니저에서 메모리 풀링할때 인자없는생성자 사용해서 미리 다 해놓고
+        //인자있는건 보통 일회용으로 잠깐 패킷 해석할때 쓴다
+        public Packet()
         {
-            this.buffer = new byte[1024];
+            buffer = new byte[1024];
         }
 
         public Int16 PopProtocolType()

@@ -139,9 +139,9 @@ namespace HatchlingNet
 
                 //}
 
-                if (this.networkService.callbackSessionCreate != null)
+                if (networkService.CallbackSessionCreate != null)
                 {
-                    this.networkService.callbackSessionCreate(clientSocket, userToken);
+                    networkService.CallbackSessionCreate(clientSocket, userToken);
                 }
 
 
