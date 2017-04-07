@@ -2,15 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class game_login_click : MonoBehaviour {
 
-	void Start () {
+    public InputField idField;
+    public InputField passwordField;
+
+    void Start () {
     }
 	
 	void Update () {
-		
+        
+        
 	}
 
     public void click()
@@ -20,7 +25,8 @@ public class game_login_click : MonoBehaviour {
         if (networkManager != null)
         {
             Packet msg = PacketBufferManager.Pop((short)PROTOCOL.LoginReq, (short)SEND_TYPE.Single);
-            msg.Push("abc|abcd");
+            msg.Push(idField.text);
+            msg.Push(passwordField.text);
 
             networkManager.GetComponent<NetworkManager>().Send(msg);
         }
