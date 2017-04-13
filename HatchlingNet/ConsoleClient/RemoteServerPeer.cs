@@ -18,9 +18,10 @@ namespace client
         public void OnMessage(byte[] buffer)
         {
             Packet msg = new Packet(buffer, this);
-            PROTOCOL protocol_id = (PROTOCOL)msg.PopProtocolType();
+            PROTOCOL protocolType = (PROTOCOL)msg.PopProtocolType();
+            SEND_TYPE sendType = (SEND_TYPE)msg.PopSendType();
 
-            switch (protocol_id)
+            switch (protocolType)
             {
                 case PROTOCOL.ChatAck:
                     {
@@ -28,6 +29,20 @@ namespace client
                         Console.WriteLine(string.Format("text {0}", text));
                     }
                     break;
+
+                case PROTOCOL.SignupAck:
+                    {
+                        Console.WriteLine(string.Format("가입완료!"));
+                    }
+                    break;
+
+                case PROTOCOL.SignupRej:
+                    {
+                        Console.WriteLine(string.Format("가입불허...!"));
+                    }
+                    break;
+
+
             }
         }
 

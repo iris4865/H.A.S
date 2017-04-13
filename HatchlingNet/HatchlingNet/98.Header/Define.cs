@@ -7,7 +7,8 @@ namespace HatchlingNet
 {
     class Define
     {
-        public static readonly short HEADERSIZE = 2;
+        public static readonly Int16 HEADERSIZE = 2;
+        public static readonly Int16 PROTOCOLSIZE = 2;
 
     }
 }

@@ -21,6 +21,9 @@ namespace HatchlingNet
         Queue<Packet> sendingQueue;
         private object csSendingQueue;
 
+        public delegate void BradcastHandler(Packet msg);
+        public BradcastHandler callbackBroadcast { get; set; }
+
         public UserToken()
         {
             this.csSendingQueue = new object();//락 조건용
@@ -81,9 +84,9 @@ namespace HatchlingNet
                 this.sendEventArgs.SetBuffer(this.sendEventArgs.Offset, msg.position); //NetworkService클래스에서
                                                                                      //풀에 들어가는 모든 이벤트객체들에게 버퍼할당했는데
                                                                                      //여기서 또하네?
-                                                                                     //버퍼매니저 쓰면 풀링해서 쓰기떄문에 빠르지만
-                                                                                     //보내는 데이터가 많아지고
-                                                                                     //여기서 할당하면 반대....
+                                                                                    //=> 여기서하는건 그버퍼중 어디서 어디까지 쓸건지 지정하는거임
+                                                                                    //사용하는공간이 적으면 그만큼만 보내서 더 빠르게...
+                                                                                    //그래서 거기선 인자3개 넘기고 여기선 인자 2개만 넘김...
 
                 Array.Copy(msg.buffer, 0, this.sendEventArgs.Buffer, this.sendEventArgs.Offset, msg.position);
 
@@ -121,16 +124,6 @@ namespace HatchlingNet
                     Console.WriteLine(error);
                     return;
                 }
-
-                //lock (csCount)//락안에서 락을 한번 더 할필요가 있나?
-                //{
-                //    ++sendCount;
-
-                //    {
-                //        Console.WriteLine(string.Format("process send : {0}, transferred {1}, sent count {2}",
-                //            sendArgs.SocketError, sendArgs.BytesTransferred, sendCount));
-                //    }
-                //}
 
                 //전송 완료된 패킷을 큐에서 제거
                 this.sendingQueue.Dequeue();

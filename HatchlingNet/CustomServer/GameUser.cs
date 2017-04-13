@@ -27,6 +27,8 @@ namespace CustomServer
                                             //GaemUser클래스는 클라의 요청에 따라 어떻게 동작할지 결정하게 되겠지
             Packet msg = new Packet(buffer, this);
             PROTOCOL protocol = (PROTOCOL)msg.PopProtocolType();
+            SEND_TYPE sendType = (SEND_TYPE)msg.PopSendType();
+
 
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine("protocolType " + protocol);
@@ -38,7 +40,7 @@ namespace CustomServer
                         string text = msg.PopString();
                         Console.WriteLine(string.Format("text {0}", text));
                         
-                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck);
+                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)SEND_TYPE.Single);
 
                         response.Push(text);
                         Send(response);

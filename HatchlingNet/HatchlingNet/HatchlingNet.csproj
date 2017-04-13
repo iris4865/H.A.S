@@ -47,12 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="98.Header\MyStruct.cs" />
     <Compile Include="98.Header\Macro.cs" />
     <Compile Include="02.Client\Connector.cs" />
     <Compile Include="97.Interface\IPeer.cs" />
     <Compile Include="01.Server\Listener.cs" />
     <Compile Include="98.Header\Define.cs" />
-    <Compile Include="99.Etc\MessageTranslator.cs" />
+    <Compile Include="95.Object\MessageTranslator.cs" />
     <Compile Include="95.Object\Packet.cs" />
     <Compile Include="96.Manager\PacketBufferManager.cs" />
     <Compile Include="95.Object\UserToken.cs" />
@@ -64,7 +65,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="99.Etc\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

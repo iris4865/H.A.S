@@ -1,39 +1,44 @@
-﻿using Server;
+﻿using DataBase;
+using Server;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HatchlingNet
 {
-    class Program
+    class MainServer
     {
         static NetworkService networkService;
         static List<GameUser> userList;
-
+        static MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
 
         static void Main(string[] args)
         {
-            Initialize();
-
+            new MainServer().Initialize();
             Console.WriteLine("Server Start");
 
-            Update();
+            new MainServer().Update();
         }
 
-        static public void Initialize()
+        public void Initialize()
         {
-            PacketBufferManager.Initialize(2000);
-            userList = new List<GameUser>();
+            mysql.Open();
 
+            PacketBufferManager.Initialize(2000);
+
+            userList = new List<GameUser>();
+            InitNeworkService();
+        }
+
+        private void InitNeworkService()
+        {
             networkService = new NetworkService();
             networkService.Initialize();
-            networkService.callbackSessionCreate += CallSessionCreate;
+
+            networkService.CallbackSessionCreate = CallSessionCreate;
         }
 
-        static public void Update()
+        public void Update()
         {
             networkService.Listen("0.0.0.0", 7979, 1000);
 
@@ -46,6 +51,8 @@ namespace HatchlingNet
         static void CallSessionCreate(Socket socket, UserToken token)
         {
             GameUser user = new GameUser(token);
+            user.mysql = mysql;
+
             lock (userList)
             {
                 userList.Add(user);
@@ -59,7 +66,5 @@ namespace HatchlingNet
                 userList.Remove(user);
             }
         }
-
-
     }
 }

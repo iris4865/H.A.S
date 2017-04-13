@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 
 namespace HatchlingNet
@@ -9,25 +7,27 @@ namespace HatchlingNet
     public class PacketBufferManager
     {
         static object csBuffer = new object();
+
         static Stack<Packet> pool;
         static int poolCapacity;
 
+
         public static void Initialize(int capacity)
         {
-            pool = new Stack<Packet>();
             poolCapacity = capacity;
             Allocate();
         }
 
         static void Allocate()
         {
+            pool = new Stack<Packet>();
             for (int i = 0; i < poolCapacity; ++i)
             {
                 pool.Push(new Packet());
             }
         }
 
-        public static Packet Pop(Int16 protocol_id)
+        public static Packet Pop(Int16 protocolType, Int16 sendType)
         {
             lock (csBuffer)
             {
@@ -38,7 +38,8 @@ namespace HatchlingNet
                 }
 
                 Packet packet = pool.Pop();
-                packet.SetProtocol(protocol_id);
+                packet.SetProtocol(protocolType);
+                packet.SetSendType(sendType);
 
                 return packet;
             }

@@ -126,6 +126,7 @@ namespace HatchlingNet
 
                 lock (userToken)
                 {
+                    userToken.callbackBroadcast = CallBroadCast;
                     userList.Add(userToken);
                 }
 
@@ -138,9 +139,9 @@ namespace HatchlingNet
 
                 //}
 
-                if (this.networkService.callbackSessionCreate != null)
+                if (networkService.CallbackSessionCreate != null)
                 {
-                    this.networkService.callbackSessionCreate(clientSocket, userToken);
+                    networkService.CallbackSessionCreate(clientSocket, userToken);
                 }
 
 
@@ -200,6 +201,16 @@ namespace HatchlingNet
             lock (userList)
             {
                 userList.Remove(user);
+            }
+        }
+
+        public void CallBroadCast(Packet msg)
+        {
+//            iterator iter = userList.GetEnumerator(UserToken);
+
+            foreach (UserToken user in userList)
+            {
+                user.Send(msg);
             }
         }
 

@@ -35,7 +35,7 @@ public class NetworkManager : MonoBehaviour {
         {
             case NETWORK_EVENT.connected:
                 {
-                    Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq);
+                    Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq, (short)SEND_TYPE.BroadcastWithMe);
                     msg.Push("Hello~!");
 
                     this.gameserver.Send(msg);
@@ -53,6 +53,8 @@ public class NetworkManager : MonoBehaviour {
     void CallMessage(Packet msg)
     {
         PROTOCOL protocolType = (PROTOCOL)msg.PopProtocolType();
+        SEND_TYPE sendType = (SEND_TYPE)msg.PopSendType();
+
         Debug.Log("콜메세지 " + protocolType);
 
         switch (protocolType)
@@ -66,7 +68,8 @@ public class NetworkManager : MonoBehaviour {
             case PROTOCOL.LoginAck:
                 {
                     Debug.Log("로그인액크");
-                    SceneManager.LoadScene(3);
+//                    SceneManager.LoadScene(3);
+                    SceneManager.LoadScene(4);
                 }
                 break;
 
