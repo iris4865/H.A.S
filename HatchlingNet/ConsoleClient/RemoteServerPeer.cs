@@ -6,6 +6,7 @@ namespace client
     public class RemoteServerPeer : IPeer
     {
         public UserToken serverToken { get; private set; }
+        public string userID;
 
         public RemoteServerPeer(UserToken serverToken)
         {

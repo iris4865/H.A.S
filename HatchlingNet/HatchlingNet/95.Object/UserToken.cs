@@ -9,6 +9,7 @@ namespace HatchlingNet
         public Socket socket;
         public SocketAsyncEventArgs receiveEventArgs;
         public SocketAsyncEventArgs sendEventArgs;
+        public int tokenID { get; set; }
 
         MessageTranslator messageTranslator;
 
@@ -19,8 +20,13 @@ namespace HatchlingNet
         Queue<Packet> sendingQueue;
         private object csSendingQueue;
 
-        public delegate void BradcastHandler(Packet msg);
-        public BradcastHandler callbackBroadcast { get; set; }
+        public delegate void BroadcastHandler(Packet msg, int withOut = -1);
+        public BroadcastHandler callbackBroadcast { get; set; }
+
+        public delegate void SendToHandler(int tokenID, Packet msg);
+        public SendToHandler callbackSendTo { get; set; }
+
+
 
         public UserToken()
         {
@@ -88,7 +94,7 @@ namespace HatchlingNet
 
                 Array.Copy(msg.buffer, 0, this.sendEventArgs.Buffer, this.sendEventArgs.Offset, msg.position);
 
-                bool pending = this.socket.SendAsync(this.sendEventArgs);
+                bool pending = this.socket.SendAsync(this.sendEventArgs);//전송!
                 if (!pending)
                 {
                     ProcessSend(this.sendEventArgs);
