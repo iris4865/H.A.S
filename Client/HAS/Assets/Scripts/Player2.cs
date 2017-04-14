@@ -1,38 +1,37 @@
-﻿using HatchlingNet;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player2 : MonoBehaviour {
 
-    public float speed = 10f;
+    float speed = 5f;
     float h;
     float v;
+    float rotateSpeed = 10f;
 
     Rigidbody rigdbody;
     Animator ani;
 
     Vector3 movement;
 
-    NetworkManager networkManager;
-
 	// Use this for initialization
 	void Awake () {
         rigdbody = GetComponent<Rigidbody>();
         ani = GetComponentInChildren<Animator>();
-        networkManager = GameObject.FindWithTag("eNetworkManager").GetComponent<NetworkManager>() ;
-
-
-    }
+	}
 	
-	// Update is called once per frame
-	void FixedUpdate () {
+    void Update()
+    {
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
 
-        run(h, v);
+        AnimationUpdate();
+    }
 
-        NetUpdate();
+	// Update is called once per frame
+	void FixedUpdate () {
+        run(h, v);
+        turn();
     }
 
     void AnimationUpdate()
@@ -55,13 +54,15 @@ public class Player2 : MonoBehaviour {
         rigdbody.MovePosition(transform.position + movement);
     }
 
-    void NetUpdate()
+    void turn()
     {
-        //Vector3 position = transform.position;
+        if(h == 0 && v == 0)
+        {
+            return;
+        }
 
-        //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq, (short)SEND_TYPE.BroadcastWithMe);
-        //msg.Push(position.x, position.y, position.z);
+        Quaternion newRotation = Quaternion.LookRotation(movement);
 
-        //networkManager.Send(msg);
+        rigdbody.rotation = Quaternion.Slerp(rigdbody.rotation, newRotation, rotateSpeed * Time.deltaTime);
     }
 }

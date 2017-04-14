@@ -4,7 +4,7 @@ using System;
 
 namespace Server
 {
-    class GameUser : IPeer
+    public class GameUser : IPeer
     {
         UserToken userToken;
         public MySQLConnecter mysql;
@@ -153,7 +153,7 @@ namespace Server
 
         public void Destroy()
         {
-            HatchlingNet.MainServer.RemoveUser(this);
+            UserList.RemoveUser(this);
         }
 
         public void Disconnect()

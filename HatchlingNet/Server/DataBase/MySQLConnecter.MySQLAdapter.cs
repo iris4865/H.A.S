@@ -5,7 +5,7 @@ using System.Data.SqlTypes;
 
 namespace DataBase
 {
-    partial class MySQLConnecter
+    public partial class MySQLConnecter
     {
         private class MySQLAdapter
         {
