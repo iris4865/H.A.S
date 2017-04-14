@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 
 namespace HatchlingNet
 {
@@ -39,10 +37,10 @@ namespace HatchlingNet
 
         public void OpenMessage(byte[] buffer, int offset, int transferred)
         {
-            this.messageTranslator.Translate(buffer, offset, transferred, CompleteMessage);
+            messageTranslator.Translate(buffer, offset, transferred, this);
         }
 
-        void CompleteMessage(byte[] buffer)//프로그램을 실행시킨 피어에게 수신패킷이 완성됬음을 알린다
+        public void CompleteMessage(byte[] buffer)//프로그램을 실행시킨 피어에게 수신패킷이 완성됬음을 알린다
         {                               //피어는 메인에서 결정됨
             Console.WriteLine("메세지완성!");
 
