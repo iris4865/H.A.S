@@ -11,7 +11,7 @@ namespace HatchlingNet
     public class Listener
     {
         NetworkService networkService;
-        List<UserToken> userList;
+        List<UserToken> tokenList;
 
         SocketAsyncEventArgs acceptArgs;//비동기 Accept를 위한 객체;
         Socket listenSocket;           //클라이언트의 접속을 처리할 소켓
@@ -31,7 +31,7 @@ namespace HatchlingNet
         public Listener(NetworkService networkService)
         {
             this.networkService = networkService;
-            userList = new List<UserToken>();
+            tokenList = new List<UserToken>();
             this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
         }
 
@@ -127,7 +127,7 @@ namespace HatchlingNet
                 lock (userToken)
                 {
                     userToken.callbackBroadcast = CallBroadCast;
-                    userList.Add(userToken);
+                    tokenList.Add(userToken);
                 }
 
                 //if (this.CallbackNewclient != null)//각 리스너는 userList를 들고있고 dll을 포함한 프로젝트의 main에서
@@ -190,17 +190,17 @@ namespace HatchlingNet
 
         public void AddUser(UserToken user)
         {
-            lock (userList)
+            lock (tokenList)
             {
-                userList.Add(user);
+                tokenList.Add(user);
             }
         }
 
         public void RemoveUser(UserToken user)
         {
-            lock (userList)
+            lock (tokenList)
             {
-                userList.Remove(user);
+                tokenList.Remove(user);
             }
         }
 
@@ -208,7 +208,7 @@ namespace HatchlingNet
         {
 //            iterator iter = userList.GetEnumerator(UserToken);
 
-            foreach (UserToken user in userList)
+            foreach (UserToken user in tokenList)
             {
                 user.Send(msg);
             }
