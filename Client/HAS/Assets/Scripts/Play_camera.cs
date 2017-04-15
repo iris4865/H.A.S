@@ -29,12 +29,10 @@ public class Play_camera : MonoBehaviour {
     void turn()
     {
         X = Input.GetAxis("Mouse Y");
-        print("1"+X);
         if (transform.rotation.eulerAngles.x - X <= 40f || transform.rotation.eulerAngles.x - X >= 320f)
         {
             V3 = new Vector3(-X, 0, 0);
             transform.Rotate(V3 * speed);
-            print("2" + (transform.rotation.eulerAngles.x - X));
         }
     }
 }

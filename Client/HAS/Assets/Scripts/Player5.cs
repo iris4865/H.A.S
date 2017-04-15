@@ -8,12 +8,15 @@ public class Player5 : MonoBehaviour
     Vector3 addPosition;
     Vector3 V3;
 
+    public GameObject can;
+
     float speed = 2.0f;
 
     // Use this for initialization
     void Awake()
     {
         ani = GetComponentInChildren<Animator>();
+        can.SetActive(false);
     }
 
     // Update is called once per frame
@@ -26,6 +29,35 @@ public class Player5 : MonoBehaviour
     {
         run();
         turn();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("1");
+        /*if(other.gameObject.name == "item")
+        {
+            Debug.Log("2");
+            can.SetActive(true);
+        }*/
+        if (other.gameObject.tag == "item1")
+        {
+            Debug.Log("2");
+            can.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        can.SetActive(false);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(Input.GetKey(KeyCode.E) == true)
+        {
+            Destroy(other.gameObject);
+            can.SetActive(false);
+        }
     }
 
     void AnimationUpdate()
