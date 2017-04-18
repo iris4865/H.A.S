@@ -14,8 +14,7 @@ public class game_login_click : MonoBehaviour {
     string password_s;
 
     void Start () {
-        id = GetComponent<InputField>();
-        password = GetComponent<InputField>();
+        password.contentType = InputField.ContentType.Password;
     }
 	
 	void Update () {
