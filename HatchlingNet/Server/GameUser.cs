@@ -4,10 +4,12 @@ using System;
 
 namespace Server
 {
-    class GameUser : IPeer
+    public class GameUser : IPeer
     {
         UserToken userToken;
         public MySQLConnecter mysql;
+        public string userID { get; set; }
+
 
         public GameUser(UserToken userToken)
         {
@@ -98,7 +100,12 @@ namespace Server
                         if (isUser == true)
                         {
                             Packet loginResult = PacketBufferManager.Pop((short)PROTOCOL.LoginAck, (short)SEND_TYPE.Single);
+                            loginResult.Push(id);
                             Send(loginResult);
+
+                            //                            userID = new string(id);
+                            userID = id;
+
                         }
                         else
                         {
@@ -134,7 +141,7 @@ namespace Server
                     break;
 
                 case SEND_TYPE.BroadcastWithoutMe:
-
+                    userToken.callbackBroadcast(msg, userToken.tokenID);
                     break;
 
                 case SEND_TYPE.BroadcastWithMe:
@@ -153,7 +160,7 @@ namespace Server
 
         public void Destroy()
         {
-            HatchlingNet.MainServer.RemoveUser(this);
+            UserList.RemoveUser(this);
         }
 
         public void Disconnect()

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 
 namespace HatchlingNet
 {
@@ -11,6 +9,7 @@ namespace HatchlingNet
         public Socket socket;
         public SocketAsyncEventArgs receiveEventArgs;
         public SocketAsyncEventArgs sendEventArgs;
+        public int tokenID { get; set; }
 
         MessageTranslator messageTranslator;
 
@@ -21,8 +20,13 @@ namespace HatchlingNet
         Queue<Packet> sendingQueue;
         private object csSendingQueue;
 
-        public delegate void BradcastHandler(Packet msg);
-        public BradcastHandler callbackBroadcast { get; set; }
+        public delegate void BroadcastHandler(Packet msg, int withOut = -1);
+        public BroadcastHandler callbackBroadcast { get; set; }
+
+        public delegate void SendToHandler(int tokenID, Packet msg);
+        public SendToHandler callbackSendTo { get; set; }
+
+
 
         public UserToken()
         {
@@ -39,10 +43,10 @@ namespace HatchlingNet
 
         public void OpenMessage(byte[] buffer, int offset, int transferred)
         {
-            this.messageTranslator.Translate(buffer, offset, transferred, CompleteMessage);
+            messageTranslator.Translate(buffer, offset, transferred, this);
         }
 
-        void CompleteMessage(byte[] buffer)//프로그램을 실행시킨 피어에게 수신패킷이 완성됬음을 알린다
+        public void CompleteMessage(byte[] buffer)//프로그램을 실행시킨 피어에게 수신패킷이 완성됬음을 알린다
         {                               //피어는 메인에서 결정됨
             Console.WriteLine("메세지완성!");
 
@@ -90,7 +94,7 @@ namespace HatchlingNet
 
                 Array.Copy(msg.buffer, 0, this.sendEventArgs.Buffer, this.sendEventArgs.Offset, msg.position);
 
-                bool pending = this.socket.SendAsync(this.sendEventArgs);
+                bool pending = this.socket.SendAsync(this.sendEventArgs);//전송!
                 if (!pending)
                 {
                     ProcessSend(this.sendEventArgs);

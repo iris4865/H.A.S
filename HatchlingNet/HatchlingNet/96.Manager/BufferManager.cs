@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Text;
 
 //https://msdn.microsoft.com/ko-kr/library/bb517542(v=vs.100).aspx
 
@@ -39,17 +36,15 @@ namespace HatchlingNet
             buffer = new byte[numBytes];
         }
 
-        // Assigns a buffer from the buffer pool to the 
+        // Assigns a buffer from the buffer pool to the
         // specified SocketAsyncEventArgs object
         //
         // <returns>true if the buffer was successfully set, else false</returns>
         public bool SetBuffer(SocketAsyncEventArgs args)
         {
-
             if (freeIndexPool.Count > 0)
             {
                 args.SetBuffer(buffer, freeIndexPool.Pop(), bufferSize);
-                //args.SetBuffer(
             }
             else
             {
@@ -62,14 +57,12 @@ namespace HatchlingNet
             return true;
         }
 
-        // Removes the buffer from a SocketAsyncEventArg object.  
+        // Removes the buffer from a SocketAsyncEventArg object.
         // This frees the buffer back to the buffer pool
         public void FreeBuffer(SocketAsyncEventArgs args)
         {
             freeIndexPool.Push(args.Offset);
             args.SetBuffer(null, 0, 0);
         }
-
     }
-
 }

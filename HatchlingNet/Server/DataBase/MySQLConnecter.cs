@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 
 namespace DataBase
 {
-    partial class MySQLConnecter
+    public partial class MySQLConnecter
     {
         MySQLAdapter mySQL;
 

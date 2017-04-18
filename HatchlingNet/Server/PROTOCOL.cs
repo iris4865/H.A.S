@@ -23,4 +23,11 @@ namespace HatchlingNet
         BroadcastWithMe
     }
 
+    public enum SERVER_TYPE : Int16
+    {
+
+
+    }
+
+
 }

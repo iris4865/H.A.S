@@ -11,7 +11,8 @@ namespace HatchlingNet
     public class Listener
     {
         NetworkService networkService;
-        List<UserToken> userList;
+        //        List<UserToken> tokenList;
+        Dictionary<int, UserToken> tokenList;
 
         SocketAsyncEventArgs acceptArgs;//비동기 Accept를 위한 객체;
         Socket listenSocket;           //클라이언트의 접속을 처리할 소켓
@@ -26,12 +27,14 @@ namespace HatchlingNet
 
         int maxConnection;
         int connectionCount;
+        int assignIDToUser;
         int bufferSize;
 
         public Listener(NetworkService networkService)
         {
+            assignIDToUser = 0;
             this.networkService = networkService;
-            userList = new List<UserToken>();
+            tokenList = new Dictionary<int, UserToken>();
             this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
         }
 
@@ -122,12 +125,14 @@ namespace HatchlingNet
                 userToken.socket = clientSocket;
                 userToken.sendEventArgs = sendArgs;
                 userToken.receiveEventArgs = receiveArgs;
-
+                userToken.tokenID = assignIDToUser++;
+                userToken.callbackBroadcast = CallBroadCast;
+                userToken.callbackSendTo = CallSendTo;
 
                 lock (userToken)
                 {
-                    userToken.callbackBroadcast = CallBroadCast;
-                    userList.Add(userToken);
+//                    tokenList.Add(userToken);
+                    tokenList.Add(userToken.tokenID, userToken);
                 }
 
                 //if (this.CallbackNewclient != null)//각 리스너는 userList를 들고있고 dll을 포함한 프로젝트의 main에서
@@ -188,30 +193,44 @@ namespace HatchlingNet
         //    }
         //}
 
-        public void AddUser(UserToken user)
+        //public void AddUser(UserToken user)
+        //{
+        //    lock (tokenList)
+        //    {
+        //        tokenList.Add(user);
+        //    }
+        //}
+
+        //public void RemoveUser(UserToken user)
+        //{
+        //    lock (tokenList)
+        //    {
+        //        tokenList.Remove(user);
+        //    }
+        //}
+
+        public void CallBroadCast(Packet msg, int withOut = -1)
         {
-            lock (userList)
+            if (withOut != -1)
             {
-                userList.Add(user);
+                foreach (KeyValuePair<int, UserToken> user in tokenList)
+                {
+                    user.Value.Send(msg);
+                }
+            }
+            else
+            {
+                foreach (KeyValuePair<int, UserToken> user in tokenList )
+                {
+                    if(withOut != user.Key)
+                        user.Value.Send(msg);
+                }
             }
         }
 
-        public void RemoveUser(UserToken user)
+        public void CallSendTo(int tokenID, Packet msg)
         {
-            lock (userList)
-            {
-                userList.Remove(user);
-            }
-        }
-
-        public void CallBroadCast(Packet msg)
-        {
-//            iterator iter = userList.GetEnumerator(UserToken);
-
-            foreach (UserToken user in userList)
-            {
-                user.Send(msg);
-            }
+            tokenList[tokenID].Send(msg);
         }
 
         //public void CloseClientSocket(UserToken user)
