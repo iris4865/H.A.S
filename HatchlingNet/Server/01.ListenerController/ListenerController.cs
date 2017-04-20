@@ -18,10 +18,6 @@ namespace Server
         readonly int preAllocCount = 2;
 
 
-        public ListenerController()
-        {
-
-        }
 
         public void Initialize()
         {
@@ -68,7 +64,6 @@ namespace Server
 
             return args;
         }
-
 
         public void Listen(string host, int port, int backlog)
         {
