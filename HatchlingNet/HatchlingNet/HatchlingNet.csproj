@@ -51,20 +51,21 @@
   <ItemGroup>
     <Compile Include="98.Header\MyStruct.cs" />
     <Compile Include="98.Header\Macro.cs" />
-    <Compile Include="02.Client\Connector.cs" />
+    <Compile Include="02.Client\Connector\Connector.cs" />
     <Compile Include="97.Interface\IPeer.cs" />
     <Compile Include="98.Header\Define.cs" />
-    <Compile Include="95.Object\MessageTranslator.cs" />
-    <Compile Include="95.Object\Packet.cs" />
-    <Compile Include="96.Manager\PacketBufferManager.cs" />
-    <Compile Include="95.Object\UserToken.cs" />
-    <Compile Include="96.Manager\BufferManager.cs" />
-    <Compile Include="00.System\NetworkService.cs" />
+    <Compile Include="95.Object\Packet\MessageTranslator\MessageTranslator.cs" />
+    <Compile Include="95.Object\Packet\Packet.cs" />
+    <Compile Include="96.Manager\PacketBufferManager\PacketBufferManager.cs" />
+    <Compile Include="95.Object\UserToken\UserToken.cs" />
+    <Compile Include="96.Manager\BufferManager\BufferManager.cs" />
+    <Compile Include="00.System\NetworkService\NetworkService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="96.Manager\SocketAsyncEventArgsPool.cs" />
+    <Compile Include="96.Manager\SocketAsyncEventArgsPool\SocketAsyncEventArgsPool.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="99.Etc\" />
