@@ -17,14 +17,13 @@ namespace Server
         int bufferSize;
         readonly int preAllocCount = 2;
 
-        public delegate void SessionHandler(Socket socket, UserToken token);
-        public SessionHandler CallbackSessionCreate { get; set; }
 
         public ListenerController()
         {
+
         }
 
-        public void Initialize()//서버에서만 호출...클라에선 안호출...
+        public void Initialize()
         {
             maxConnection = 10000;
             bufferSize = 1024;
@@ -35,49 +34,55 @@ namespace Server
             buffer_manager = new BufferManager(maxConnection * bufferSize * preAllocCount, bufferSize);
             buffer_manager.InitBuffer();
 
-            SocketAsyncEventArgs arg;
-
+            //Pre-allocate a set of reusable SocketAsyncEventArgs
             for (int i = 0; i < this.maxConnection; ++i)
             {
                 UserToken token = new UserToken();
-                //                token.callbackBroadcast = Call
-                //receive pool
-                {
-                    //Pre-allocate a set of reusable SocketAsyncEventArgs
-                    arg = new SocketAsyncEventArgs();
-                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
-                    arg.UserToken = token;
 
-                    this.buffer_manager.SetBuffer(arg);
-
-                    this.receiveEventArgsPool.Push(arg);
-                }
-
-                //send pool
-                {
-                    //Pre-allocate a set of reusable SocketAsyncEventArgs
-                    arg = new SocketAsyncEventArgs();
-                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(CallSendComplete);
-                    arg.UserToken = token;
-
-                    this.buffer_manager.SetBuffer(arg);
-
-                    this.sendEventArgsPool.Push(arg);
-                }
+                PushReceiveEventArgsPool(token);
+                PushSendEventArgsPool(token);
             }
         }
+
+        //receive pool
+        private void PushReceiveEventArgsPool(UserToken token)
+        {
+            SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete));
+            receiveEventArgsPool.Push(args);
+        }
+
+        //send pool
+        private void PushSendEventArgsPool(UserToken token)
+        {
+            SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallSendComplete));
+            receiveEventArgsPool.Push(args);
+        }
+
+        private SocketAsyncEventArgs PreAllocateSocketAsyncEventArgs(UserToken token, EventHandler<SocketAsyncEventArgs> handler)
+        {
+            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+            args.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
+            args.UserToken = token;
+
+            buffer_manager.SetBuffer(args);
+
+            return args;
+        }
+
 
         public void Listen(string host, int port, int backlog)
         {
             clientListener = new Listener(this, receiveEventArgsPool, sendEventArgsPool);
 
-            clientListener.receiveBeginTrigger = BeginReceive;
+            clientListener.receiveBeginTrigger = service.BeginReceive;
 
             clientListener.Start(host, port, backlog);
         }
 
         public override void CloseClientSocket(UserToken token)
         {
+            token.OnRemove();
+
             receiveEventArgsPool.Push(token.receiveEventArgs);
             sendEventArgsPool.Push(token.sendEventArgs);
         }

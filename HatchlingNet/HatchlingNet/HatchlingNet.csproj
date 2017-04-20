@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="98.Header\MyStruct.cs" />
     <Compile Include="98.Header\Macro.cs" />
-    <Compile Include="02.Client\Connector\Connector.cs" />
     <Compile Include="97.Interface\IPeer.cs" />
     <Compile Include="98.Header\Define.cs" />
     <Compile Include="95.Object\Packet\MessageTranslator\MessageTranslator.cs" />

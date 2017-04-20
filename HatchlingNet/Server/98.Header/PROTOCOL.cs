@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Server
+namespace Header
 {
     public enum PROTOCOL : Int16
     {

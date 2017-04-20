@@ -1,105 +1,32 @@
 ﻿using System;
 using System.Net.Sockets;
+using HatchlingNet;
 
 namespace HatchlingClient
 {
-    public class NetworkClient
+    public class NetworkClient : NetworkService
     {
-        
-        
-
         public void ConnectProcess(Socket clientSocket, UserToken token)//클라에서 Initialize대신 사용
         {
-            SocketAsyncEventArgs receiveEventArg = new SocketAsyncEventArgs();
-            receiveEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
-            receiveEventArg.UserToken = token;
-            receiveEventArg.SetBuffer(new Byte[1204], 0, 1024);
-
-            SocketAsyncEventArgs sendEventArg = new SocketAsyncEventArgs();
-            sendEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CallSendComplete);
-            sendEventArg.UserToken = token;
-            sendEventArg.SetBuffer(new Byte[1024], 0, 1024);
-
+            SocketAsyncEventArgs receiveEventArg = GetEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete));
+            SocketAsyncEventArgs sendEventArg = GetEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallSendComplete));
 
             BeginReceive(clientSocket, receiveEventArg, sendEventArg);
         }
-        
-        public void BeginReceive(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
+
+        private SocketAsyncEventArgs GetEventArgs(UserToken token, EventHandler<SocketAsyncEventArgs> handler)
         {
-            UserToken token = receiveArgs.UserToken as UserToken;
-            token.receiveEventArgs = receiveArgs;
-            token.sendEventArgs = sendArgs;
+            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+            args.Completed += handler;
+            args.UserToken = token;
+            args.SetBuffer(new Byte[1204], 0, 1024);
 
-            token.socket = clientSocket;
-
-            bool pending = clientSocket.ReceiveAsync(receiveArgs);
-            if (!pending)
-            {
-                Console.WriteLine("비긴 리시브");
-                ProcessReceive(receiveArgs);
-            }
+            return args;
         }
 
-        public void CallReceiveComplete(object sender, SocketAsyncEventArgs receiveArgs)
-        {
-            if (receiveArgs.LastOperation == SocketAsyncOperation.Receive)
-            {
-                ProcessReceive(receiveArgs);
-                Console.WriteLine("콜백 리시브컴플리트!");
-                return;
-            }
-            else
-            {
-                Console.WriteLine("콜백 리시브컴플리트 실패!");
-            }
-        }
-
-        public void ProcessReceive(SocketAsyncEventArgs receiveArgs)
-        {
-            UserToken token = receiveArgs.UserToken as UserToken;
-
-            if (receiveArgs.BytesTransferred > 0)
-            {
-                //e.Buffer : 클라로부터 수신된 데이터, e.offset : 버퍼의 포지션, e.ByesTransferred : 이번에 수신된 바이트의 수
-                token.OpenMessage(receiveArgs.Buffer, receiveArgs.Offset, receiveArgs.BytesTransferred);
-
-                Console.WriteLine("대기");
-                bool pending = token.socket.ReceiveAsync(receiveArgs);
-                if (!pending)
-                {
-                    ProcessReceive(receiveArgs);
-                }//비동기로 한번이라도 처리되는 순간 함수 나가게 되니 스택에 ProcessReceive가 계속 쌓이는건 아닌지에 대한 걱정은 안해도 된다.
-
-                Console.WriteLine("지나감");
-
-            }
-            else
-            {
-                Console.WriteLine(string.Format("error {0}, transferred {1}", receiveArgs.SocketError, receiveArgs.BytesTransferred));
-                CloseClientSocket(token);
-            }
-        }
-
-        public void CloseClientSocket(UserToken token)
+        public override void CloseClientSocket(UserToken token)
         {
             token.OnRemove();
-
-            if (this.receiveEventArgsPool != null)
-            {
-                this.receiveEventArgsPool.Push(token.receiveEventArgs);
-            }
-
-            if (this.sendEventArgsPool != null)
-            {
-                this.sendEventArgsPool.Push(token.sendEventArgs);
-            }
-        }
-
-        public void CallSendComplete(object sender, SocketAsyncEventArgs sendArgs)
-        {
-            UserToken token = sendArgs.UserToken as UserToken;
-
-            token.ProcessSend(sendArgs);
         }
     }
 }

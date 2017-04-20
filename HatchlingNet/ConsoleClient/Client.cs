@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Threading;
 
 using HatchlingNet;
+using HatchlingClient;
 
 namespace client
 {
     public class Client
     {
         static List<IPeer> gameServer = new List<IPeer>();
-        static NetworkService service;
+        static NetworkClient service;
 
         int index;
 
@@ -18,7 +19,7 @@ namespace client
         {
             this.index = i;
             PacketBufferManager.Initialize(2000);
-            service = new NetworkService();
+            service = new NetworkClient();
 
             Connector connector = new Connector(service);
             connector.callbackConnect += CallConnectGameserver;
