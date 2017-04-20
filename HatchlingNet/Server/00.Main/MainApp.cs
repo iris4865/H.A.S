@@ -5,17 +5,17 @@ using System;
 
 namespace Server
 {
-    class Server
+    class MainApp
     {
-        static NetworkServer networkService;
+        static ListenerController networkService;
         static MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
 
         static void Main(string[] args)
         {
-            new Server().Initialize();
+            new MainApp().Initialize();
             Console.WriteLine("Server Start");
 
-            new Server().Update();
+            new MainApp().Update();
         }
 
         public void Initialize()
@@ -28,7 +28,7 @@ namespace Server
 
         private void InitNeworkService()
         {
-            networkService = new NetworkServer();
+            networkService = new ListenerController();
             networkService.Initialize();
 
             networkService.CallbackSessionCreate = UserList.CallSessionCreate;

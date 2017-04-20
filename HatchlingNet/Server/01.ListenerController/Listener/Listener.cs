@@ -6,11 +6,11 @@ using System.Threading;
 
 using HatchlingNet;
 
-namespace Network
+namespace Server
 {
     public class Listener
     {
-        NetworkServer networkService;
+        ListenerController networkService;
         //        List<UserToken> tokenList;
         Dictionary<int, UserToken> tokenList;
 
@@ -30,7 +30,7 @@ namespace Network
         int assignIDToUser;
         int bufferSize;
 
-        public Listener(NetworkServer networkService)
+        public Listener(ListenerController networkService)
         {
             assignIDToUser = 0;
             this.networkService = networkService;

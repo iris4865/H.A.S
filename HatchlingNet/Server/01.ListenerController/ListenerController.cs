@@ -2,11 +2,11 @@
 using System;
 using System.Net.Sockets;
 
-namespace Network
+namespace Server
 {
-    public class NetworkServer : NetworkService
+    public class ListenerController : NetworkService
     {
-        NetworkService service;
+//        NetworkService service;
         Listener clientListener;
 
         public SocketAsyncEventArgsPool receiveEventArgsPool;//메시지 수신객체, 풀링해서 사용예정
@@ -21,9 +21,9 @@ namespace Network
         public delegate void SessionHandler(Socket socket, UserToken token);
         public SessionHandler CallbackSessionCreate { get; set; }
 
-        public NetworkServer()
+        public ListenerController()
         {
-            service = new NetworkService();
+//            service = new NetworkService();
         }
 
         public void Initialize()//서버에서만 호출...클라에선 안호출...
@@ -47,7 +47,7 @@ namespace Network
                 {
                     //Pre-allocate a set of reusable SocketAsyncEventArgs
                     arg = new SocketAsyncEventArgs();
-                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(service.CallReceiveComplete);
+                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
                     arg.UserToken = token;
 
                     this.buffer_manager.SetBuffer(arg);
@@ -59,7 +59,7 @@ namespace Network
                 {
                     //Pre-allocate a set of reusable SocketAsyncEventArgs
                     arg = new SocketAsyncEventArgs();
-                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(service.CallSendComplete);
+                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(CallSendComplete);
                     arg.UserToken = token;
 
                     this.buffer_manager.SetBuffer(arg);
