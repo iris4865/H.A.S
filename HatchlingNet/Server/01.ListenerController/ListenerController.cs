@@ -31,6 +31,7 @@ namespace Network
             buffer_manager = new BufferManager(maxConnection * bufferSize * preAllocCount, bufferSize);
             buffer_manager.InitBuffer();
 
+            //Pre-allocate a set of reusable SocketAsyncEventArgs
             for (int i = 0; i < this.maxConnection; ++i)
             {
                 UserToken token = new UserToken();
@@ -41,7 +42,6 @@ namespace Network
         }
 
         //receive pool
-        //Pre-allocate a set of reusable SocketAsyncEventArgs
         private void PushReceiveEventArgsPool(UserToken token)
         {
             SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete));
@@ -49,7 +49,6 @@ namespace Network
         }
 
         //send pool
-        //Pre-allocate a set of reusable SocketAsyncEventArgs
         private void PushSendEventArgsPool(UserToken token)
         {
             SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallSendComplete));
