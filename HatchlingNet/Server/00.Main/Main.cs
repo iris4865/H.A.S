@@ -30,8 +30,6 @@ namespace Server
         {
             networkService = new ListenerController();
             networkService.Initialize();
-
-            networkService.CallbackSessionCreate = UserList.CallSessionCreate;
         }
 
         public void Update()

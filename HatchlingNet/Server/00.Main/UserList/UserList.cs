@@ -19,7 +19,7 @@ namespace Server
             return instance;
         }
 
-        public static void CallSessionCreate(Socket socket, UserToken token)
+        public static void SessionCreate(Socket socket, UserToken token)
         {
             GameUser user = new GameUser(token);
             //user.mysql = mysql;

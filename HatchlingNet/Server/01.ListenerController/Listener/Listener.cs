@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Server;
 
 using HatchlingNet;
 
@@ -141,11 +142,7 @@ namespace Network
 
                 //}
 
-                if (networkService.CallbackSessionCreate != null)
-                {
-                    networkService.CallbackSessionCreate(clientSocket, userToken);
-                }
-
+                UserList.SessionCreate(clientSocket, userToken);
 
                 networkService.BeginReceive(clientSocket, receiveArgs, sendArgs);
 

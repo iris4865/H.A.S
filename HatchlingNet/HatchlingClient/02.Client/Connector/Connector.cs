@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 using System.Net.Sockets;
-            
-namespace HatchlingNet
+using HatchlingNet;
+
+namespace HatchlingClient
 {
     public class Connector
     {
-        private NetworkService networkService;
+        private NetworkClient networkService;
         private Socket client;
 
         public delegate void ConnectHandler(UserToken token);
         public ConnectHandler callbackConnect { get; set; }//클라 main로직에서 직접적으로 처리되야하는것들 정의한 함수 호출할 핸들러
 
 
-        public Connector(NetworkService networkService)
+        public Connector(NetworkClient networkService)
         {
             this.networkService = networkService;
                 
@@ -45,7 +42,7 @@ namespace HatchlingNet
         {
             UserToken token = new UserToken();
 //            token.sendEventArgs = 
-            this.networkService.Initialize(this.client, token);
+            this.networkService.ConnectProcess(this.client, token);
 
             if (this.callbackConnect != null)
             {

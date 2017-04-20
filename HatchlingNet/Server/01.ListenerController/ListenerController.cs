@@ -17,9 +17,6 @@ namespace Network
         int bufferSize;
         readonly int preAllocCount = 2;
 
-        public delegate void SessionHandler(Socket socket, UserToken token);
-        public SessionHandler CallbackSessionCreate { get; set; }
-
         public void Initialize()
         {
             maxConnection = 10000;

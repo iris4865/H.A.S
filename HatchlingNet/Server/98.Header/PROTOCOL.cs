@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Network
+namespace Header
 {
     public enum PROTOCOL : Int16
     {
