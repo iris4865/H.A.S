@@ -4,9 +4,8 @@ using System.Net.Sockets;
 
 namespace Network
 {
-    public class NetworkServer : NetworkService
+    public class ListenerController
     {
-        NetworkService service;
         Listener clientListener;
 
         public SocketAsyncEventArgsPool receiveEventArgsPool;//메시지 수신객체, 풀링해서 사용예정
@@ -20,13 +19,9 @@ namespace Network
 
         public delegate void SessionHandler(Socket socket, UserToken token);
         public SessionHandler CallbackSessionCreate { get; set; }
+        
 
-        public NetworkServer()
-        {
-            service = new NetworkService();
-        }
-
-        public void Initialize()//서버에서만 호출...클라에선 안호출...
+        public void Initialize()
         {
             maxConnection = 10000;
             bufferSize = 1024;
@@ -47,7 +42,7 @@ namespace Network
                 {
                     //Pre-allocate a set of reusable SocketAsyncEventArgs
                     arg = new SocketAsyncEventArgs();
-                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(service.CallReceiveComplete);
+                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
                     arg.UserToken = token;
 
                     this.buffer_manager.SetBuffer(arg);
@@ -59,7 +54,7 @@ namespace Network
                 {
                     //Pre-allocate a set of reusable SocketAsyncEventArgs
                     arg = new SocketAsyncEventArgs();
-                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(service.CallSendComplete);
+                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(CallSendComplete);
                     arg.UserToken = token;
 
                     this.buffer_manager.SetBuffer(arg);
@@ -69,19 +64,109 @@ namespace Network
             }
         }
 
+        public void ConnectProcess(Socket clientSocket, UserToken token)//클라에서 Initialize대신 사용
+        {
+            SocketAsyncEventArgs receiveEventArg = new SocketAsyncEventArgs();
+            receiveEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
+            receiveEventArg.UserToken = token;
+            receiveEventArg.SetBuffer(new Byte[1204], 0, 1024);
+
+            SocketAsyncEventArgs sendEventArg = new SocketAsyncEventArgs();
+            sendEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CallSendComplete);
+            sendEventArg.UserToken = token;
+            sendEventArg.SetBuffer(new Byte[1024], 0, 1024);
+
+
+            BeginReceive(clientSocket, receiveEventArg, sendEventArg);
+        }
+
+
+
+
         public void Listen(string host, int port, int backlog)
         {
             clientListener = new Listener(this);
 
-            clientListener.receiveBeginTrigger = service.BeginReceive;
-
             clientListener.Start(host, port, backlog);
         }
 
-        public override void CloseClientSocket(UserToken token)
+        public void BeginReceive(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
         {
-            receiveEventArgsPool.Push(token.receiveEventArgs);
-            sendEventArgsPool.Push(token.sendEventArgs);
+            UserToken token = receiveArgs.UserToken as UserToken;
+            token.receiveEventArgs = receiveArgs;
+            token.sendEventArgs = sendArgs;
+
+            token.socket = clientSocket;
+
+            bool pending = clientSocket.ReceiveAsync(receiveArgs);
+            if (!pending)
+            {
+                Console.WriteLine("비긴 리시브");
+                ProcessReceive(receiveArgs);
+            }
         }
+
+        public void CallReceiveComplete(object sender, SocketAsyncEventArgs receiveArgs)
+        {
+            if (receiveArgs.LastOperation == SocketAsyncOperation.Receive)
+            {
+                ProcessReceive(receiveArgs);
+                Console.WriteLine("콜백 리시브컴플리트!");
+                return;
+            }
+            else
+            {
+                Console.WriteLine("콜백 리시브컴플리트 실패!");
+            }
+        }
+
+        public void ProcessReceive(SocketAsyncEventArgs receiveArgs)
+        {
+            UserToken token = receiveArgs.UserToken as UserToken;
+
+            if (receiveArgs.BytesTransferred > 0)
+            {
+                //e.Buffer : 클라로부터 수신된 데이터, e.offset : 버퍼의 포지션, e.ByesTransferred : 이번에 수신된 바이트의 수
+                token.OpenMessage(receiveArgs.Buffer, receiveArgs.Offset, receiveArgs.BytesTransferred);
+
+                Console.WriteLine("대기");
+                bool pending = token.socket.ReceiveAsync(receiveArgs);
+                if (!pending)
+                {
+                    ProcessReceive(receiveArgs);
+                }//비동기로 한번이라도 처리되는 순간 함수 나가게 되니 스택에 ProcessReceive가 계속 쌓이는건 아닌지에 대한 걱정은 안해도 된다.
+
+                Console.WriteLine("지나감");
+
+            }
+            else
+            {
+                Console.WriteLine(string.Format("error {0}, transferred {1}", receiveArgs.SocketError, receiveArgs.BytesTransferred));
+                CloseClientSocket(token);
+            }
+        }
+
+        public void CloseClientSocket(UserToken token)
+        {
+            token.OnRemove();
+
+            if (this.receiveEventArgsPool != null)
+            {
+                this.receiveEventArgsPool.Push(token.receiveEventArgs);
+            }
+
+            if (this.sendEventArgsPool != null)
+            {
+                this.sendEventArgsPool.Push(token.sendEventArgs);
+            }
+        }
+
+        public void CallSendComplete(object sender, SocketAsyncEventArgs sendArgs)
+        {
+            UserToken token = sendArgs.UserToken as UserToken;
+
+            token.ProcessSend(sendArgs);
+        }
+
     }
 }

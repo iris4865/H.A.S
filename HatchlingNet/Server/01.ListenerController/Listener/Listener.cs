@@ -10,7 +10,7 @@ namespace Network
 {
     public class Listener
     {
-        NetworkServer networkService;
+        ListenerController networkService;
         //        List<UserToken> tokenList;
         Dictionary<int, UserToken> tokenList;
 
@@ -21,16 +21,13 @@ namespace Network
 
         //public delegate void NewclientHandler(Socket clientSocket, Object token);
         //public NewclientHandler CallbackNewclient;
-
-        public delegate void ReceiveBeginHandler(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs);
-        public ReceiveBeginHandler receiveBeginTrigger;
-
+        
         int maxConnection;
         int connectionCount;
         int assignIDToUser;
         int bufferSize;
 
-        public Listener(NetworkServer networkService)
+        public Listener(ListenerController networkService)
         {
             assignIDToUser = 0;
             this.networkService = networkService;
@@ -150,7 +147,7 @@ namespace Network
                 }
 
 
-                receiveBeginTrigger(clientSocket, receiveArgs, sendArgs);
+                networkService.BeginReceive(clientSocket, receiveArgs, sendArgs);
 
 
                 //bool pending = clientSocket.ReceiveAsync(receiveArgs);//receiveArgs에는 complted콜백 등록 안해줬음...해줘야됨

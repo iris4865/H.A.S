@@ -7,7 +7,7 @@ namespace Server
 {
     class Server
     {
-        static NetworkServer networkService;
+        static ListenerController networkService;
         static MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
 
         static void Main(string[] args)
@@ -28,7 +28,7 @@ namespace Server
 
         private void InitNeworkService()
         {
-            networkService = new NetworkServer();
+            networkService = new ListenerController();
             networkService.Initialize();
 
             networkService.CallbackSessionCreate = UserList.CallSessionCreate;
