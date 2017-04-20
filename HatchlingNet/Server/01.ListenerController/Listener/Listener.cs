@@ -10,30 +10,30 @@ namespace Server
 {
     public class Listener
     {
-        ListenerController networkService;
-        //        List<UserToken> tokenList;
         Dictionary<int, UserToken> tokenList;
+        SocketAsyncEventArgsPool receiveEventArgsPool;//메시지 수신객체, 풀링해서 사용예정
+        SocketAsyncEventArgsPool sendEventArgsPool;//메시지 전송객체, 풀링해서 사용예정
 
         SocketAsyncEventArgs acceptArgs;//비동기 Accept를 위한 객체;
         Socket listenSocket;           //클라이언트의 접속을 처리할 소켓
 
         AutoResetEvent flowController;
 
-        //public delegate void NewclientHandler(Socket clientSocket, Object token);
-        //public NewclientHandler CallbackNewclient;
-
-        public delegate void ReceiveBeginHandler(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs);
-        public ReceiveBeginHandler receiveBeginTrigger;
-
         int maxConnection;
         int connectionCount;
         int assignIDToUser;
         int bufferSize;
 
-        public Listener(ListenerController networkService)
+        public delegate void ReceiveBeginHandler(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs);
+        public ReceiveBeginHandler receiveBeginTrigger;
+
+
+        public Listener(ListenerController networkService, SocketAsyncEventArgsPool receivePool, SocketAsyncEventArgsPool sendPool)
         {
             assignIDToUser = 0;
-            this.networkService = networkService;
+            this.receiveEventArgsPool = receivePool;
+            this.sendEventArgsPool = sendPool;
+
             tokenList = new Dictionary<int, UserToken>();
             this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
         }
@@ -59,9 +59,7 @@ namespace Server
 
             this.listenSocket.Bind(endpoint); //호스트의 정보 등록
             this.listenSocket.Listen(backlog); //받아들일 클라이언트 수 결정
-
-
-
+            
            
             this.acceptArgs.Completed += new EventHandler<SocketAsyncEventArgs>(AcceptComplete);
             //연결이 되었을경우 호출할 콜백함수의 핸들러를 Completed에 저장함...다만 연결이 되었는지에 대한 검사는 별도로 해야됨. 그게 바로 아래 코드
@@ -106,21 +104,11 @@ namespace Server
             {
                 Socket clientSocket = e.AcceptSocket;
 
-
-                //요 아래 이벤트풀 호출하는 부분에서 이벤트풀은 네트워크서비스 클래스에 있는데
-                //여기서 이런식으로 거슬러 올라가서 쓰는게 좋은걸까?
-                //네트워크 클래스에서 콜백함수를 정의해서 여기서 콜백함수를 호출하는게 맞는걸까?
-                //콜백함수 쓰면 구조가 너무 복잡해지는 느낌...
                 Interlocked.Increment(ref this.connectionCount);
-                SocketAsyncEventArgs receiveArgs = networkService.receiveEventArgsPool.Pop();
-                SocketAsyncEventArgs sendArgs = networkService.sendEventArgsPool.Pop();
+                SocketAsyncEventArgs receiveArgs = receiveEventArgsPool.Pop();
+                SocketAsyncEventArgs sendArgs = sendEventArgsPool.Pop();
 
                 UserToken userToken = receiveArgs.UserToken as UserToken;
-                //if (this.callbackSessionCreate != null)
-                //{
-                //    callbackSessionCreate(userToken);
-                //}
-
 
                 userToken.socket = clientSocket;
                 userToken.sendEventArgs = sendArgs;
@@ -131,35 +119,13 @@ namespace Server
 
                 lock (userToken)
                 {
-//                    tokenList.Add(userToken);
                     tokenList.Add(userToken.tokenID, userToken);
                 }
 
-                //if (this.CallbackNewclient != null)//각 리스너는 userList를 들고있고 dll을 포함한 프로젝트의 main에서
-                //                            //모든 리스너에 접속한 유저들의 리스트를 가지는데
-                //                            //해당 유저들을 등록할때 CallbackNewClient에서 수행
-                //                            //프로그램의 main에서 등록해서 사용
-                //{
-                //    this.CallbackNewclient(clientSocket, e.UserToken);
-
-                //}
-
-                if (networkService.CallbackSessionCreate != null)
-                {
-                    networkService.CallbackSessionCreate(clientSocket, userToken);
-                }
-
+                UserList.GetInstance.CallSessionCreate(clientSocket, userToken);
 
                 receiveBeginTrigger(clientSocket, receiveArgs, sendArgs);
 
-
-                //bool pending = clientSocket.ReceiveAsync(receiveArgs);//receiveArgs에는 complted콜백 등록 안해줬음...해줘야됨
-                //if (!pending)
-                //{
-                //    ProcessReceive(userToken.receiveEventArg);
-                //}
-
-                //BeginReceive(clientSocket, receiveArgs, sendArgs);
                 flowController.Set();
 
                 return;
@@ -169,45 +135,7 @@ namespace Server
                 Console.WriteLine("Failed to Accept client");
             }
         }
-
-
-        //public void ProcessReceive(SocketAsyncEventArgs receiveArgs)
-        //{
-        //    UserToken token = receiveArgs.UserToken as UserToken;
-
-        //    if (receiveArgs.BytesTransferred > 0 && receiveArgs.SocketError == SocketError.Success)
-        //    {
-        //        //e.Buffer : 클라로부터 수신된 데이터, e.offset : 버퍼의 포지션, e.ByesTransferred : 이번에 수신된 바이트의 수
-        //        token.OnReceive(receiveArgs.Buffer, receiveArgs.Offset, receiveArgs.BytesTransferred);
-
-        //        bool pending = token.socket.ReceiveAsync(receiveArgs);
-        //        if (!pending)                               
-        //        {
-        //            ProcessReceive(receiveArgs);
-        //        }//비동기로 한번이라도 처리되는 순간 함수 나가게 되니 스택에 ProcessReceive가 계속 쌓이는건 아닌지에 대한 걱정은 안해도 된다.
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine(string.Format("error {0}, transferred {1}", receiveArgs.SocketError, receiveArgs.BytesTransferred));
-        //        CloseClientSocket(token);
-        //    }
-        //}
-
-        //public void AddUser(UserToken user)
-        //{
-        //    lock (tokenList)
-        //    {
-        //        tokenList.Add(user);
-        //    }
-        //}
-
-        //public void RemoveUser(UserToken user)
-        //{
-        //    lock (tokenList)
-        //    {
-        //        tokenList.Remove(user);
-        //    }
-        //}
+        
 
         public void CallBroadCast(Packet msg, int withOut = -1)
         {
@@ -233,9 +161,5 @@ namespace Server
             tokenList[tokenID].Send(msg);
         }
 
-        //public void CloseClientSocket(UserToken user)
-        //{
-
-        //}
     }
 }

@@ -6,7 +6,6 @@ namespace Server
 {
     public class ListenerController : NetworkService
     {
-//        NetworkService service;
         Listener clientListener;
 
         public SocketAsyncEventArgsPool receiveEventArgsPool;//메시지 수신객체, 풀링해서 사용예정
@@ -23,7 +22,6 @@ namespace Server
 
         public ListenerController()
         {
-//            service = new NetworkService();
         }
 
         public void Initialize()//서버에서만 호출...클라에선 안호출...
@@ -71,9 +69,9 @@ namespace Server
 
         public void Listen(string host, int port, int backlog)
         {
-            clientListener = new Listener(this);
+            clientListener = new Listener(this, receiveEventArgsPool, sendEventArgsPool);
 
-            clientListener.receiveBeginTrigger = service.BeginReceive;
+            clientListener.receiveBeginTrigger = BeginReceive;
 
             clientListener.Start(host, port, backlog);
         }
