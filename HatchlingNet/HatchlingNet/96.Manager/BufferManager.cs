@@ -12,7 +12,7 @@ namespace HatchlingNet
     // fragmenting heap memory.
     // 
     // The operations exposed on the BufferManager class are not thread safe.
-    class BufferManager
+    public class BufferManager
     {
         int numBytes;                 // the total number of bytes controlled by the buffer pool
         byte[] buffer;                // the underlying byte array maintained by the Buffer Manager

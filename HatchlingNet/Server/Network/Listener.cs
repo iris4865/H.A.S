@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 
-namespace HatchlingNet
+using HatchlingNet;
+
+namespace Network
 {
     public class Listener
     {
-        NetworkService networkService;
+        NetworkServer networkService;
         //        List<UserToken> tokenList;
         Dictionary<int, UserToken> tokenList;
 
@@ -30,7 +30,7 @@ namespace HatchlingNet
         int assignIDToUser;
         int bufferSize;
 
-        public Listener(NetworkService networkService)
+        public Listener(NetworkServer networkService)
         {
             assignIDToUser = 0;
             this.networkService = networkService;

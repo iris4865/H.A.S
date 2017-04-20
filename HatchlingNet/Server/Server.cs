@@ -1,12 +1,13 @@
 ﻿using DataBase;
 using HatchlingNet;
+using Network;
 using System;
 
 namespace Server
 {
     class Server
     {
-        static NetworkService networkService;
+        static NetworkServer networkService;
         static MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
 
         static void Main(string[] args)
@@ -27,7 +28,7 @@ namespace Server
 
         private void InitNeworkService()
         {
-            networkService = new NetworkService();
+            networkService = new NetworkServer();
             networkService.Initialize();
 
             networkService.CallbackSessionCreate = UserList.CallSessionCreate;

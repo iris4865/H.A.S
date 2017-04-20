@@ -1,11 +1,29 @@
 ﻿using System;
 using System.Net.Sockets;
 
-
-namespace HatchlingNet
+namespace HatchlingClient
 {
-    public abstract class NetworkService
+    public class NetworkClient
     {
+        
+        
+
+        public void ConnectProcess(Socket clientSocket, UserToken token)//클라에서 Initialize대신 사용
+        {
+            SocketAsyncEventArgs receiveEventArg = new SocketAsyncEventArgs();
+            receiveEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
+            receiveEventArg.UserToken = token;
+            receiveEventArg.SetBuffer(new Byte[1204], 0, 1024);
+
+            SocketAsyncEventArgs sendEventArg = new SocketAsyncEventArgs();
+            sendEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CallSendComplete);
+            sendEventArg.UserToken = token;
+            sendEventArg.SetBuffer(new Byte[1024], 0, 1024);
+
+
+            BeginReceive(clientSocket, receiveEventArg, sendEventArg);
+        }
+        
         public void BeginReceive(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
         {
             UserToken token = receiveArgs.UserToken as UserToken;
@@ -40,7 +58,6 @@ namespace HatchlingNet
         {
             UserToken token = receiveArgs.UserToken as UserToken;
 
-            //close()가 수신되면 BytesTransferred is 0
             if (receiveArgs.BytesTransferred > 0)
             {
                 //e.Buffer : 클라로부터 수신된 데이터, e.offset : 버퍼의 포지션, e.ByesTransferred : 이번에 수신된 바이트의 수
@@ -63,7 +80,20 @@ namespace HatchlingNet
             }
         }
 
-        public abstract void CloseClientSocket(UserToken token);
+        public void CloseClientSocket(UserToken token)
+        {
+            token.OnRemove();
+
+            if (this.receiveEventArgsPool != null)
+            {
+                this.receiveEventArgsPool.Push(token.receiveEventArgs);
+            }
+
+            if (this.sendEventArgsPool != null)
+            {
+                this.sendEventArgsPool.Push(token.sendEventArgs);
+            }
+        }
 
         public void CallSendComplete(object sender, SocketAsyncEventArgs sendArgs)
         {
@@ -71,6 +101,5 @@ namespace HatchlingNet
 
             token.ProcessSend(sendArgs);
         }
-
     }
 }

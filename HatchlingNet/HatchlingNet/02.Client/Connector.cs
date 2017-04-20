@@ -45,7 +45,7 @@ namespace HatchlingNet
         {
             UserToken token = new UserToken();
 //            token.sendEventArgs = 
-            this.networkService.ConnectProcess(this.client, token);
+            this.networkService.Initialize(this.client, token);
 
             if (this.callbackConnect != null)
             {
