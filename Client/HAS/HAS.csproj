@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\Player3.cs" />
     <Compile Include="Assets\Scripts\Player4.cs" />
     <Compile Include="Assets\Scripts\Player5.cs" />
+    <Compile Include="Assets\Scripts\Spawn.cs" />
     <Compile Include="Assets\Scripts\game_join_click.cs" />
     <Compile Include="Assets\Scripts\game_login_click.cs" />
     <Compile Include="Assets\Scripts\game_title_click.cs" />
