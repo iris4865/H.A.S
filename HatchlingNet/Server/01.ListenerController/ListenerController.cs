@@ -19,7 +19,6 @@ namespace Network
 
         public delegate void SessionHandler(Socket socket, UserToken token);
         public SessionHandler CallbackSessionCreate { get; set; }
-        
 
         public void Initialize()
         {
@@ -32,56 +31,41 @@ namespace Network
             buffer_manager = new BufferManager(maxConnection * bufferSize * preAllocCount, bufferSize);
             buffer_manager.InitBuffer();
 
-            SocketAsyncEventArgs arg;
-
             for (int i = 0; i < this.maxConnection; ++i)
             {
                 UserToken token = new UserToken();
-                //                token.callbackBroadcast = Call
-                //receive pool
-                {
-                    //Pre-allocate a set of reusable SocketAsyncEventArgs
-                    arg = new SocketAsyncEventArgs();
-                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
-                    arg.UserToken = token;
 
-                    this.buffer_manager.SetBuffer(arg);
-
-                    this.receiveEventArgsPool.Push(arg);
-                }
-
-                //send pool
-                {
-                    //Pre-allocate a set of reusable SocketAsyncEventArgs
-                    arg = new SocketAsyncEventArgs();
-                    arg.Completed += new EventHandler<SocketAsyncEventArgs>(CallSendComplete);
-                    arg.UserToken = token;
-
-                    this.buffer_manager.SetBuffer(arg);
-
-                    this.sendEventArgsPool.Push(arg);
-                }
+                PushReceiveEventArgsPool(token);
+                PushSendEventArgsPool(token);
             }
         }
 
-        public void ConnectProcess(Socket clientSocket, UserToken token)//클라에서 Initialize대신 사용
+        //receive pool
+        //Pre-allocate a set of reusable SocketAsyncEventArgs
+        private void PushReceiveEventArgsPool(UserToken token)
         {
-            SocketAsyncEventArgs receiveEventArg = new SocketAsyncEventArgs();
-            receiveEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
-            receiveEventArg.UserToken = token;
-            receiveEventArg.SetBuffer(new Byte[1204], 0, 1024);
-
-            SocketAsyncEventArgs sendEventArg = new SocketAsyncEventArgs();
-            sendEventArg.Completed += new EventHandler<SocketAsyncEventArgs>(CallSendComplete);
-            sendEventArg.UserToken = token;
-            sendEventArg.SetBuffer(new Byte[1024], 0, 1024);
-
-
-            BeginReceive(clientSocket, receiveEventArg, sendEventArg);
+            SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete));
+            receiveEventArgsPool.Push(args);
         }
 
+        //send pool
+        //Pre-allocate a set of reusable SocketAsyncEventArgs
+        private void PushSendEventArgsPool(UserToken token)
+        {
+            SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallSendComplete));
+            receiveEventArgsPool.Push(args);
+        }
 
+        private SocketAsyncEventArgs PreAllocateSocketAsyncEventArgs(UserToken token, EventHandler<SocketAsyncEventArgs> handler)
+        {
+            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+            args.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
+            args.UserToken = token;
 
+            buffer_manager.SetBuffer(args);
+
+            return args;
+        }
 
         public void Listen(string host, int port, int backlog)
         {
