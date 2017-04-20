@@ -69,7 +69,7 @@ namespace Server
         {
             clientListener = new Listener(this, receiveEventArgsPool, sendEventArgsPool);
 
-            clientListener.receiveBeginTrigger = service.BeginReceive;
+            clientListener.receiveBeginTrigger = BeginReceive;
 
             clientListener.Start(host, port, backlog);
         }
