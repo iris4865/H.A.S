@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using HatchlingNet;
 
-namespace HatchlingClient
+namespace HatchlingNet
 {
     public class ConnectorController : NetworkService
     {
