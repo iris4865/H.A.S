@@ -40,8 +40,7 @@ namespace HatchlingNet
         {
             UserToken token = receiveArgs.UserToken as UserToken;
 
-            //close()가 수신되면 BytesTransferred is 0
-            if (receiveArgs.BytesTransferred > 0)
+            if (!IsArgsClosed(receiveArgs.BytesTransferred))
             {
                 //e.Buffer : 클라로부터 수신된 데이터, e.offset : 버퍼의 포지션, e.ByesTransferred : 이번에 수신된 바이트의 수
                 token.OpenMessage(receiveArgs.Buffer, receiveArgs.Offset, receiveArgs.BytesTransferred);
@@ -61,6 +60,14 @@ namespace HatchlingNet
                 Console.WriteLine(string.Format("error {0}, transferred {1}", receiveArgs.SocketError, receiveArgs.BytesTransferred));
                 CloseClientSocket(token);
             }
+        }
+        
+        private bool IsArgsClosed(int value)
+        {
+            if (value > 0)
+                return false;
+
+            return true;
         }
 
         public abstract void CloseClientSocket(UserToken token);

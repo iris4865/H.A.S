@@ -27,7 +27,6 @@ namespace Server
         public delegate void ReceiveBeginHandler(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs);
         public ReceiveBeginHandler receiveBeginTrigger;
 
-
         public Listener(ListenerController networkService, SocketAsyncEventArgsPool receivePool, SocketAsyncEventArgsPool sendPool)
         {
             assignIDToUser = 0;
@@ -37,7 +36,6 @@ namespace Server
             tokenList = new Dictionary<int, UserToken>();
             this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
         }
-
 
         public void Start(string host, int port, int backlog)//backlog : 대기큐의 크기
         {
