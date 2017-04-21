@@ -12,9 +12,16 @@ namespace Server
 
         static void Main(string[] args)
         {
-            new MainApp().Initialize();
+            /*
+            MainApp mainApp = new MainApp();
             Console.WriteLine("Server Start");
 
+            mainApp.Initialize();
+            mainApp.Update();
+            */
+
+            Console.WriteLine("Server Start");
+            new MainApp().Initialize();
             new MainApp().Update();
         }
 
@@ -26,20 +33,11 @@ namespace Server
 
             mainListener = new Listener(10000);
             mainListener.Initialize();
-            //InitNeworkService();
         }
-        /*
-        private void InitNeworkService()
-        {
-            listenerController = new ListenerController();
-            listenerController.Initialize();
-        }
-        */
 
         public void Update()
         {
             mainListener.Start("0.0.0.0", 7979, 1000);
-            //listenerController.Listen("0.0.0.0", 7979, 1000);
 
             while (true)
                 System.Threading.Thread.Sleep(10000);
