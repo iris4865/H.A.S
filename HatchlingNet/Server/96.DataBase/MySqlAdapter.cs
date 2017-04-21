@@ -4,7 +4,7 @@ using System.Data;
 
 namespace DataBase
 {
-    sealed class MySqlAdapter : IDisposable, IMySQLAdapter
+    sealed class MySqlAdapter : IDisposable, IMySqlAdapter
     {
         private static readonly Lazy<MySqlAdapter> instance = new Lazy<MySqlAdapter>(() => new MySqlAdapter());
         MySqlConnection connection;
@@ -14,10 +14,9 @@ namespace DataBase
             return instance.Value;
         }
 
-        public bool Connect(string remoteAddress, string Password)
+        public bool Connect(string connectionString)
         {
-            string connectArguments = $"Server={remoteAddress};Uid=root;Pwd={Password};";
-            connection = new MySqlConnection(connectArguments);
+            connection = new MySqlConnection(connectionString);
             
             try
             {

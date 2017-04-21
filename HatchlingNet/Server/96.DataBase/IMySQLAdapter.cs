@@ -2,9 +2,9 @@
 
 namespace DataBase
 {
-    interface IMySQLAdapter
+    public interface IMySqlAdapter
     {
-        bool Connect(string remoteAddress, string Password);
+        bool Connect(string connectionString);
         bool SendQueryNoData(string sqlQuery);
         DataSet SendQuery(string sqlQuery);
     }
