@@ -9,6 +9,25 @@ using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviour {
 
+    private static NetworkManager instance = null;
+    public static NetworkManager GetInstance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType(typeof(NetworkManager)) as NetworkManager;
+
+                if (instance == null)
+                {
+                    Debug.LogError("no active NetworkManager ");
+                }
+            }
+
+            return instance;
+        }
+    }
+
     HatchlingNetUnityService gameserver;
 
     void Awake()
@@ -78,8 +97,10 @@ public class NetworkManager : MonoBehaviour {
                     //다시입력하라고
                 }
                 break;
+
             case PROTOCOL.PositionAck:
                 break;
+
             default:
                 {
                     string text = msg.PopString();
