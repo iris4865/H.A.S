@@ -50,7 +50,7 @@ public class NetworkManager : MonoBehaviour {
         }
     }
 
-    void CallMessage(Packet msg)
+    void CallMessage(Packet msg)//클라이언트 수신부
     {
         PROTOCOL protocolType = (PROTOCOL)msg.PopProtocolType();
         SEND_TYPE sendType = (SEND_TYPE)msg.PopSendType();
@@ -78,8 +78,8 @@ public class NetworkManager : MonoBehaviour {
                     //다시입력하라고
                 }
                 break;
-
-
+            case PROTOCOL.PositionAck:
+                break;
             default:
                 {
                     string text = msg.PopString();

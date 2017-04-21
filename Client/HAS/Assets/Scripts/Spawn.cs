@@ -5,7 +5,6 @@ using UnityEngine;
 public class Spawn : MonoBehaviour {
 
     int size = 10;
-    public GameObject trigger_object;
     public GameObject[] spawn = new GameObject[10];    
     Vector3 posi;
     float range = 30.0f;

@@ -33,7 +33,7 @@ public class game_login_click : MonoBehaviour {
         }
 
         GameObject networkManager = GameObject.Find("networkManager");
-
+        /*
         if (networkManager != null)
         {
             //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.LoginReq);
@@ -45,6 +45,8 @@ public class game_login_click : MonoBehaviour {
         {
             SceneManager.LoadScene(3);
         }
+        */
+        SceneManager.LoadScene(3);
     }
     public void click_1()
     {

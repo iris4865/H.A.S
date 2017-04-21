@@ -8,6 +8,9 @@ public class Player5 : MonoBehaviour
     Vector3 addPosition;
     Vector3 V3;
 
+    //경찰인지 도둑인지 구별...해야한다.
+    int player_job; //1 or 2 = 도둑 or 경찰...
+    
     public GameObject can;
 
     float speed = 2.0f;
@@ -33,7 +36,6 @@ public class Player5 : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("1");
         /*if(other.gameObject.name == "item")
         {
             Debug.Log("2");
@@ -41,7 +43,6 @@ public class Player5 : MonoBehaviour
         }*/
         if (other.gameObject.tag == "item1")
         {
-            Debug.Log("2");
             can.SetActive(true);
         }
     }
@@ -100,6 +101,10 @@ public class Player5 : MonoBehaviour
             if (Input.GetKey(KeyCode.D) == true)
             {
                 transform.Rotate(Vector3.up * Time.deltaTime * 100f);
+            }
+            if (Input.GetKey(KeyCode.E) == true)
+            {
+                
             }
             ani.SetFloat("speed", speed * s);
         }
