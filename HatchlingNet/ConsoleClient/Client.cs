@@ -8,10 +8,10 @@ using HatchlingNet;
 namespace client
 {
     public class Client
-    {
+    {   
         static List<IPeer> gameServer = new List<IPeer>();
         static ConnectorController service;
-
+         
         int index;
 
         public void Initialize(int i = 12)
