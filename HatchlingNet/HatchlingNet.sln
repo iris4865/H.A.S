@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatchlingNet", "HatchlingNet\HatchlingNet.csproj", "{C4CD9EBF-4396-43E2-B037-1DE1E9518DA3}"
 EndProject
@@ -13,8 +13,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomServer", "CustomServer\CustomServer.csproj", "{2A30CC98-5486-448D-8875-ACE827FEAC10}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{200A6A19-08AC-4A86-9DC3-2CAAB59858F9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HatchlingClient", "HatchlingClient\HatchlingClient.csproj", "{FCA5C033-163A-4B8A-A1E2-597DE991C39F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +36,6 @@ Global
 		{200A6A19-08AC-4A86-9DC3-2CAAB59858F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{200A6A19-08AC-4A86-9DC3-2CAAB59858F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{200A6A19-08AC-4A86-9DC3-2CAAB59858F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FCA5C033-163A-4B8A-A1E2-597DE991C39F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCA5C033-163A-4B8A-A1E2-597DE991C39F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCA5C033-163A-4B8A-A1E2-597DE991C39F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FCA5C033-163A-4B8A-A1E2-597DE991C39F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

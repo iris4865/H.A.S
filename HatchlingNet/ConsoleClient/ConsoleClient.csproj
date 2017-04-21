@@ -54,10 +54,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HatchlingClient\HatchlingClient.csproj">
-      <Project>{fca5c033-163a-4b8a-a1e2-597de991c39f}</Project>
-      <Name>HatchlingClient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HatchlingNet\HatchlingNet.csproj">
       <Project>{c4cd9ebf-4396-43e2-b037-1de1e9518da3}</Project>
       <Name>HatchlingNet</Name>

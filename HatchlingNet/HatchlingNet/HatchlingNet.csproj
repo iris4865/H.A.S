@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="95.Object\ConnectorController\Connector\Connector.cs" />
+    <Compile Include="95.Object\ConnectorController\ConnectorController.cs" />
     <Compile Include="98.Header\MyStruct.cs" />
     <Compile Include="98.Header\Macro.cs" />
     <Compile Include="97.Interface\IPeer.cs" />
