@@ -57,7 +57,7 @@ namespace HatchlingNet
             }
             else
             {
-                Console.WriteLine(string.Format("error {0}, transferred {1}", receiveArgs.SocketError, receiveArgs.BytesTransferred));
+                Console.WriteLine($"error{receiveArgs.SocketError}, transferred {receiveArgs.BytesTransferred}");
                 CloseClientSocket(token);
             }
         }
