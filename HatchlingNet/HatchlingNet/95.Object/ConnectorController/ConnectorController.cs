@@ -7,8 +7,8 @@ namespace HatchlingNet
     {
         public void ConnectProcess(Socket clientSocket, UserToken token)//클라에서 Initialize대신 사용
         {
-            SocketAsyncEventArgs receiveEventArg = GetEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete));
-            SocketAsyncEventArgs sendEventArg = GetEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallSendComplete));
+            SocketAsyncEventArgs receiveEventArg = GetEventArgs(token, CallReceiveComplete);
+            SocketAsyncEventArgs sendEventArg = GetEventArgs(token, CallSendComplete);
 
             BeginReceive(clientSocket, receiveEventArg, sendEventArg);
         }

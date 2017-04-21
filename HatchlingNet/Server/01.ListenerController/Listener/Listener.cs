@@ -61,7 +61,7 @@ namespace Server
             this.listenSocket.Listen(backlog); //받아들일 클라이언트 수 결정
 
 
-            this.acceptArgs.Completed += new EventHandler<SocketAsyncEventArgs>(AcceptComplete);
+            this.acceptArgs.Completed += AcceptComplete;
             //연결이 되었을경우 호출할 콜백함수의 핸들러를 Completed에 저장함...다만 연결이 되었는지에 대한 검사는 별도로 해야됨. 그게 바로 아래 코드
 
 

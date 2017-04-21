@@ -47,14 +47,14 @@ namespace Server
         //receive pool
         private void PushReceiveEventArgsPool(UserToken token)
         {
-            SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete));
+            SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, CallReceiveComplete);
             receiveEventArgsPool.Push(args);
         }
 
         //send pool
         private void PushSendEventArgsPool(UserToken token)
         {
-            SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, new EventHandler<SocketAsyncEventArgs>(CallSendComplete));
+            SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, CallSendComplete);
             receiveEventArgsPool.Push(args);
         }
 
