@@ -73,9 +73,6 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
-    <Reference Include="HatchlingNet">
-      <HintPath>Assets\HatchlingNet\Engine\HatchlingNet.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Fonts\Script\scriptTexttest.cs" />

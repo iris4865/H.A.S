@@ -12,11 +12,17 @@ namespace Server
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Server Start");
 
             MainApp mainApp = new MainApp();
+            Console.WriteLine("Server Start");
+
             mainApp.Initialize();
             mainApp.Update();
+             
+
+            //Console.WriteLine("Server Start");
+            //new MainApp().Initialize();
+            //new MainApp().Update();
         }
 
         public void Initialize()

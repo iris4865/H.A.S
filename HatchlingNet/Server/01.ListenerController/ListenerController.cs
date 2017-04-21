@@ -61,7 +61,7 @@ namespace Server
         private SocketAsyncEventArgs PreAllocateSocketAsyncEventArgs(UserToken token, EventHandler<SocketAsyncEventArgs> handler)
         {
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-            args.Completed += new EventHandler<SocketAsyncEventArgs>(CallReceiveComplete);
+            args.Completed += handler;
             args.UserToken = token;
 
             buffer_manager.SetBuffer(args);
