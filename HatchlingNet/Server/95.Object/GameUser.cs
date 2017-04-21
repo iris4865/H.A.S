@@ -8,7 +8,7 @@ namespace Server
     public class GameUser : IPeer
     {
         UserToken userToken;
-        public MySQLConnecter mysql;
+        public MySQLController mysql;
         public string userID { get; set; }
 
 
@@ -161,7 +161,7 @@ namespace Server
 
         public void Destroy()
         {
-            UserList.RemoveUser(this);
+            UserList.GetInstance.RemoveUser(this);
         }
 
         public void Disconnect()

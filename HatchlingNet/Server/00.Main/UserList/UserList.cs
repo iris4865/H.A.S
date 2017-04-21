@@ -1,13 +1,13 @@
 ﻿using HatchlingNet;
+using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
-using System;
 
 namespace Server
 {
     public sealed class UserList
     {
-        private static volatile UserList instance;
+        private static readonly Lazy<UserList> instance = new Lazy<UserList>(() => new UserList());
         private static object syncObj = new object();
 
         static List<GameUser> userList;
@@ -21,24 +21,11 @@ namespace Server
         {                               //이것이 c#의 겟터인가...
             get
             {
-                if (instance == null)
-                {
-                    lock (syncObj)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new UserList();
-                        }
-                    }
-                }
-
-                return instance;
+                return instance.Value;
             }
-
-       
         }
 
-        public void CallSessionCreate(Socket socket, UserToken token)
+        public void SessionCreate(Socket socket, UserToken token)
         {
             GameUser user = new GameUser(token);
 
@@ -48,7 +35,7 @@ namespace Server
             }
         }
 
-        public static void RemoveUser(GameUser user)
+        public void RemoveUser(GameUser user)
         {
             lock (syncObj)
             {

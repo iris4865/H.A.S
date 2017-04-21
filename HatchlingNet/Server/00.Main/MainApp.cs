@@ -8,7 +8,7 @@ namespace Server
     {
         ListenerController listenerController;
         //static ListenerController listenerController;
-        static MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
+        static MySQLController mysql = new MySQLController("localhost", "apmsetup");
 
         static void Main(string[] args)
         {

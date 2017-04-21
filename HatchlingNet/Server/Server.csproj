@@ -53,8 +53,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="96.DataBase\MySQLConnecter.cs" />
+    <Compile Include="96.DataBase\IMySQLAdapter.cs" />
+    <Compile Include="96.DataBase\MySqlAdapter.cs" />
     <Compile Include="96.DataBase\MySQLConnecter.MySQLAdapter.cs" />
+    <Compile Include="96.DataBase\MySQLController.cs" />
     <Compile Include="96.DataBase\MySQLDataType.cs" />
     <Compile Include="95.Object\GameUser.cs" />
     <Compile Include="01.ListenerController\Listener\Listener.cs" />

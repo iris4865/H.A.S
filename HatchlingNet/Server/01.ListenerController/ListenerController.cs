@@ -122,7 +122,7 @@ namespace Server
                     tokenList.Add(userToken.tokenID, userToken);
                 }
 
-                UserList.GetInstance.CallSessionCreate(clientSocket, userToken);
+                UserList.GetInstance.SessionCreate(clientSocket, userToken);
 
                 Listener.BeginReceive(clientSocket, receiveArgs, sendArgs);
 

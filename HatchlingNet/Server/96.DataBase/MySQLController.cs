@@ -4,11 +4,11 @@ using System.Data.SqlClient;
 
 namespace DataBase
 {
-    public partial class MySQLConnecter
+    public partial class MySQLController
     {
         MySQLAdapter mySQL;
 
-        public MySQLConnecter(string remoteAddress, string Password)
+        public MySQLController(string remoteAddress, string Password)
         {
             mySQL = new MySQLAdapter();
             mySQL.Connect(remoteAddress, Password);
