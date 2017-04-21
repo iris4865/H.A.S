@@ -6,7 +6,7 @@ namespace Server
 {
     class MainApp
     {
-        Listener mainListener;
+        ListenerController mainListener;
         //static ListenerController listenerController;
         static MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
 
@@ -25,7 +25,7 @@ namespace Server
 
             PacketBufferManager.Initialize(2000);
 
-            mainListener = new Listener(10000);
+            mainListener = new ListenerController(10000);
             mainListener.Initialize();
         }
 
