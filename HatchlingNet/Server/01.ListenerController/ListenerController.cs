@@ -14,7 +14,7 @@ namespace Server
         SocketAsyncEventArgs acceptArgs;
         Socket listenSocket;
 
-        Listener listenerController;
+        Listener Listener;
         Dictionary<int, UserToken> tokenList;
 
         AutoResetEvent flowController;
@@ -36,8 +36,8 @@ namespace Server
             tokenList = new Dictionary<int, UserToken>();
             this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
 
-            listenerController = new Listener(maxConnection);
-            listenerController.Initialize();
+            Listener = new Listener(maxConnection);
+            Listener.Initialize();
         }
 
         public void Start(string host, int port, int backlog)//backlog : 대기큐의 크기
@@ -105,8 +105,8 @@ namespace Server
                 Socket clientSocket = e.AcceptSocket;
 
                 Interlocked.Increment(ref this.connectionCount);
-                SocketAsyncEventArgs receiveArgs = listenerController.PopReceiveEventArgs();
-                SocketAsyncEventArgs sendArgs = listenerController.PopSendEventArgs();
+                SocketAsyncEventArgs receiveArgs = Listener.PopReceiveEventArgs();
+                SocketAsyncEventArgs sendArgs = Listener.PopSendEventArgs();
 
                 UserToken userToken = receiveArgs.UserToken as UserToken;
 
@@ -124,7 +124,7 @@ namespace Server
 
                 UserList.GetInstance.CallSessionCreate(clientSocket, userToken);
 
-                listenerController.BeginReceive(clientSocket, receiveArgs, sendArgs);
+                Listener.BeginReceive(clientSocket, receiveArgs, sendArgs);
 
                 flowController.Set();
 
