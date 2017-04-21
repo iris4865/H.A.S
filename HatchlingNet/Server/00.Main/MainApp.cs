@@ -19,10 +19,6 @@ namespace Server
             mainApp.Initialize();
             mainApp.Update();
              
-
-            //Console.WriteLine("Server Start");
-            //new MainApp().Initialize();
-            //new MainApp().Update();
         }
 
         public void Initialize()
