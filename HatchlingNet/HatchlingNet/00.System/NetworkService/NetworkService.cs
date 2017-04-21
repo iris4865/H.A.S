@@ -9,7 +9,7 @@ namespace HatchlingNet
         public void BeginReceive(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
         {
             UserToken token = receiveArgs.UserToken as UserToken;
-            token.receiveEventArgs = receiveArgs;
+            //token.receiveEventArgs = receiveArgs;
             token.sendEventArgs = sendArgs;
 
             token.socket = clientSocket;
@@ -40,7 +40,7 @@ namespace HatchlingNet
         {
             UserToken token = receiveArgs.UserToken as UserToken;
 
-            if (!IsArgsClosed(receiveArgs.BytesTransferred))
+            if (!IsArgsSocketClosed(receiveArgs.BytesTransferred))
             {
                 //e.Buffer : 클라로부터 수신된 데이터, e.offset : 버퍼의 포지션, e.ByesTransferred : 이번에 수신된 바이트의 수
                 token.OpenMessage(receiveArgs.Buffer, receiveArgs.Offset, receiveArgs.BytesTransferred);
@@ -62,7 +62,7 @@ namespace HatchlingNet
             }
         }
         
-        private bool IsArgsClosed(int value)
+        private bool IsArgsSocketClosed(int value)
         {
             if (value > 0)
                 return false;

@@ -30,7 +30,7 @@ namespace client
 
             this.whileActive();
 
-            ((RemoteServerPeer)gameServer[0]).serverToken.disconnect();
+            ((RemoteServerPeer)gameServer[0]).serverToken.Disconnect();
             //            Console.ReadKey();
         }
 

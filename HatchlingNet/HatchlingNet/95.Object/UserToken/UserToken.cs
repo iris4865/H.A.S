@@ -140,7 +140,7 @@ namespace HatchlingNet
             }
         }
 
-        public void disconnect()
+        public void Disconnect()
         {
             try
             {

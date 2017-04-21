@@ -6,7 +6,8 @@ namespace Server
 {
     class MainApp
     {
-        static ListenerController listenerController;
+        Listener mainListener;
+        //static ListenerController listenerController;
         static MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
 
         static void Main(string[] args)
@@ -22,18 +23,23 @@ namespace Server
             mysql.Open();
 
             PacketBufferManager.Initialize(2000);
-            InitNeworkService();
-        }
 
+            mainListener = new Listener(10000);
+            mainListener.Initialize();
+            //InitNeworkService();
+        }
+        /*
         private void InitNeworkService()
         {
             listenerController = new ListenerController();
             listenerController.Initialize();
         }
+        */
 
         public void Update()
         {
-            listenerController.Listen("0.0.0.0", 7979, 1000);
+            mainListener.Start("0.0.0.0", 7979, 1000);
+            //listenerController.Listen("0.0.0.0", 7979, 1000);
 
             while (true)
                 System.Threading.Thread.Sleep(10000);

@@ -4,24 +4,28 @@ using System.Net.Sockets;
 
 namespace Server
 {
+    //Date: 4. 21
+    //NetworkController식이 더 어울려 보인다.
     public class ListenerController : NetworkService
     {
-        Listener clientListener;
-
-        public SocketAsyncEventArgsPool receiveEventArgsPool;//메시지 수신객체, 풀링해서 사용예정
-        public SocketAsyncEventArgsPool sendEventArgsPool;//메시지 전송객체, 풀링해서 사용예정
         BufferManager buffer_manager;
+
+        //메시지 송수신객체, 풀링해서 사용예정
+        SocketAsyncEventArgsPool receiveEventArgsPool;
+        SocketAsyncEventArgsPool sendEventArgsPool;
 
         int maxConnection;//모든 리스너들의 연결 맥스
         int connectionCount;//모든 리스너들의 연결 총합
         int bufferSize;
         readonly int preAllocCount = 2;
 
-
+        public ListenerController(int maxConnection)
+        {
+            this.maxConnection = maxConnection;
+        }
 
         public void Initialize()
         {
-            maxConnection = 10000;
             bufferSize = 1024;
 
             receiveEventArgsPool = new SocketAsyncEventArgsPool(maxConnection);
@@ -65,21 +69,22 @@ namespace Server
             return args;
         }
 
-        public void Listen(string host, int port, int backlog)
-        {
-            clientListener = new Listener(this, receiveEventArgsPool, sendEventArgsPool);
-
-            clientListener.receiveBeginTrigger = BeginReceive;
-
-            clientListener.Start(host, port, backlog);
-        }
-
         public override void CloseClientSocket(UserToken token)
         {
             token.OnRemove();
 
             receiveEventArgsPool.Push(token.receiveEventArgs);
             sendEventArgsPool.Push(token.sendEventArgs);
+        }
+
+        public SocketAsyncEventArgs PopReceiveEventArgs()
+        {
+            return receiveEventArgsPool.Pop();
+        }
+
+        public SocketAsyncEventArgs PopSendEventArgs()
+        {
+            return sendEventArgsPool.Pop();
         }
     }
 }

@@ -10,9 +10,9 @@ namespace Server
 {
     public class Listener
     {
+        ListenerController listenerController;
         Dictionary<int, UserToken> tokenList;
-        SocketAsyncEventArgsPool receiveEventArgsPool;//메시지 수신객체, 풀링해서 사용예정
-        SocketAsyncEventArgsPool sendEventArgsPool;//메시지 전송객체, 풀링해서 사용예정
+
 
         SocketAsyncEventArgs acceptArgs;//비동기 Accept를 위한 객체;
         Socket listenSocket;           //클라이언트의 접속을 처리할 소켓
@@ -24,17 +24,20 @@ namespace Server
         int assignIDToUser;
         int bufferSize;
 
-        public delegate void ReceiveBeginHandler(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs);
-        public ReceiveBeginHandler receiveBeginTrigger;
+        public Listener(int maxConnection)
+        {
+            this.maxConnection = maxConnection;
+        }
 
-        public Listener(ListenerController networkService, SocketAsyncEventArgsPool receivePool, SocketAsyncEventArgsPool sendPool)
+        public void Initialize()
         {
             assignIDToUser = 0;
-            this.receiveEventArgsPool = receivePool;
-            this.sendEventArgsPool = sendPool;
 
             tokenList = new Dictionary<int, UserToken>();
             this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
+
+            listenerController = new ListenerController(maxConnection);
+            listenerController.Initialize();
         }
 
         public void Start(string host, int port, int backlog)//backlog : 대기큐의 크기
@@ -103,8 +106,8 @@ namespace Server
                 Socket clientSocket = e.AcceptSocket;
 
                 Interlocked.Increment(ref this.connectionCount);
-                SocketAsyncEventArgs receiveArgs = receiveEventArgsPool.Pop();
-                SocketAsyncEventArgs sendArgs = sendEventArgsPool.Pop();
+                SocketAsyncEventArgs receiveArgs = listenerController.PopReceiveEventArgs();
+                SocketAsyncEventArgs sendArgs = listenerController.PopSendEventArgs();
 
                 UserToken userToken = receiveArgs.UserToken as UserToken;
 
@@ -122,7 +125,7 @@ namespace Server
 
                 UserList.GetInstance.CallSessionCreate(clientSocket, userToken);
 
-                receiveBeginTrigger(clientSocket, receiveArgs, sendArgs);
+                listenerController.BeginReceive(clientSocket, receiveArgs, sendArgs);
 
                 flowController.Set();
 
