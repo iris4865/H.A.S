@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Sockets;
-using HatchlingNet;
 
 namespace HatchlingNet
 {

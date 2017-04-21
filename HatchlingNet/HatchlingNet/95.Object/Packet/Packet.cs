@@ -136,9 +136,9 @@ namespace HatchlingNet
             Push(sendType);
         }
 
-
+        //패킷의 헤더부분에 body의 크기를 입력한다
         public void RecordSize()
-        {//패킷의 헤더부분에 body의 크기를 입력한다
+        {
             Int16 bodySize = (Int16)(this.position - Define.HEADERSIZE);
             byte[] header = BitConverter.GetBytes(bodySize);
             header.CopyTo(this.buffer, 0);
@@ -174,34 +174,17 @@ namespace HatchlingNet
             this.position += tempBuffer.Length;
         }
 
-        public void Push(float x, float y, float z)
+        public void Push(params float[] datas)
         {
-            byte[] tempBuffer = BitConverter.GetBytes(x);
-            tempBuffer.CopyTo(this.buffer, this.position);
-            this.position += tempBuffer.Length;
-
-            tempBuffer = BitConverter.GetBytes(y);
-            tempBuffer.CopyTo(this.buffer, this.position);
-            this.position += tempBuffer.Length;
-
-            tempBuffer = BitConverter.GetBytes(z);
-            tempBuffer.CopyTo(this.buffer, this.position);
-            this.position += tempBuffer.Length;
+            foreach(float data in datas)
+                Push(data);
         }
 
         public void Push(MyVector3 data)
         {
-            byte[] tempBuffer = BitConverter.GetBytes(data.x);
-            tempBuffer.CopyTo(this.buffer, this.position);
-            this.position += tempBuffer.Length;
-
-            tempBuffer = BitConverter.GetBytes(data.y);
-            tempBuffer.CopyTo(this.buffer, this.position);
-            this.position += tempBuffer.Length;
-
-            tempBuffer = BitConverter.GetBytes(data.z);
-            tempBuffer.CopyTo(this.buffer, this.position);
-            this.position += tempBuffer.Length;
+            Push(data.x);
+            Push(data.y);
+            Push(data.z);
         }
 
         public void Push(double data)
@@ -211,9 +194,9 @@ namespace HatchlingNet
             this.position += tempBuffer.Length;
         }
 
-
+        //왜 문자열일때만 문자열의 크기를 따로 저장하는 코드가 있는거지?
         public void Push(string data)
-        {//왜 문자열일때만 문자열의 크기를 따로 저장하는 코드가 있는거지?
+        {
             byte[] tempBuffer = Encoding.UTF8.GetBytes(data);
             Int16 len = (Int16)tempBuffer.Length;
 

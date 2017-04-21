@@ -76,7 +76,7 @@ namespace Server
 
                         Packet response;
 
-                        if (isSignup == true)
+                        if (isSignup)
                         {
                             response = PacketBufferManager.Pop((short)PROTOCOL.SignupAck, (short)SEND_TYPE.Single);
                         }
