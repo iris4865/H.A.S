@@ -1,11 +1,14 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace DataBase
 {
     public class MysqlCommand
     {
         IMySqlAdapter adapter;
+        MysqlDatabaseList database;
+        MysqlTable table;
 
         public MysqlCommand()
         {
@@ -17,81 +20,52 @@ namespace DataBase
             string connectString = $"Server={remoteAddress};Uid=root;Pwd={Password};";
             adapter.Connect(connectString);
         }
-        /*
-        public bool IsDataBase()
+
+        public bool OpenDatabase(string dbName)
         {
-            if (string.IsNullOrEmpty(databaseName))
-                return false;
-
-            return this.IsExist($"SHOW DATABASES LIKE '{databaseName}'");
-        }
-
-        public bool IsDataBase(string databaseName)
-        {
-            this.databaseName = databaseName;
-            return this.IsExist($"SHOW DATABASES LIKE '{databaseName}'");
-        }
-
-        private bool IsExist(string sqlQuery)
-        {
-            MySqlCommand command = new MySqlCommand(sqlQuery, connection);
-            MySqlDataReader reader = command.ExecuteReader();
-            bool exist = reader.HasRows;
-            reader.Close();
-
-            return exist;
-        }
-
-        public bool createDataBase(string databaseName)
-        {
-            adapter.SendQueryNoData($"CREATE DATABASE {databaseName};");
-            return true;
-        }
-
-        public bool ConnectDataBase()
-        {
-            try
+            if (IsDatabase(dbName))
             {
-                connection.ChangeDatabase(databaseName);
+                MysqlDatabase = new MysqlDatabaseList(adapter, dbName);
             }
-            catch (MySqlException)
-            {
-                return false;
-            }
+                
 
+            return false;
+        }
+
+        public bool IsDatabase(string dbName)
+        {
+            return adapter.IsExist($"SHOW DATABASES LIKE '{dbName}'");
+        }
+
+        public bool CreateDataBase(string dbName)
+        {
+            adapter.SendQueryNoData($"CREATE DATABASE {dbName};");
             return true;
-        }
-
-        public List<string> ShowTables()
-        {
-            return adapter.SendQuery("SHOW TABLES;");
-        }
-
-        public bool CreateTable(string tableName, string primaryKeyId)
-        {
-            adapter.SendQueryNoData(
-                $"CREATE TABLE {tableName} (" +
-                $"{primaryKeyId} INT NOT NULL AUTO_INCREMENT, " +
-                $"PRIMARY KEY({primaryKeyId}) " +
-                $") DEFAULT CHARSET=utf16;");
-
-            return true;
-        }
-
-        public bool RemoveTable()
-        {
-            adapter.SendQueryNoData($"DROP TABLE {tableName};");
-            return true;
-        }
-
-        public bool IsTable()
-        {
-            return IsExist($"SHOW TABLES LIKE '{tableName}'");
         }
 
         public bool IsTable(string tableName)
         {
-            return IsExist($"SHOW TABLES LIKE '{tableName}'");
+            return adapter.IsExist($"SHOW TABLES LIKE '{tableName}'");
+        }
+
+        public bool CreateTable(string tableName, string primaryKeyId)
+        {
+            return adapter.SendQueryNoData(
+                $"CREATE TABLE {tableName} (" +
+                $"{primaryKeyId} INT NOT NULL AUTO_INCREMENT, " +
+                $"PRIMARY KEY({primaryKeyId}) " +
+                $") DEFAULT CHARSET=utf16;");
+        }
+
+        public List<string> ShowTables()
+        {
+            return adapter.SendQueryList("SHOW TABLES;");
+        }
+
+        public bool RemoveTable(string tableName)
+        {
+            adapter.SendQueryNoData($"DROP TABLE {tableName};");
+            return true;
         }
 
         public bool AddColumns(MySQLDataType type, string columnId, int size, bool defaultNull)
@@ -128,6 +102,23 @@ namespace DataBase
         {
             adapter.SendQueryNoData($"INSERT INTO {tableName} (id, password) VALUES ('{id}','{password}');");
             return true;
+        }
+
+        /*
+        public void testcode()
+        {
+            DataSet set = adapter.SendQueryDataSet("SHOW DATABASES");
+
+            DataTable table = set.Tables[0];
+
+            foreach (DataRow row in table.Rows)
+            {
+                foreach(DataColumn col in table.Columns)
+                {
+                    Console.Write($"{row[col]}\t");
+                }
+                Console.WriteLine();
+            }
         }
         */
     }
