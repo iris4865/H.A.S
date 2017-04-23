@@ -12,9 +12,12 @@ namespace DataBase
         private static readonly Lazy<MySqlAdapter> instance = new Lazy<MySqlAdapter>(() => new MySqlAdapter());
         MySqlConnection connection;
 
-        public static MySqlAdapter GetInstance()
+        public static MySqlAdapter Instance
         {
-            return instance.Value;
+            get
+            {
+                return instance.Value;
+            }
         }
 
         public bool Connect(string connectionString)

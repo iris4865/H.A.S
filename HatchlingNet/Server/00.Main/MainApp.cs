@@ -15,8 +15,8 @@ namespace Server
             Console.WriteLine("Server Start");
 
             MysqlCommand command = new MysqlCommand();
-            command.Connect("localhost", "anstjd");
-            command.IsDatabase("sys");
+            command.ConnectMysql("localhost", "root", "anstjd");
+            //command.IsDatabase("sys");
 
 
             /*

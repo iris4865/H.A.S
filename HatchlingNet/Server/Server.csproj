@@ -55,16 +55,16 @@
   <ItemGroup>
     <Compile Include="96.DataBase\Adapter\IMySqlAdapter.cs" />
     <Compile Include="96.DataBase\Adapter\MySqlAdapter.cs" />
+    <Compile Include="96.DataBase\DataBaseManager.cs" />
     <Compile Include="96.DataBase\MysqlCommand.cs" />
     <Compile Include="96.DataBase\MySQLConnecter.MySQLAdapter.cs" />
     <Compile Include="96.DataBase\MySQLController.cs" />
-    <Compile Include="96.DataBase\MysqlDatabase.cs" />
     <Compile Include="96.DataBase\MySQLDataType.cs" />
     <Compile Include="95.Object\GameUser.cs" />
     <Compile Include="01.ListenerController\Listener\Listener.cs" />
     <Compile Include="01.ListenerController\ListenerController.cs" />
     <Compile Include="00.Main\MainApp.cs" />
-    <Compile Include="96.DataBase\MysqlTable.cs" />
+    <Compile Include="96.DataBase\TableManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="98.Header\PROTOCOL.cs" />
     <Compile Include="00.Main\UserList\UserList.cs" />
