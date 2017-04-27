@@ -7,7 +7,7 @@ namespace DataBase
     public class MysqlCommand
     {
         DataBaseManager database;
-        TableManager table;
+        DataBase table;
 
         public MysqlCommand()
         {

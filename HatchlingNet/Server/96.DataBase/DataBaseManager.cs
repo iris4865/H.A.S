@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DataBase
 {
@@ -49,12 +48,12 @@ namespace DataBase
             return false;
         }
 
-        public TableManager OpenDataBase(string name)
+        public DataBase OpenDataBase(string name)
         {
             if (databaseList.Contains(name))
             {
                 adapter.SelectDatabase(name);
-                return new TableManager(adapter.SendQueryList("SHOW TABLES"));
+                return new DataBase(name);
             }
 
             return null;
