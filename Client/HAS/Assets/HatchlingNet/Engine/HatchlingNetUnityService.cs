@@ -11,7 +11,7 @@ public class HatchlingNetUnityService : MonoBehaviour
 {
     HatchlingNetEventManager eventManager;
     IPeer gameserver;       //연결된 서버 객체
-    ConnectorController connectorController;//tcp통신을 위한 서비스 객체
+    NetworkService service;//tcp통신을 위한 서비스 객체
 
     //접속상태 변화시 호출될 델리게이트
     public delegate void StatusChangeHandler(NETWORK_EVENT status);
@@ -29,10 +29,10 @@ public class HatchlingNetUnityService : MonoBehaviour
 
     public void Connect(string host, int port)
     {
-        this.connectorController = new ConnectorController();
+        this.service = new NetworkService();
 
 
-        Connector connector = new Connector(connectorController);
+        Connector connector = new Connector(service);
         connector.callbackConnect += on_connected_gameserver;
 
         IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(host), port);

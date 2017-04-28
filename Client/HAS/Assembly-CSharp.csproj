@@ -85,6 +85,9 @@
  <Reference Include="UnityEngine.VR">
  <HintPath>E:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
+ <Reference Include="HatchlingNet">
+ <HintPath>C:/Users/iris4/Documents/GitHub/H.A.S/Client/HAS/Assets/HatchlingNet/Engine/HatchlingNet.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
