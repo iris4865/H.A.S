@@ -9,7 +9,7 @@ namespace Header
         SignupReq = 1100, SignupAck, SignupRej,
 
         ChatReq = 2000, ChatAck,
-
+        PositionReq = 3000, PositionAck,
         END
     }
 

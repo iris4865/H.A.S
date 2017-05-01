@@ -32,20 +32,20 @@ public class game_login_click : MonoBehaviour {
             return;
         }
 
-        GameObject networkManager = GameObject.Find("networkManager");
-        /*
-        if (networkManager != null)
-        {
-            //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.LoginReq);
-            //msg.Push("abc|abcd");
+        NetworkManager networkManager = NetworkManager.GetInstance;
 
-            //networkManager.GetComponent<NetworkManager>().Send(msg);
-        }
-        else
-        {
-            SceneManager.LoadScene(3);
-        }
-        */
+        //if (NetworkManager.GetInstance != null)
+        //{
+        //    Packet msg = PacketBufferManager.Pop((short)PROTOCOL.LoginReq);
+        //    msg.Push("abc|abcd");
+
+        //    networkManager.GetComponent<NetworkManager>().Send(msg);
+        //}
+        //else
+        //{
+        //    SceneManager.LoadScene(3);
+        //}
+
         SceneManager.LoadScene(3);
     }
     public void click_1()

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using HatchlingNet;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,23 +16,36 @@ public class Player5 : MonoBehaviour
 
     float speed = 2.0f;
 
+
     // Use this for initialization
     void Awake()
     {
         ani = GetComponentInChildren<Animator>();
         can.SetActive(false);
+
     }
 
     // Update is called once per frame
     void Update()
     {
         AnimationUpdate();
+
+        NetUpdate();
     }
 
     void FixedUpdate()
     {
         run();
         turn();
+    }
+
+    void NetUpdate()
+    {
+        //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.PositionReq, (short)SEND_TYPE.BroadcastWithoutMe);
+        //msg.Push();//id...
+        //msg.Push(transform.position.x, transform.position.y, transform.position.z);
+        //NetworkManager.GetInstance.Send(msg);
+
     }
 
     private void OnTriggerEnter(Collider other)

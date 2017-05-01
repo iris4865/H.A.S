@@ -106,7 +106,7 @@ namespace Server
 
                             //                            userID = new string(id);
                             userID = id;
-
+                            
                         }
                         else
                         {
@@ -130,6 +130,11 @@ namespace Server
                     }
                     break;
 
+                case PROTOCOL.PositionAck:
+                    {
+
+                    }
+                    break;
             }
         }
 

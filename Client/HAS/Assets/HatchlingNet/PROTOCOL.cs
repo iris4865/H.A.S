@@ -9,6 +9,8 @@ namespace HatchlingNet
     public enum PROTOCOL : Int16
     {
         LoginReq = 1000, LoginAck, LoginRej,
+        SignupReq = 1100, SignupAck, SignupRej,
+
         ChatReq = 2000, ChatAck,
         PositionReq = 3000, PositionAck,
         END

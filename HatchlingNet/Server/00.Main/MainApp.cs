@@ -14,16 +14,16 @@ namespace Server
         {
             Console.WriteLine("Server Start");
 
-            MysqlCommand command = new MysqlCommand();
-            command.ConnectMysql("localhost", "root", "anstjd");
+//            MysqlCommand command = new MysqlCommand();
+ //           command.ConnectMysql("localhost", "root", "anstjd");
             //command.IsDatabase("sys");
 
 
-            /*
+            
             MainApp mainApp = new MainApp();
             mainApp.Initialize();
             mainApp.Update();
-            */
+            
         }
 
         public void Initialize()
