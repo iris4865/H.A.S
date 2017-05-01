@@ -55,7 +55,7 @@ namespace Server
         private void PushSendEventArgsPool(UserToken token)
         {
             SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, CallSendComplete);
-            receiveEventArgsPool.Push(args);
+            sendEventArgsPool.Push(args);
         }
 
         private SocketAsyncEventArgs PreAllocateSocketAsyncEventArgs(UserToken token, EventHandler<SocketAsyncEventArgs> handler)
@@ -63,7 +63,7 @@ namespace Server
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
             args.Completed += handler;
             args.UserToken = token;
-
+            
             buffer_manager.SetBuffer(args);
 
             return args;
