@@ -16,7 +16,13 @@ namespace HatchlingNet
         //int bufferSize;
 
         IPeer peer;
-        public IPeer Peer { set => peer = value; }
+        public IPeer Peer
+        {
+            set
+            {
+                peer = value;
+            }
+        }
 
         Queue<Packet> sendingQueue;
         private object csSendingQueue;

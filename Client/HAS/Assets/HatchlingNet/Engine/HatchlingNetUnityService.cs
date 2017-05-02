@@ -31,10 +31,10 @@ public class HatchlingNetUnityService : MonoBehaviour
 
 
         Connector connector = new Connector(connectorController);
-        connector.callbackConnect += on_connected_gameserver;
+        connector.CallbackConnect += on_connected_gameserver;
 
         IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(host), port);
-        connector.connect(endpoint);
+        connector.Connect(endpoint);
     }
 
     public void on_connected_gameserver(UserToken server_token)
