@@ -15,9 +15,13 @@ public class NetworkManager : MonoBehaviour
             if (instance == null)
             {
                 instance = FindObjectOfType(typeof(NetworkManager)) as NetworkManager;
+//                instance = new NetworkManager();
 
                 if (instance == null)
                     Debug.LogError("no active NetworkManager ");
+                else
+                    Debug.Log("active NetworkManager ");
+
             }
 
             return instance;
