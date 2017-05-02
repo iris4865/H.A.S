@@ -1,6 +1,6 @@
 ﻿using HatchlingNet;
 using Header;
-using MySQL.Adapter;
+using MySqlDataBase;
 using System;
 
 namespace Server
@@ -16,7 +16,7 @@ namespace Server
         {
             this.userToken = userToken;
 
-            this.userToken.SetPeer(this);
+            userToken.Peer = this;
         }
 
         /*
@@ -67,13 +67,10 @@ namespace Server
                         Packet response;
 
                         if (isSignup)
-                        {
                             response = PacketBufferManager.Pop((short)PROTOCOL.SignupAck, (short)SEND_TYPE.Single);
-                        }
                         else
-                        {
                             response = PacketBufferManager.Pop((short)PROTOCOL.SignupRej, (short)SEND_TYPE.Single);
-                        }
+
                         Send(response);
                     }
                     break;
@@ -135,11 +132,11 @@ namespace Server
                     break;
 
                 case SEND_TYPE.BroadcastWithoutMe:
-                    userToken.callbackBroadcast(msg, userToken.tokenID);
+                    userToken.CallbackBroadcast(msg, userToken.TokenID);
                     break;
 
                 case SEND_TYPE.BroadcastWithMe:
-                    userToken.callbackBroadcast(msg);
+                    userToken.CallbackBroadcast(msg);
 
                     break;
 
@@ -154,7 +151,7 @@ namespace Server
 
         public void Destroy()
         {
-            UserList.GetInstance.RemoveUser(this);
+            UserList.Instance.RemoveUser(this);
         }
 
         public void Disconnect()

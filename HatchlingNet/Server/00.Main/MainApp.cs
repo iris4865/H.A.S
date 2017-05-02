@@ -1,5 +1,4 @@
 ﻿using HatchlingNet;
-using MySQL.Adapter;
 using System;
 
 namespace Server
@@ -7,7 +6,6 @@ namespace Server
     class MainApp
     {
         ListenerController listenerController;
-        static MysqlCommand command;
 
         static void Main(string[] args)
         {
@@ -20,10 +18,6 @@ namespace Server
 
         public void Initialize()
         {
-            command = new MysqlCommand();
-            //db id, password 입력
-            command.ConnectMysql("localhost", "id", "password");
-
             PacketBufferManager.Initialize(2000);
 
             listenerController = new ListenerController(10000);

@@ -28,7 +28,6 @@ namespace HatchlingNet
             {
                 ProcessReceive(receiveArgs);
                 Console.WriteLine("콜백 리시브컴플리트!");
-                return;
             }
             else
             {

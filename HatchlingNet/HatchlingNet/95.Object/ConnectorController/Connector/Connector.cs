@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using HatchlingNet;
 
 namespace HatchlingNet
 {
@@ -10,17 +9,15 @@ namespace HatchlingNet
         private Socket client;
 
         public delegate void ConnectHandler(UserToken token);
-        public ConnectHandler callbackConnect { get; set; }//클라 main로직에서 직접적으로 처리되야하는것들 정의한 함수 호출할 핸들러
+        public ConnectHandler CallbackConnect { get; set; }//클라 main로직에서 직접적으로 처리되야하는것들 정의한 함수 호출할 핸들러
 
 
         public Connector(ConnectorController networkService)
         {
             this.networkService = networkService;
-                
-
         }
 
-        public void connect(IPEndPoint remoteEndPoint)
+        public void Connect(IPEndPoint remoteEndPoint)
         {
             this.client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -44,9 +41,9 @@ namespace HatchlingNet
 //            token.sendEventArgs = 
             this.networkService.ConnectProcess(this.client, token);
 
-            if (this.callbackConnect != null)
+            if (this.CallbackConnect != null)
             {
-                this.callbackConnect(token);
+                this.CallbackConnect(token);
             }
             
         }

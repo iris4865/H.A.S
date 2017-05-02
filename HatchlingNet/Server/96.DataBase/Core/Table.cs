@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace MySQL.Core
+namespace MySqlDataBase.Core
 {
     class Table
     {

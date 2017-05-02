@@ -1,7 +1,7 @@
-﻿using MySQL.Core;
+﻿using MySqlDataBase.Core;
 using System;
 
-namespace MySQL.Adapter
+namespace MySqlDataBase
 {
     public class MysqlCommand
     {

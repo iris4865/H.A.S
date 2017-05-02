@@ -115,7 +115,7 @@ namespace HatchlingNet
             Int16 len = BitConverter.ToInt16(this.buffer, this.position);
             this.position += sizeof(Int16);
 
-            string data = System.Text.Encoding.UTF8.GetString(this.buffer, this.position, len);
+            string data = Encoding.UTF8.GetString(this.buffer, this.position, len);
             this.position += len;
 
             return data;

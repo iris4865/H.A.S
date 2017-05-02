@@ -5,20 +5,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 
-namespace MySQL.Core
+namespace MySqlDataBase.Core
 {
     sealed class MySqlAdapter : IDisposable
     {
         private static readonly Lazy<MySqlAdapter> instance = new Lazy<MySqlAdapter>(() => new MySqlAdapter());
         MySqlConnection connection;
 
-        public static MySqlAdapter Instance
-        {
-            get
-            {
-                return instance.Value;
-            }
-        }
+        public static MySqlAdapter Instance => instance.Value;
 
         public bool Connect(string connectionString)
         {

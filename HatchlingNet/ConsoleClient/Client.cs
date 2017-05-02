@@ -21,11 +21,11 @@ namespace client
             service = new ConnectorController();
 
             Connector connector = new Connector(service);
-            connector.callbackConnect += CallConnectGameserver;
+            connector.CallbackConnect += CallConnectGameserver;
 
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7979);
             Console.WriteLine("connect start");
-            connector.connect(endPoint);//리시브도 이안에서 해결
+            connector.Connect(endPoint);//리시브도 이안에서 해결
             Console.WriteLine("connect end");
 
             this.whileActive();

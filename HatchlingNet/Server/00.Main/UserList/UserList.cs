@@ -8,21 +8,14 @@ namespace Server
     public sealed class UserList
     {
         private static readonly Lazy<UserList> instance = new Lazy<UserList>(() => new UserList());
-        private static object syncObj = new object();
+        public static UserList Instance => instance.Value;
 
-        static List<GameUser> userList;
+        private static object syncObj = new object();
+        List<GameUser> userList;
 
         private UserList()
         {
             userList = new List<GameUser>();
-        }
-
-        public static UserList GetInstance//...함수같지만 변수인...
-        {                               //이것이 c#의 겟터인가...
-            get
-            {
-                return instance.Value;
-            }
         }
 
         public void SessionCreate(Socket socket, UserToken token)

@@ -1,14 +1,12 @@
 ﻿using HatchlingNet;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 //클라에게 제공하게될 인터페이스가 되겠네
 
 
-public class NetworkManager : MonoBehaviour {
-
+public class NetworkManager : MonoBehaviour
+{
     private static NetworkManager instance = null;
     public static NetworkManager GetInstance
     {
@@ -19,9 +17,7 @@ public class NetworkManager : MonoBehaviour {
                 instance = FindObjectOfType(typeof(NetworkManager)) as NetworkManager;
 
                 if (instance == null)
-                {
                     Debug.LogError("no active NetworkManager ");
-                }
             }
 
             return instance;
@@ -32,21 +28,24 @@ public class NetworkManager : MonoBehaviour {
 
     void Awake()
     {
-        //DontDestroyOnLoad(this);
+        if (instance != null)
+            return;
+        DontDestroyOnLoad(this);
         this.gameserver = gameObject.AddComponent<HatchlingNetUnityService>();
         this.gameserver.callbackAppStatusChanged += CallStatusChange;
         this.gameserver.callbackAppReceiveMessage += CallMessage;
 
     }
 
+    void Start()
+    {
+        Connect();
+    }
+
     void Connect()
     {
         this.gameserver.Connect("127.0.0.1", 7979);
     }
-
-    void Start () {
-        Connect();		
-	}
 
     void CallStatusChange(NETWORK_EVENT status)
     {
@@ -87,7 +86,7 @@ public class NetworkManager : MonoBehaviour {
             case PROTOCOL.LoginAck:
                 {
                     Debug.Log("로그인액크");
-//                    SceneManager.LoadScene(3);
+                    //SceneManager.LoadScene(3);
                     SceneManager.LoadScene(4);
                 }
                 break;
@@ -117,5 +116,5 @@ public class NetworkManager : MonoBehaviour {
         this.gameserver.Send(msg);
     }
 
-	
+
 }

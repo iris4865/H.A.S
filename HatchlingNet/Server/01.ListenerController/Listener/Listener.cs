@@ -15,7 +15,7 @@ namespace Server
         SocketAsyncEventArgsPool sendEventArgsPool;
 
         int maxConnection;//모든 리스너들의 연결 맥스
-        int connectionCount;//모든 리스너들의 연결 총합
+        //int connectionCount;//모든 리스너들의 연결 총합
         int bufferSize;
         readonly int preAllocCount = 2;
 

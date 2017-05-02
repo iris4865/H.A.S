@@ -1,4 +1,4 @@
-﻿namespace MySQL
+﻿namespace MySqlDataBase
 {
     public enum MySQLDataType
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace MySQL.Core
+namespace MySqlDataBase.Core
 {
     class DataBaseInventory
     {

@@ -12,7 +12,7 @@ namespace client
         {
             this.serverToken = serverToken;
 
-            this.serverToken.SetPeer(this);
+            serverToken.Peer = this;
         }
 
 

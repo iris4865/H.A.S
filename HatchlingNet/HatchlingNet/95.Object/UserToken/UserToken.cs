@@ -9,36 +9,30 @@ namespace HatchlingNet
         public Socket socket;
         public SocketAsyncEventArgs receiveEventArgs;
         public SocketAsyncEventArgs sendEventArgs;
-        public int tokenID { get; set; }
+        public int TokenID { get; set; }
 
         MessageTranslator messageTranslator;
 
-        int bufferSize;
+        //int bufferSize;
 
         IPeer peer;
+        public IPeer Peer { set => peer = value; }
 
         Queue<Packet> sendingQueue;
         private object csSendingQueue;
 
         public delegate void BroadcastHandler(Packet msg, int withOut = -1);
-        public BroadcastHandler callbackBroadcast { get; set; }
+        public BroadcastHandler CallbackBroadcast { get; set; }
 
         public delegate void SendToHandler(int tokenID, Packet msg);
-        public SendToHandler callbackSendTo { get; set; }
-
-
+        public SendToHandler CallbackSendTo { get; set; }
 
         public UserToken()
         {
-            this.csSendingQueue = new object();//락 조건용
-            this.messageTranslator = new MessageTranslator();
-            this.peer = null;
-            this.sendingQueue = new Queue<Packet>();
-        }
-
-        public void SetPeer(IPeer peer)
-        {
-            this.peer = peer;
+            csSendingQueue = new object();//락 조건용
+            messageTranslator = new MessageTranslator();
+            peer = null;
+            sendingQueue = new Queue<Packet>();
         }
 
         public void OpenMessage(byte[] buffer, int offset, int transferred)
@@ -46,8 +40,10 @@ namespace HatchlingNet
             messageTranslator.Translate(buffer, offset, transferred, this);
         }
 
-        public void CompleteMessage(byte[] buffer)//프로그램을 실행시킨 피어에게 수신패킷이 완성됬음을 알린다
-        {                               //피어는 메인에서 결정됨
+        //프로그램을 실행시킨 피어에게 수신패킷이 완성됬음을 알린다
+        //피어는 메인에서 결정됨
+        public void CompleteMessage(byte[] buffer)
+        {
             Console.WriteLine("메세지완성!");
 
             if (this.peer != null)
@@ -55,8 +51,6 @@ namespace HatchlingNet
                 this.peer.OnMessage(buffer);
             }
         }
-
-
 
         public void Send(Packet msg)
         {
@@ -71,12 +65,9 @@ namespace HatchlingNet
                     StartSend();
                     return;
                 }
-
                 this.sendingQueue.Enqueue(clone);
             }
-
         }
-
 
         void StartSend()
         {
@@ -103,7 +94,7 @@ namespace HatchlingNet
             }
         }
 
-        static int sendCount = 0;
+        //static int sendCount = 0;
         static object csCount = new object();
 
         //테스트만하고 NetowowrkService클래스로 넘기자
