@@ -20,7 +20,7 @@ public class RemoteServerPeer : IPeer {
     {
         this.serverToken = serverToken;
 
-        this.serverToken.SetPeer(this);
+        this.serverToken.Peer = this;
     }
 
     //멤버변수로 갖는 이벤트매니저가 WeakReference라서 객체만들기 위해 프로퍼티(변수옆에 get;set; 으로 겟터셋터만드는거)사용안하고 별도로 만든다
