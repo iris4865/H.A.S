@@ -1,29 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
-namespace DataBase
+namespace MySQL.Core
 {
-    class DataBaseManager
+    class DataBaseInventory
     {
-        IMySqlAdapter adapter;
-        public bool Isconnect { get; private set; }
+        MySqlAdapter adapter = MySqlAdapter.Instance;
         private List<string> databaseList;
 
         public string[] DatabaseList => databaseList.ToArray();
 
-        public DataBaseManager()
+        public DataBaseInventory()
         {
-            adapter = MySqlAdapter.Instance;
-            Isconnect = false;
-        }
-
-        public bool ConnectMysql(string remoteAddress, string id, string Password)
-        {
-            Isconnect = adapter.Connect($"Server={remoteAddress};Uid={id};Pwd={Password};");
-
-            if (Isconnect)
-                databaseList = adapter.SendQueryList("SHOW DATABASES");
-
-            return Isconnect;
+            databaseList = adapter.SendQueryList("SHOW DATABASES");
+            databaseList = databaseList.Select(item => item = item.Trim()).ToList();
         }
 
         public bool CreateDataBase(string dbName)

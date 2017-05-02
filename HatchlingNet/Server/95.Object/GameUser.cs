@@ -1,15 +1,15 @@
-﻿using DataBase;
-using HatchlingNet;
-using System;
+﻿using HatchlingNet;
 using Header;
+using MySQL.Adapter;
+using System;
 
 namespace Server
 {
     public class GameUser : IPeer
     {
         UserToken userToken;
-        public MySQLController mysql;
-        public string userID { get; set; }
+        MysqlCommand command;
+        public string UserID { get; set; }
 
 
         public GameUser(UserToken userToken)
@@ -48,31 +48,21 @@ namespace Server
                         //MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
                         //mysql.Open();
 
-                        string databaseName = "HatchlingDB";//디비 생성
-                        if (!mysql.ConnectDatabase(databaseName))
-                        {
-                            mysql.CreateDatabase(databaseName);
+                        command = new MysqlCommand();
+                        //db id, password 입력
+                        command.ConnectMysql("localhost", "id", "password");
 
-                            if (!mysql.ConnectDatabase(databaseName))
-                                Console.WriteLine("where is database?");
-                        }
+                        command.OpenDatabase("hatchlingdb");
+                        command.OpenTable("userinfo");
 
-
-                        string tableName = "userinfo";          //테이블 생성
-                        if (!mysql.ConnectTable(tableName))
-                        {
-                            mysql.CreateTable(tableName, "no");
-
-                            if (!mysql.ConnectTable("userinfo"))//혹시모를 예외처리
-                                Console.WriteLine("where is table?");
-
-                            mysql.AddColumn(MySQLDataType.VARCHAR, "id", 20, false);
-                            mysql.AddColumn(MySQLDataType.VARCHAR, "password", 20, false);
-                        }
+                        if (command.CheckLogin("a", "d"))
+                            Console.WriteLine("login sucess");
+                        else
+                            Console.WriteLine("fail");
 
 
 
-                        bool isSignup = mysql.SignUp(id, password);
+                        bool isSignup = command.SignUp(id, password);
 
                         Packet response;
 
@@ -85,7 +75,6 @@ namespace Server
                             response = PacketBufferManager.Pop((short)PROTOCOL.SignupRej, (short)SEND_TYPE.Single);
                         }
                         Send(response);
-
                     }
                     break;
 
@@ -96,7 +85,7 @@ namespace Server
                         string id = msg.PopString();
                         string password = msg.PopString();
 
-                        bool isUser = mysql.Login(id, password);
+                        bool isUser = command.CheckLogin(id, password);
 
                         if (isUser == true)
                         {
@@ -105,8 +94,8 @@ namespace Server
                             Send(loginResult);
 
                             //                            userID = new string(id);
-                            userID = id;
-                            
+                            UserID = id;
+
                         }
                         else
                         {
@@ -116,7 +105,6 @@ namespace Server
 
                     }
                     break;
-
 
                 case PROTOCOL.ChatReq:
                     {

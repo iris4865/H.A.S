@@ -1,5 +1,5 @@
-﻿using DataBase;
-using HatchlingNet;
+﻿using HatchlingNet;
+using MySQL.Adapter;
 using System;
 
 namespace Server
@@ -7,28 +7,22 @@ namespace Server
     class MainApp
     {
         ListenerController listenerController;
-        //static ListenerController listenerController;
-        static MySQLController mysql = new MySQLController("localhost", "apmsetup");
+        static MysqlCommand command;
 
         static void Main(string[] args)
         {
             Console.WriteLine("Server Start");
-
-//            MysqlCommand command = new MysqlCommand();
- //           command.ConnectMysql("localhost", "root", "anstjd");
-            //command.IsDatabase("sys");
-
-
             
             MainApp mainApp = new MainApp();
             mainApp.Initialize();
             mainApp.Update();
-            
         }
 
         public void Initialize()
         {
-            mysql.Open();
+            command = new MysqlCommand();
+            //db id, password 입력
+            command.ConnectMysql("localhost", "id", "password");
 
             PacketBufferManager.Initialize(2000);
 

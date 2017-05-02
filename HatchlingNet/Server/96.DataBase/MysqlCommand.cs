@@ -1,46 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using MySQL.Core;
+using System;
 
-namespace DataBase
+namespace MySQL.Adapter
 {
     public class MysqlCommand
     {
-        DataBaseManager database;
-        DataBase table;
+        DataBaseInventory inventory;
+        DataBase database;
+        Table table;
 
-        public MysqlCommand()
-        {
-            database = new DataBaseManager();
-        }
+        public string[] DatabaseList => inventory.DatabaseList;
 
         public bool ConnectMysql(string remoteAddress, string id, string Password)
         {
-            return database.ConnectMysql(remoteAddress, id, Password);
+            MySqlAdapter adapter = MySqlAdapter.Instance;
+            bool isConnect = adapter.Connect($"Server={remoteAddress};Uid={id};Pwd={Password};");
+
+            if (isConnect)
+                inventory = new DataBaseInventory();
+
+            return isConnect;
         }
 
-        public bool OpenDatabase(string dbName)
+        public bool OpenDatabase(string dbName, string tableName)
         {
-            table = database.OpenDataBase(dbName);
+            if (IsObject(OpenDatabase(dbName)))
+                return OpenTable(tableName);
+
             return false;
         }
 
-        /*
-        public void testcode()
+        public string[] OpenDatabase(string dbName)
         {
-            DataSet set = adapter.SendQueryDataSet("SHOW DATABASES");
+            database = inventory.OpenDataBase(dbName);
 
-            DataTable table = set.Tables[0];
-
-            foreach (DataRow row in table.Rows)
-            {
-                foreach(DataColumn col in table.Columns)
-                {
-                    Console.Write($"{row[col]}\t");
-                }
-                Console.WriteLine();
-            }
+            if (IsObject(database))
+                return database.TableList;
+            return null;
         }
-        */
+
+        public bool OpenTable(string tableName)
+        {
+            table = database.GetTable(tableName);
+
+            if (IsObject(table))
+                return true;
+            return false;
+        }
+
+        private bool IsObject(Object o)
+        {
+            if (o != null)
+                return true;
+
+            return false;
+        }
+
+        public bool CheckLogin(string id, string password)
+        {
+            return table.IsField($"id='{id}' AND password='{password}'");
+        }
+
+        public bool SignUp(string id, string password)
+        {
+            return table.AddField(id, password);
+        }
     }
 }

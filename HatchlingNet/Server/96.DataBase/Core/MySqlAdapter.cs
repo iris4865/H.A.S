@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 
-namespace DataBase
+namespace MySQL.Core
 {
-    sealed class MySqlAdapter : IDisposable, IMySqlAdapter
+    sealed class MySqlAdapter : IDisposable
     {
         private static readonly Lazy<MySqlAdapter> instance = new Lazy<MySqlAdapter>(() => new MySqlAdapter());
         MySqlConnection connection;

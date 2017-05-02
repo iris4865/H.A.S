@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
-namespace DataBase
+namespace MySQL.Core
 {
     class DataBase
     {
         string name;
 
         List<Table> tableList;
-        public Table[] TableList => tableList.ToArray();
 
         public DataBase(string name)
         {
@@ -20,8 +20,9 @@ namespace DataBase
         private void RefreshData()
         {
             List<string> tablesName = MySqlAdapter.Instance.SendQueryList("SHOW TABLES");
+            tablesName = tablesName.Select(item => item = item.Trim()).ToList();
 
-            List<Table> newTableList = new List<Table>() ;
+            List<Table> newTableList = new List<Table>();
 
             foreach (string name in tablesName)
             {
@@ -36,6 +37,28 @@ namespace DataBase
             }
 
             tableList = newTableList;
+        }
+
+        public string[] TableList
+        {
+            get
+            {
+                List<string> nameList = new List<string>();
+                tableList.ForEach(i => nameList.Add(i.Name));
+
+                return nameList.ToArray();
+            }
+        }
+
+        public Table GetTable(string name)
+        {
+            foreach (Table table in tableList)
+            {
+                if (table.Name.Equals(name))
+                    return table;
+            }
+
+            return null;
         }
 
         public bool CreateTable(string tableName, string primaryKeyId)
@@ -54,7 +77,7 @@ namespace DataBase
 
         private bool SendQueryNoData(string sqlQuery)
         {
-            if(MySqlAdapter.Instance.SendQueryNoData(sqlQuery))
+            if (MySqlAdapter.Instance.SendQueryNoData(sqlQuery))
             {
                 RefreshData();
                 return true;

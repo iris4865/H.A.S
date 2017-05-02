@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace DataBase
+namespace MySQL.Core
 {
     class Table
     {
@@ -27,8 +27,8 @@ namespace DataBase
             dataTable = dataSet.Tables[0];
 
             columnNameList.Clear();
-            foreach (DataColumn column in dataTable.Columns)
-                columnNameList.Add(column.ColumnName);
+            foreach (DataRow row in dataTable.Rows)
+                columnNameList.Add((string)row[0]);
         }
 
         public bool AddColumn(string columnName, MySQLDataType type, int size, bool defaultNull)
@@ -54,6 +54,16 @@ namespace DataBase
             return SendQueryNoData($"alter table {name} drop {columnName}");
         }
 
+        public bool AddField(string id, string password)
+        {
+            return SendQueryNoData($"INSERT INTO {name} (id, password) VALUES ('{id}','{password}');");
+        }
+
+        public bool IsField(string whereQuery)
+        {
+            return MySqlAdapter.Instance.IsExist($"SELECT * FROM {name} WHERE {whereQuery}");
+        }
+
         private bool SendQueryNoData(string sqlQuery)
         {
             if (MySqlAdapter.Instance.SendQueryNoData(sqlQuery))
@@ -63,25 +73,6 @@ namespace DataBase
             }
 
             return false;
-        }
-
-        /*
-         * 고칠것
-         */
-        public bool IsField(string tableName, string columnName, string fieldValue)
-        {
-            return MySqlAdapter.Instance.IsExist($"SELECT * FROM {tableName} WHERE {columnName}='{fieldValue}';");
-        }
-
-        public bool CheckLogin(string tableName, string id, string password)
-        {
-            return MySqlAdapter.Instance.IsExist($"SELECT * FROM {tableName} WHERE id='{id}' AND password='{password}'");
-        }
-
-        public bool AddField(string tableName, string id, string password)
-        {
-            MySqlAdapter.Instance.SendQueryNoData($"INSERT INTO {tableName} (id, password) VALUES ('{id}','{password}');");
-            return true;
         }
     }
 }
