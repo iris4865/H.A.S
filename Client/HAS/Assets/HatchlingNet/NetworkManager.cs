@@ -1,4 +1,5 @@
 ﻿using HatchlingNet;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,20 +30,28 @@ public class NetworkManager : MonoBehaviour
     }
 
     HatchlingNetUnityService gameserver;
+    Dictionary<int, GameObject> networkObj;
+    public Queue<GameObject> numberingWaitObj {get; set;}
+    public int networkID { get; set; }
+    public string userID { get; set; }
 
     void Awake()
     {
-        if (instance != null)
-            return;
+        //if (instance != null)
+        //    return;
         DontDestroyOnLoad(this);
         this.gameserver = gameObject.AddComponent<HatchlingNetUnityService>();
         this.gameserver.callbackAppStatusChanged += CallStatusChange;
         this.gameserver.callbackAppReceiveMessage += CallMessage;
 
+        userID = "test";
+
+        Debug.Log("ㅇㅇ");
     }
 
     void Start()
     {
+        Debug.Log("ㅇㅇㅁ");
         Connect();
     }
 
@@ -102,6 +111,50 @@ public class NetworkManager : MonoBehaviour
                 break;
 
             case PROTOCOL.PositionAck:
+                {
+                    int networkID = msg.PopInt32();
+                    Vector3 position;
+                    position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
+
+                    if (networkObj.ContainsKey(networkID) == true)
+                    {
+                        networkObj[networkID].GetComponent<Transform>().position = position;
+                    }
+                }
+                break;
+
+            case PROTOCOL.ObjNumberingAck:
+                {
+                    GameObject obj = null;
+                    networkID = msg.PopInt32();
+
+                    lock (numberingWaitObj)
+                    {
+                        obj = numberingWaitObj.Dequeue();
+                    }
+
+                    lock (networkObj)
+                    {
+                        networkObj.Add(networkID, obj);
+                    }
+
+                    PacketBufferManager.Push(msg);
+                    msg = PacketBufferManager.Pop((short)PROTOCOL.CreateObjReq, (short)SEND_TYPE.Single);
+                    msg.Push(networkID);
+                    msg.Push(obj.tag);//tag는 유니티 내에서 각 객체에 설정된거임...
+                                      //자세한건 유니티 실행 후  윈도우탭/inspector탭/  을 참고
+
+                    Send(msg);
+                }
+                break;
+
+            case PROTOCOL.CreateObjAck:
+                {
+                    int objNumbering = msg.PopInt32();
+                    string objTag = msg.PopString();
+
+                    //
+                }
                 break;
 
             default:

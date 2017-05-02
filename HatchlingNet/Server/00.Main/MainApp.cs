@@ -6,6 +6,7 @@ namespace Server
     class MainApp
     {
         ListenerController listenerController;
+//        NumberingPool objNumberingPool;
 
         static void Main(string[] args)
         {
@@ -19,9 +20,12 @@ namespace Server
         public void Initialize()
         {
             PacketBufferManager.Initialize(2000);
+  //          objNumberingPool = new NumberingPool(20000);
 
             listenerController = new ListenerController(10000);
             listenerController.Initialize();
+
+
         }
 
         public void Update()

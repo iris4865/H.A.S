@@ -12,9 +12,17 @@ public class game_login_click : MonoBehaviour
     string id_s;
     string password_s;
 
+    NetworkManager networkManager = null;
+
+    void Awake()
+    {
+        networkManager = NetworkManager.GetInstance;
+    }
+
     void Start()
     {
         password.contentType = InputField.ContentType.Password;
+        
     }
 
     void Update()
@@ -33,7 +41,8 @@ public class game_login_click : MonoBehaviour
             return;
         }
 
-        NetworkManager networkManager = NetworkManager.GetInstance;
+//        NetworkManager networkManager = NetworkManager.GetInstance.GetComponent<;
+        networkManager = networkManager = NetworkManager.GetInstance;
 
         if (networkManager != null)
         {
@@ -41,7 +50,9 @@ public class game_login_click : MonoBehaviour
             msg.Push(id_s);
             msg.Push(password_s);
 
-            networkManager.GetComponent<NetworkManager>().Send(msg);
+            networkManager.Send(msg);
+
+            networkManager.userID = id_s;
         }
 
         SceneManager.LoadScene(3);

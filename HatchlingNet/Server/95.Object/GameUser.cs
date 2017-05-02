@@ -2,11 +2,14 @@
 using Header;
 using MySqlDataBase;
 using System;
+using System.Collections.Generic;
 
 namespace Server
 {
     public class GameUser : IPeer
     {
+        static NumberingPool objNumberingPool = new NumberingPool(20000);
+        static Dictionary<int, string> objList = new Dictionary<int, string>();
         UserToken userToken;
         MysqlCommand command;
         public string UserID { get; set; }
@@ -82,7 +85,8 @@ namespace Server
                         string id = msg.PopString();
                         string password = msg.PopString();
 
-                        bool isUser = command.CheckLogin(id, password);
+                        //                        bool isUser = command.CheckLogin(id, password);
+                        bool isUser = true;
 
                         if (isUser == true)
                         {
@@ -115,10 +119,36 @@ namespace Server
                     }
                     break;
 
-                case PROTOCOL.PositionAck:
+                case PROTOCOL.PositionReq:
                     {
+                        //Packet response = PacketBufferManager.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
+                        //int networkID = msg.PopInt32();
 
+                        Send(msg);
                     }
+                    break;
+
+                case PROTOCOL.ObjNumberingReq:
+                    {
+                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.Single);
+                        response.Push(objNumberingPool.Pop());
+                        Send(response);
+                    }
+                    break;
+
+                case PROTOCOL.CreateObjReq:
+                    {
+                        int objNumbering = msg.PopInt32();
+                        string objTag = msg.PopString();
+
+                        objList.Add(objNumbering, objTag);
+
+                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.CreateObjAck, (short)SEND_TYPE.BroadcastWithMe);
+                        response.Push(objNumbering);
+                        response.Push(objTag);
+                        Send(response);
+                    }
+
                     break;
             }
         }
