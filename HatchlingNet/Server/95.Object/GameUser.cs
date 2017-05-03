@@ -38,13 +38,11 @@ namespace Server
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine("protocolType " + protocol);
 
+            Packet response = null;
             switch (protocol)
             {
                 case PROTOCOL.SignupReq:
                     {
-                        string id = msg.PopString();
-                        string password = msg.PopString();
-
                         //MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
                         //mysql.Open();
 
@@ -60,18 +58,14 @@ namespace Server
                         else
                             Console.WriteLine("fail");
 
-
-
+                        string id = msg.PopString();
+                        string password = msg.PopString();
                         bool isSignup = command.SignUp(id, password);
-
-                        Packet response;
 
                         if (isSignup)
                             response = PacketBufferManager.Pop((short)PROTOCOL.SignupAck, (short)SEND_TYPE.Single);
                         else
                             response = PacketBufferManager.Pop((short)PROTOCOL.SignupRej, (short)SEND_TYPE.Single);
-
-                        Send(response);
                     }
                     break;
 
@@ -81,24 +75,16 @@ namespace Server
 
                         string id = msg.PopString();
                         string password = msg.PopString();
-
                         bool isUser = command.CheckLogin(id, password);
 
                         if (isUser == true)
                         {
-                            Packet loginResult = PacketBufferManager.Pop((short)PROTOCOL.LoginAck, (short)SEND_TYPE.Single);
-                            loginResult.Push(id);
-                            Send(loginResult);
-
-                            //                            userID = new string(id);
+                            response = PacketBufferManager.Pop((short)PROTOCOL.LoginAck, (short)SEND_TYPE.Single);
+                            response.Push(id);
                             UserID = id;
-
                         }
                         else
-                        {
-                            Packet loginResult = PacketBufferManager.Pop((short)PROTOCOL.LoginRej, (short)SEND_TYPE.Single);
-                            Send(loginResult);
-                        }
+                            response = PacketBufferManager.Pop((short)PROTOCOL.LoginRej, (short)SEND_TYPE.Single);
 
                     }
                     break;
@@ -108,10 +94,9 @@ namespace Server
                         string text = msg.PopString();
                         Console.WriteLine(string.Format("text {0}", text));
 
-                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)sendType);
+                        response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)sendType);
 
                         response.Push(text);
-                        Send(response);
                     }
                     break;
 
@@ -121,6 +106,8 @@ namespace Server
                     }
                     break;
             }
+            if (response != null)
+                Send(response);
         }
 
         public void Send(Packet msg)

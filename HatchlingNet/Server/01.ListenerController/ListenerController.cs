@@ -85,8 +85,6 @@ namespace Server
                 }
 
                 this.flowController.WaitOne();
-
-
             }
         }
 
