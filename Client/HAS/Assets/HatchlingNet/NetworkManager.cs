@@ -43,6 +43,8 @@ public class NetworkManager : MonoBehaviour
         this.gameserver = gameObject.AddComponent<HatchlingNetUnityService>();
         this.gameserver.callbackAppStatusChanged += CallStatusChange;
         this.gameserver.callbackAppReceiveMessage += CallMessage;
+        networkObj = new Dictionary<int, GameObject>();
+        numberingWaitObj = new Queue<GameObject>();
 
         userID = "test";
 
@@ -143,8 +145,11 @@ public class NetworkManager : MonoBehaviour
                     msg.Push(networkID);
                     msg.Push(obj.tag);//tag는 유니티 내에서 각 객체에 설정된거임...
                                       //자세한건 유니티 실행 후  윈도우탭/inspector탭/  을 참고
+                    msg.Push(transform.position.x, transform.position.y, transform.position.z);
 
                     Send(msg);
+
+                    
                 }
                 break;
 
@@ -152,8 +157,16 @@ public class NetworkManager : MonoBehaviour
                 {
                     int objNumbering = msg.PopInt32();
                     string objTag = msg.PopString();
+                    Vector3 position;   position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
+//                    Quaternion rotation;   rotation.x = 0; rotation.y = 0; rotation.z = 0;
 
-                    //
+                    //                    GameObject obj = Instantiate<Player, position> as GameObject;
+
+                    GameObject obj = Instantiate(Resources.Load("Prefabs/" + "Player") as GameObject, position, new Quaternion(0, 0, 0, 0));
+                    lock (networkObj)
+                    {
+                        networkObj.Add(networkID, obj);
+                    }
                 }
                 break;
 
