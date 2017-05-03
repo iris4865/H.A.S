@@ -31,7 +31,7 @@ namespace Server
 
         public void Initialize()
         {
-//            assignIDToUser = 0;
+            //            assignIDToUser = 0;
 
             tokenList = new Dictionary<int, UserToken>();
             this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
@@ -40,6 +40,15 @@ namespace Server
             Listener.Initialize();
 
             tokenNumberingPool = new NumberingPool(10000);
+            for (int i = 0; i < tokenNumberingPool.capacity; ++i)
+            {
+                int number = new int();
+                number = i;
+
+                tokenNumberingPool.Push(number);
+            }
+        
+
         }
 
         public void Start(string host, int port, int backlog)//backlog : 대기큐의 크기

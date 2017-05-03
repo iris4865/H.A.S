@@ -8,7 +8,7 @@ namespace Server
 {
     public class GameUser : IPeer
     {
-        static NumberingPool objNumberingPool = new NumberingPool(20000);
+        static NumberingPool objNumberingPool = null;
         static Dictionary<int, string> objList = new Dictionary<int, string>();
         UserToken userToken;
         MysqlCommand command;
@@ -17,6 +17,19 @@ namespace Server
 
         public GameUser(UserToken userToken)
         {
+            if (objNumberingPool == null)
+            {
+                objNumberingPool = new NumberingPool(20000);
+
+                for (int i = 0; i < objNumberingPool.capacity; ++i)
+                {
+                    int number = new int();
+                    number = i;
+
+                    objNumberingPool.Push(number);
+                }
+            }
+
             this.userToken = userToken;
 
             userToken.Peer = this;
