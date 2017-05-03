@@ -1,17 +1,19 @@
 ﻿using HatchlingNet;
 using System;
+using Management;
 
 namespace Server
 {
     class MainApp
     {
         ListenerController listenerController;
+        Monitor monitor = Monitor.Instance;
 //        NumberingPool objNumberingPool;
 
         static void Main(string[] args)
         {
             Console.WriteLine("Server Start");
-            
+
             MainApp mainApp = new MainApp();
             mainApp.Initialize();
             mainApp.Update();
@@ -24,13 +26,12 @@ namespace Server
 
             listenerController = new ListenerController(10000);
             listenerController.Initialize();
-
-
         }
 
         public void Update()
         {
             listenerController.Start("0.0.0.0", 7979, 1000);
+            monitor.Start();
 
             while (true)
                 System.Threading.Thread.Sleep(10000);
