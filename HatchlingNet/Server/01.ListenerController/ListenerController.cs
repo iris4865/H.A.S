@@ -15,12 +15,13 @@ namespace Server
 
         Listener Listener;
         Dictionary<int, UserToken> tokenList;
+        NumberingPool tokenNumberingPool;
 
         AutoResetEvent flowController;
 
         int maxConnection;
         int connectionCount;
-        int assignIDToUser;
+//        int assignIDToUser;
         //int bufferSize;
 
         public ListenerController(int maxConnection)
@@ -30,13 +31,15 @@ namespace Server
 
         public void Initialize()
         {
-            assignIDToUser = 0;
+//            assignIDToUser = 0;
 
             tokenList = new Dictionary<int, UserToken>();
             this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
 
             Listener = new Listener(maxConnection);
             Listener.Initialize();
+
+            tokenNumberingPool = new NumberingPool(10000);
         }
 
         public void Start(string host, int port, int backlog)//backlog : 대기큐의 크기
@@ -105,7 +108,7 @@ namespace Server
                 userToken.socket = clientSocket;
                 userToken.sendEventArgs = sendArgs;
                 userToken.receiveEventArgs = receiveArgs;
-                userToken.TokenID = assignIDToUser++;
+                userToken.TokenID = tokenNumberingPool.Pop();//연결해지시 push해주는거 아직 안함
                 userToken.CallbackBroadcast = CallBroadCast;
                 userToken.CallbackSendTo = CallSendTo;
 

@@ -2,11 +2,14 @@
 using Header;
 using MySqlDataBase;
 using System;
+using System.Collections.Generic;
 
 namespace Server
 {
     public class GameUser : IPeer
     {
+        static NumberingPool objNumberingPool = new NumberingPool(20000);
+        static Dictionary<int, string> objList = new Dictionary<int, string>();
         UserToken userToken;
         MysqlCommand command;
         public string UserID { get; set; }
@@ -38,11 +41,13 @@ namespace Server
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine("protocolType " + protocol);
 
-            Packet response = null;
             switch (protocol)
             {
                 case PROTOCOL.SignupReq:
                     {
+                        string id = msg.PopString();
+                        string password = msg.PopString();
+
                         //MySQLConnecter mysql = new MySQLConnecter("localhost", "apmsetup");
                         //mysql.Open();
 
@@ -58,14 +63,18 @@ namespace Server
                         else
                             Console.WriteLine("fail");
 
-                        string id = msg.PopString();
-                        string password = msg.PopString();
+
+
                         bool isSignup = command.SignUp(id, password);
+
+                        Packet response;
 
                         if (isSignup)
                             response = PacketBufferManager.Pop((short)PROTOCOL.SignupAck, (short)SEND_TYPE.Single);
                         else
                             response = PacketBufferManager.Pop((short)PROTOCOL.SignupRej, (short)SEND_TYPE.Single);
+
+                        Send(response);
                     }
                     break;
 
@@ -75,16 +84,25 @@ namespace Server
 
                         string id = msg.PopString();
                         string password = msg.PopString();
-                        bool isUser = command.CheckLogin(id, password);
+
+                        //                        bool isUser = command.CheckLogin(id, password);
+                        bool isUser = true;
 
                         if (isUser == true)
                         {
-                            response = PacketBufferManager.Pop((short)PROTOCOL.LoginAck, (short)SEND_TYPE.Single);
-                            response.Push(id);
+                            Packet loginResult = PacketBufferManager.Pop((short)PROTOCOL.LoginAck, (short)SEND_TYPE.Single);
+                            loginResult.Push(id);
+                            Send(loginResult);
+
+                            //                            userID = new string(id);
                             UserID = id;
+
                         }
                         else
-                            response = PacketBufferManager.Pop((short)PROTOCOL.LoginRej, (short)SEND_TYPE.Single);
+                        {
+                            Packet loginResult = PacketBufferManager.Pop((short)PROTOCOL.LoginRej, (short)SEND_TYPE.Single);
+                            Send(loginResult);
+                        }
 
                     }
                     break;
@@ -94,20 +112,45 @@ namespace Server
                         string text = msg.PopString();
                         Console.WriteLine(string.Format("text {0}", text));
 
-                        response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)sendType);
+                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)sendType);
 
                         response.Push(text);
+                        Send(response);
                     }
                     break;
 
-                case PROTOCOL.PositionAck:
+                case PROTOCOL.PositionReq:
                     {
+                        //Packet response = PacketBufferManager.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
+                        //int networkID = msg.PopInt32();
 
+                        Send(msg);
                     }
+                    break;
+
+                case PROTOCOL.ObjNumberingReq:
+                    {
+                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.Single);
+                        response.Push(objNumberingPool.Pop());
+                        Send(response);
+                    }
+                    break;
+
+                case PROTOCOL.CreateObjReq:
+                    {
+                        int objNumbering = msg.PopInt32();
+                        string objTag = msg.PopString();
+
+                        objList.Add(objNumbering, objTag);
+
+                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.CreateObjAck, (short)SEND_TYPE.BroadcastWithMe);
+                        response.Push(objNumbering);
+                        response.Push(objTag);
+                        Send(response);
+                    }
+
                     break;
             }
-            if (response != null)
-                Send(response);
         }
 
         public void Send(Packet msg)
