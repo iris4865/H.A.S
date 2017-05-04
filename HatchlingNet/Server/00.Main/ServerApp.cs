@@ -18,7 +18,7 @@ namespace Server
             listenerController.Initialize();
         }
 
-        public void Update()
+        public void Update()//콘솔용
         {
             Start();
 
@@ -26,7 +26,7 @@ namespace Server
                 System.Threading.Thread.Sleep(10000);
         }
 
-        public void Start()
+        public void Start()//gui용
         {
             listenerController.Start("0.0.0.0", 7979, 1000);
         }

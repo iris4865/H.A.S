@@ -8,7 +8,7 @@ namespace Server
         [STAThread]
         static void Main()
         {
-            bool firstWpf = true;
+            bool firstWpf = false;
             
             if (firstWpf)
                 WpfInit();
