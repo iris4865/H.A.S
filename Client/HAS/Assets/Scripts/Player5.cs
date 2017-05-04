@@ -15,7 +15,7 @@ public class Player5 : MonoBehaviour
     public GameObject can;
 
     float speed = 2.0f;
-    bool isMe = false;
+    //int player_number;
 
     // Use this for initialization
     void Awake()
