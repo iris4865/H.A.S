@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player_Spawn : MonoBehaviour {
-    
     public GameObject player = new GameObject();
+    Player5 a = new Player5();
     Vector3 posi;
+    
     float range = 10.0f;
-
+    //생성자
     // Use this for initialization
     void Start()
     {
@@ -32,8 +33,10 @@ public class Player_Spawn : MonoBehaviour {
         for (i = 0; i < 4; i++)
         {
             posi = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
-            print(player.tag);
-            Instantiate(player, posi, transform.rotation);
+            player.tag= "hahaha";
+            print(i + "번째 이름:" + player.name);
+            print(i + "번째 태그: " + player.tag);
+            Instantiate(a, posi, transform.rotation);
         }
     }
 }

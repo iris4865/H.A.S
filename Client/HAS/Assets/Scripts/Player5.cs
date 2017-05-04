@@ -8,6 +8,7 @@ public class Player5 : MonoBehaviour
     Animator ani;
     Vector3 addPosition;
     Vector3 V3;
+    int id;
 
     //경찰인지 도둑인지 구별...해야한다.
     int player_job; //1 or 2 = 도둑 or 경찰...
@@ -56,6 +57,11 @@ public class Player5 : MonoBehaviour
         msg.Push(transform.position.x, transform.position.y, transform.position.z);
         NetworkManager.GetInstance.Send(msg);
 
+    }
+
+    public int gethaha()
+    {
+        return id;
     }
 
     private void OnTriggerEnter(Collider other)
