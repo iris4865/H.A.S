@@ -5,10 +5,10 @@ using Microsoft.VisualBasic.Devices;
 
 namespace Management
 {
-    class Monitor
+    class ServerMonitor
     {
-        private static readonly Lazy<Monitor> instance = new Lazy<Monitor>(() => new Monitor());
-        public static Monitor Instance => instance.Value;
+        private static readonly Lazy<ServerMonitor> instance = new Lazy<ServerMonitor>(() => new ServerMonitor());
+        public static ServerMonitor Instance => instance.Value;
 
         PerformanceCounter cpuUsage;
         PerformanceCounter cpuTotalUsage;
@@ -16,14 +16,14 @@ namespace Management
         PerformanceCounter memAvailable;
         PerformanceCounter memTotal;
 
-        private Monitor()
+        
+        private ServerMonitor()
         {
             cpuUsage = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName);
             cpuTotalUsage = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             memUsage = new PerformanceCounter("Process", "Working Set", Process.GetCurrentProcess().ProcessName);
             memAvailable = new PerformanceCounter("Memory", "Available MBytes");
             //memTotal = new PerformanceCounter("Memory", "_total");
-
         }
 
         public void Start()
