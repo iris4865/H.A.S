@@ -26,7 +26,6 @@ namespace Management
 
         public void AppExit(object sender, ExitEventArgs e)
         {
-            MessageBox.Show("App has exited");
         }
     }
 }

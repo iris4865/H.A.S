@@ -9,6 +9,7 @@ namespace Server
         static void Main()
         {
             bool firstWpf = true;
+            
             if (firstWpf)
                 WpfInit();
             else

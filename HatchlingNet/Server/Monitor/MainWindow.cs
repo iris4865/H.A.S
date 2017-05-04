@@ -13,6 +13,7 @@ namespace Management
             Width = width;
             Background = backgroundColor;
             Show();
+            Server.Monitor.MainWpf a;
         }
     }
 }
