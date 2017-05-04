@@ -22,7 +22,7 @@ namespace Server.Monitor
     {
         public MainWpf()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
     }
 }
