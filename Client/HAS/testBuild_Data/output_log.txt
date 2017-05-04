@@ -2,26 +2,74 @@ Initialize engine version: 5.5.2f1 (3829d7f588f3)
 GfxDevice: creating device client; threaded=1
 Direct3D:
     Version:  Direct3D 11.0 [level 11.0]
-    Renderer: NVIDIA GeForce GTX 960M (ID=0x139b)
+    Renderer: NVIDIA GeForce GTX 750 (ID=0x1381)
     Vendor:   NVIDIA
-    VRAM:     3072 MB
-    Driver:   22.21.13.8189
+    VRAM:     993 MB
+    Driver:   20.19.15.4531
 Begin MonoManager ReloadAssembly
-Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.dll (this message is harmless)
-Loading C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\Assembly-CSharp.dll (this message is harmless)
-Loading C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.UI.dll (this message is harmless)
-Loading C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
-Loading C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
-Loading C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
-Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\HatchlingNet.dll (this message is harmless)
-Loading C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\HatchlingNet.dll into Unity Child Domain
-- Completed reload, in  0.083 seconds
-Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\System.Core.dll (this message is harmless)
-Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\System.dll (this message is harmless)
+Platform assembly: E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
+Loading E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
+Platform assembly: E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\HatchlingNet.dll (this message is harmless)
+Loading E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\HatchlingNet.dll into Unity Child Domain
+- Completed reload, in  0.042 seconds
+Platform assembly: E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: E:\iris4\Documents\GitHub\H.A.S\Client\HAS\testBuild_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 1.636311 ms
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 1fc0 -> priority: 1 
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 4.933902 ms
+active NetworkManager 
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+ㅇㅇ
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 329.
+Total: 0.275279 ms (FindLiveObjects: 0.026887 ms CreateObjectMapping: 0.015684 ms MarkObjects: 0.225344 ms  DeleteObjects: 0.007042 ms)
+
+ㅇㅇㅁ
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.980762 ms
+
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 311.
+Total: 0.262155 ms (FindLiveObjects: 0.023366 ms CreateObjectMapping: 0.016964 ms MarkObjects: 0.212541 ms  DeleteObjects: 0.009282 ms)
+
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.359463 ms
+
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 1064.
+Total: 0.311769 ms (FindLiveObjects: 0.053775 ms CreateObjectMapping: 0.021126 ms MarkObjects: 0.225985 ms  DeleteObjects: 0.010563 ms)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at Player_Spawn.CreatePlayer () [0x00000] in <filename unknown>:0 
+  at Player_Spawn.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+앱콰이트1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+앱콰이트2
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+

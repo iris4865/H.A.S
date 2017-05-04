@@ -1,6 +1,4 @@
 ﻿using HatchlingNet;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player5 : MonoBehaviour
@@ -8,30 +6,50 @@ public class Player5 : MonoBehaviour
     Animator ani;
     Vector3 addPosition;
     Vector3 V3;
-    int id;
+
+    public int UniqueId { get; set; }
+    bool isPlayer = false;
+    static int count = 0;
 
     //경찰인지 도둑인지 구별...해야한다.
     int player_job; //1 or 2 = 도둑 or 경찰...
-    
+
     public GameObject can;
 
     float speed = 2.0f;
     //int player_number;
 
     // Use this for initialization
+
     void Awake()
     {
         ani = GetComponentInChildren<Animator>();
-        can.SetActive(false);
+        //can.SetActive(false);
     }
 
     void Start()
     {
+        if (count == 0)
+            isPlayer = true;
+
+        UniqueId = count++;
         //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingReq, (short)SEND_TYPE.Single);
         //msg.Push(this.tag);
         //Queue<GameObject> queue = NetworkManager.GetInstance.numberingWaitObj;
         //queue.Enqueue(this.gameObject);
         //NetworkManager.GetInstance.Send(msg);
+    }
+
+    public void testMove()
+    {
+        addPosition = Vector3.zero;
+        {
+            float s = 1.0f;
+            addPosition.z = speed * s;
+            ani.SetBool("isRunning", true);
+            ani.SetFloat("speed", speed * s);
+        }
+        transform.position += ((transform.rotation * addPosition) * Time.deltaTime);
     }
 
     // Update is called once per frame
@@ -44,8 +62,11 @@ public class Player5 : MonoBehaviour
 
     void FixedUpdate()
     {
-        run();
-        turn();
+        if (isPlayer)
+        {
+            run();
+            turn();
+        }
     }
 
     void NetUpdate()
@@ -57,11 +78,6 @@ public class Player5 : MonoBehaviour
         msg.Push(transform.position.x, transform.position.y, transform.position.z);
         NetworkManager.GetInstance.Send(msg);
 
-    }
-
-    public int gethaha()
-    {
-        return id;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -84,7 +100,7 @@ public class Player5 : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(Input.GetKey(KeyCode.E) == true)
+        if (Input.GetKey(KeyCode.E) == true)
         {
             Destroy(other.gameObject);
             can.SetActive(false);
@@ -134,7 +150,7 @@ public class Player5 : MonoBehaviour
             }
             if (Input.GetKey(KeyCode.E) == true)
             {
-                
+
             }
             ani.SetFloat("speed", speed * s);
         }

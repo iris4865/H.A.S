@@ -1,18 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Player_Spawn : MonoBehaviour {
-    public GameObject player = new GameObject();
-    Player5 a = new Player5();
-    Vector3 posi;
+    public GameObject player;
+    //GameObject player1 = GameObject.Find("player");
+    //GameObject[] players = GameObject.FindGameObjectsWithTag("player");
+    //GameObject[] players2 = GameObject.FindGameObjectsWithTag("Player");
+    Vector3 position;
+
+    int nonPlayerCount = 4;
+    private List<Player5> players = new List<Player5>();
     
     float range = 10.0f;
     //생성자
     // Use this for initialization
     void Start()
     {
-        player_create();
+        CreatePlayer();
     }
 
     void Awake()
@@ -26,17 +30,18 @@ public class Player_Spawn : MonoBehaviour {
 
     }
 
-    void player_create()
+    void CreatePlayer()
     {
-        int i;
-
-        for (i = 0; i < 4; i++)
+        GameObject gb = GameObject.Find("Player").gameObject;
+        players.Add(gb.GetComponent<Player5>());
+            
+        //sc.ControlInstanceId = gb.GetInstanceID();
+        for (int i = 0; i < nonPlayerCount; i++)
         {
-            posi = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
-            player.tag= "hahaha";
-            print(i + "번째 이름:" + player.name);
-            print(i + "번째 태그: " + player.tag);
-            Instantiate(a, posi, transform.rotation);
+            position = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
+
+            GameObject copy = Instantiate(player, position, transform.rotation);
+            players.Add(copy.GetComponent<Player5>());
         }
     }
 }
