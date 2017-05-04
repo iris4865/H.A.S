@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawn : MonoBehaviour {
-
-    //public GameObject player = new GameObject();
-
-
+public class Item_Spawn : MonoBehaviour {
 
     int size = 10;
     public GameObject[] spawn = new GameObject[10]; 
@@ -15,7 +11,6 @@ public class Spawn : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        //player_create();
         item_create();
     }
 
@@ -27,17 +22,6 @@ public class Spawn : MonoBehaviour {
 	void Update () {
 		
 	}
-
-    /*void player_create()
-    {
-        int i;
-        for(i = 0; i < 4; i++)
-        {
-            posi = new Vector3(Random.Range(-10f, 10f), 0f, Random.Range(-10f, 10f));
-
-            Instantiate(player, posi, transform.rotation);
-        }
-    }*/
 
     void item_create()
     {

@@ -155,17 +155,17 @@ public class NetworkManager : MonoBehaviour
 
             case PROTOCOL.CreateObjAck:
                 {
-                    int objNumbering = msg.PopInt32();
-                    string objTag = msg.PopString();
-                    Vector3 position;   position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
+                    //int objNumbering = msg.PopInt32();
+                    //string objTag = msg.PopString();
+                    //Vector3 position;   position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
                     
-                    lock (networkObj)
-                    {
-                        //   GameObject obj = Instantiate(Resources.Load("Prefabs/" + "Player") as GameObject, position, new Quaternion(0, 0, 0, 0));
-                        GameObject obj = Instantiate(Resources.Load("Prefabs/" + "Player") as GameObject, position, new Quaternion(0, 0, 0, 0));
+                    //lock (networkObj)
+                    //{
+                    //    //   GameObject obj = Instantiate(Resources.Load("Prefabs/" + "Player") as GameObject, position, new Quaternion(0, 0, 0, 0));
+                    //    GameObject obj = Instantiate(Resources.Load("Prefabs/" + "Player") as GameObject, position, new Quaternion(0, 0, 0, 0));
 
-                        networkObj.Add(networkID, obj);
-                    }
+                    //    networkObj.Add(networkID, obj);
+                    //}
                 }
                 break;
 
