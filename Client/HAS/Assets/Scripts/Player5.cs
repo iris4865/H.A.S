@@ -22,13 +22,15 @@ public class Player5 : MonoBehaviour
     {
         ani = GetComponentInChildren<Animator>();
         can.SetActive(false);
+    }
 
-
-        Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingReq, (short)SEND_TYPE.Single);
-        msg.Push(this.tag);
-        Queue<GameObject> queue = NetworkManager.GetInstance.numberingWaitObj;
-        queue.Enqueue(this.gameObject);
-        NetworkManager.GetInstance.Send(msg);
+    void Start()
+    {
+        //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingReq, (short)SEND_TYPE.Single);
+        //msg.Push(this.tag);
+        //Queue<GameObject> queue = NetworkManager.GetInstance.numberingWaitObj;
+        //queue.Enqueue(this.gameObject);
+        //NetworkManager.GetInstance.Send(msg);
     }
 
     // Update is called once per frame
@@ -36,7 +38,7 @@ public class Player5 : MonoBehaviour
     {
         AnimationUpdate();
 
-        NetUpdate();
+        //NetUpdate();
     }
 
     void FixedUpdate()

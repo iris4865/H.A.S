@@ -118,9 +118,12 @@ public class NetworkManager : MonoBehaviour
                     Vector3 position;
                     position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
 
-                    if (networkObj.ContainsKey(networkID) == true)
+                    lock (networkObj)
                     {
-                        networkObj[networkID].GetComponent<Transform>().position = position;
+                        if (networkObj.ContainsKey(networkID) == true)
+                        {
+                            networkObj[networkID].GetComponent<Transform>().position = position;
+                        }
                     }
                 }
                 break;

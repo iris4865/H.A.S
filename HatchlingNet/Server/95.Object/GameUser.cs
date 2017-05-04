@@ -144,7 +144,12 @@ namespace Server
                 case PROTOCOL.ObjNumberingReq:
                     {
                         Packet response = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.Single);
-                        response.Push(objNumberingPool.Pop());
+
+                        lock (objNumberingPool)
+                        {
+                            response.Push(objNumberingPool.Pop());
+                        }
+
                         Send(response);
                     }
                     break;
@@ -154,7 +159,8 @@ namespace Server
                         int objNumbering = msg.PopInt32();
                         string objTag = msg.PopString();
 
-                        objList.Add(objNumbering, objTag);
+                        lock(objList)
+                            objList.Add(objNumbering, objTag);
 
                         Packet response = PacketBufferManager.Pop((short)PROTOCOL.CreateObjAck, (short)SEND_TYPE.BroadcastWithMe);
                         response.Push(objNumbering);
