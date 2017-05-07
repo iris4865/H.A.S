@@ -1,20 +1,30 @@
-﻿using System.Windows;
+﻿using Server;
+using System.Windows;
 using System.Windows.Media;
-using Server;
 
 namespace Management
 {
-    class WpfApp : System.Windows.Application
+    public class WpfApp
     {
-        static ServerApp server;
-        public void AppStartUp(object sender, StartupEventArgs e)
-        {
+        ServerApp server;
+        Application wpf;
+        WindowMain windowMain;
 
+        public void Start()
+        {
+            wpf = new Application();
+            wpf.Startup += WpfStartUp;
+            wpf.Exit += WpfExit;
+            wpf.Run();
+        }
+
+        public void WpfStartUp(object sender, StartupEventArgs e)
+        {
             double height = SystemParameters.MaximizedPrimaryScreenHeight / 2;
             double width = SystemParameters.MaximizedPrimaryScreenWidth / 2;
 
-            Window mainWindow = new MainWindow("Hatchling Server Monitor", height, width, Brushes.Black);
-            mainWindow.Show();
+            windowMain = new WindowMain("Hatchling Server Monitor", height, width, Brushes.White);
+            windowMain.Show();
         }
 
         public void ServerStart()
@@ -24,8 +34,54 @@ namespace Management
             server.Start();
         }
 
-        public void AppExit(object sender, ExitEventArgs e)
+        public void WpfExit(object sender, ExitEventArgs e)
         {
         }
+        /*
+        public void  Deactivated()
+        {
+
+        }
+        public void  SessionEnding()
+        {
+
+        }
+        public void  DispatcherUnhandledException()
+        {
+
+        }
+        public void  Navigating()
+        {
+
+        }
+        public void  Navigated()
+        {
+
+        }
+        public void  NavigationProgress()
+        {
+
+        }
+        public void  NavigationFailed()
+        {
+
+        }
+        public void  LoadCompleted()
+        {
+
+        }
+        public void  Activated()
+        {
+
+        }
+        public void  NavigationStopped()
+        {
+
+        }
+        public void  FragmentNavigation()
+        {
+
+        }
+        */
     }
 }

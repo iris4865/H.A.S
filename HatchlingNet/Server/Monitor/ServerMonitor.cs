@@ -15,8 +15,9 @@ namespace Management
         PerformanceCounter memUsage;
         PerformanceCounter memAvailable;
         PerformanceCounter memTotal;
+        readonly ComputerInfo info = new ComputerInfo();
 
-        
+
         private ServerMonitor()
         {
             cpuUsage = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName);
@@ -34,15 +35,29 @@ namespace Management
 
         public void Monitoring()
         {
-            while(true)
+            while (true)
             {
-                ComputerInfo info = new ComputerInfo();
-                
+
 
                 Console.WriteLine($"thisPcpu: {cpuUsage.NextValue()}, TOTAL: {cpuTotalUsage.NextValue()}.");
-                Console.WriteLine($"mem: {memUsage.NextValue()/1024/1024}MB, available: {memAvailable.NextValue()/1024}, total: {((double)info.TotalPhysicalMemory)/1024/1024/1024}");
+                Console.WriteLine($"mem: {memUsage.NextValue() / 1024 / 1024}MB, available: {memAvailable.NextValue() / 1024}, total: {((double)info.TotalPhysicalMemory) / 1024 / 1024 / 1024}");
                 Thread.Sleep(1500);
             }
+        }
+
+        public float GetUsageCpu()
+        {
+            return cpuTotalUsage.NextValue();
+        }
+
+        public float GetMemoryUsage()
+        {
+            return memUsage.NextValue() / 1024 / 1024 / 8;
+        }
+
+        public float GetMemoryTotal()
+        {
+            return (float)info.TotalPhysicalMemory / 1024 / 1024 / 1024;
         }
     }
 }

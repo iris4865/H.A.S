@@ -8,7 +8,7 @@ namespace Server
         [STAThread]
         static void Main()
         {
-            bool firstWpf = false;
+            bool firstWpf = true;
             
             if (firstWpf)
                 WpfInit();
@@ -26,10 +26,7 @@ namespace Server
         static void WpfInit()
         {
             ConsoleScreen.OnScreen(false);
-            WpfApp app = new WpfApp();
-            app.Startup += app.AppStartUp;
-            app.Exit += app.AppExit;
-            app.Run();
+            new WpfApp().Start();
         }
     }
 }

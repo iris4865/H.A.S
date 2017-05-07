@@ -69,12 +69,9 @@
     <Compile Include="01.ListenerController\Listener\Listener.cs" />
     <Compile Include="01.ListenerController\ListenerController.cs" />
     <Compile Include="96.DataBase\Core\Table.cs" />
-    <Compile Include="Monitor\MainWindow.cs" />
-    <Compile Include="Monitor\MainWpf.xaml.cs">
-      <DependentUpon>MainWpf.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Monitor\ServerMonitor.cs" />
     <Compile Include="Monitor\ShowConsole.cs" />
+    <Compile Include="Monitor\WindowMain.cs" />
     <Compile Include="Monitor\WpfApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="98.Header\PROTOCOL.cs" />
@@ -88,12 +85,6 @@
       <Project>{c4cd9ebf-4396-43e2-b037-1de1e9518da3}</Project>
       <Name>HatchlingNet</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Monitor\MainWpf.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
