@@ -9,7 +9,7 @@ public class Player_Spawn : MonoBehaviour {
     Vector3 position;
 
     int nonPlayerCount = 4;
-    private List<Player5> players = new List<Player5>();
+    private List<Player5> playerList = new List<Player5>();
     
     float range = 10.0f;
     //생성자
@@ -32,16 +32,20 @@ public class Player_Spawn : MonoBehaviour {
 
     void CreatePlayer()
     {
-        GameObject gb = GameObject.Find("Player").gameObject;
-        players.Add(gb.GetComponent<Player5>());
-            
+        player.GetComponent<Player5>().main_camera.enabled = false;
+        //GameObject gb = GameObject.Find("Player").gameObject;
+        //playerList.Add(gb.GetComponent<Player5>());
+
         //sc.ControlInstanceId = gb.GetInstanceID();
         for (int i = 0; i < nonPlayerCount; i++)
         {
             position = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
-
+            
             GameObject copy = Instantiate(player, position, transform.rotation);
-            players.Add(copy.GetComponent<Player5>());
+            //playerList.Add(copy.GetComponent<Player5>());
+            //copy.GetComponent<Player5>().main_camera.enabled = false;
         }
+
+        player.GetComponent<Player5>().main_camera.enabled = true;
     }
 }

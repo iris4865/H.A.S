@@ -9,7 +9,7 @@ public class Player5 : MonoBehaviour
 
     public int UniqueId { get; set; }
     bool isPlayer = false;
-    static int count = 0;
+    public static int count = 0;
 
     //경찰인지 도둑인지 구별...해야한다.
     int player_job; //1 or 2 = 도둑 or 경찰...
@@ -18,6 +18,8 @@ public class Player5 : MonoBehaviour
 
     float speed = 2.0f;
     //int player_number;
+
+    public Camera main_camera;
 
     // Use this for initialization
 
@@ -30,7 +32,11 @@ public class Player5 : MonoBehaviour
     void Start()
     {
         if (count == 0)
+        {
+            main_camera.enabled = true;
             isPlayer = true;
+        }
+
 
         UniqueId = count++;
         //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingReq, (short)SEND_TYPE.Single);
@@ -64,6 +70,7 @@ public class Player5 : MonoBehaviour
     {
         if (isPlayer)
         {
+            
             run();
             turn();
         }
@@ -77,7 +84,6 @@ public class Player5 : MonoBehaviour
         msg.Push(NetworkManager.GetInstance.networkID);
         msg.Push(transform.position.x, transform.position.y, transform.position.z);
         NetworkManager.GetInstance.Send(msg);
-
     }
 
     private void OnTriggerEnter(Collider other)

@@ -6,6 +6,7 @@ public class Play_camera : MonoBehaviour {
     
     Vector3 V3;
     float X;
+    float Y;
     float speed;
 
 	// Use this for initialization
@@ -22,13 +23,13 @@ public class Play_camera : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate() {
-        
         turn();
     }
 
     void turn()
     {
         X = Input.GetAxis("Mouse Y");
+        //Y = Input.GetAxis("Mouse X");
         if (transform.rotation.eulerAngles.x - X <= 40f || transform.rotation.eulerAngles.x - X >= 320f)
         {
             V3 = new Vector3(-X, 0, 0);
