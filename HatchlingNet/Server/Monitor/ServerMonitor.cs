@@ -5,7 +5,7 @@ using Microsoft.VisualBasic.Devices;
 
 namespace Management
 {
-    class ServerMonitor
+    public class ServerMonitor
     {
         private static readonly Lazy<ServerMonitor> instance = new Lazy<ServerMonitor>(() => new ServerMonitor());
         public static ServerMonitor Instance => instance.Value;
