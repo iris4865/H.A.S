@@ -9,7 +9,7 @@ namespace Server
     public class GameUser : IPeer
     {
         static NumberingPool objNumberingPool = null;
-        static Dictionary<int, string> objList = new Dictionary<int, string>();
+        static Dictionary<int, string> objList = new Dictionary<int, string>();//<remoteID, 객체 태그>
         UserToken userToken;
         MysqlCommand command;
         public string UserID { get; set; }
@@ -137,38 +137,60 @@ namespace Server
                         //Packet response = PacketBufferManager.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
                         //int networkID = msg.PopInt32();
 
+                        Packet response = msg;
+                        response.SetProtocol((short)PROTOCOL.PositionAck);
+                        response.SetSendType((short)SEND_TYPE.BroadcastWithoutMe);
+
                         Send(msg);
                     }
                     break;
 
                 case PROTOCOL.ObjNumberingReq:
                     {
-                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.Single);
+                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.BroadcastWithMe);
+                        string objTag = msg.PopString();
+                        MyVector3 position; position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
 
+                        response.Push(objTag);//태그
+                        response.Push(position.x);//위치
+                        response.Push(position.y);//위치
+                        response.Push(position.z);//위치
+
+                        int number = 0;
                         lock (objNumberingPool)
                         {
-                            response.Push(objNumberingPool.Pop());
+                            number = objNumberingPool.Pop();
                         }
 
+                        Console.WriteLine("태그 : " + objTag + " 위치 x : " + position.x + " y : " + position.y + " z : " + position.z + " remoteID : " + number);
+
+
+                        response.Push(number);        //remote ID
+                        response.Push(UserID);         //만약 이 메세지를 받은 클라의 userID와 같으면 그건 그사람이 주체적으로 만든거고
+                                                       //그 플레이어 조종하려고 만든거일 확률이 높음
+
+
+                        objList.Add(number, objTag);
+
                         Send(response);
                     }
                     break;
 
-                case PROTOCOL.CreateObjReq:
-                    {
-                        int objNumbering = msg.PopInt32();
-                        string objTag = msg.PopString();
+                //case PROTOCOL.CreateObjReq:
+                //    {
+                //        int objNumbering = msg.PopInt32();
+                //        string objTag = msg.PopString();
 
-                        lock(objList)
-                            objList.Add(objNumbering, objTag);
+                //        lock(objList)
+                //            objList.Add(objNumbering, objTag);
 
-                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.CreateObjAck, (short)SEND_TYPE.BroadcastWithMe);
-                        response.Push(objNumbering);
-                        response.Push(objTag);
-                        Send(response);
-                    }
+                //        Packet response = PacketBufferManager.Pop((short)PROTOCOL.CreateObjAck, (short)SEND_TYPE.BroadcastWithMe);
+                //        response.Push(objNumbering);
+                //        response.Push(objTag);
+                //        Send(response);
+                //    }
 
-                    break;
+                //    break;
             }
         }
 

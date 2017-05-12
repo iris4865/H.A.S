@@ -6,10 +6,10 @@ public class Player5 : MonoBehaviour
     Animator ani;
     Vector3 addPosition;
     Vector3 V3;
+    public GameObject headCamera;
+    int remoteID;
 
-    public int UniqueId { get; set; }
-    bool isPlayer = false;
-    public static int count = 0;
+    public bool isPlayer { get; set; }
 
     //경찰인지 도둑인지 구별...해야한다.
     int player_job; //1 or 2 = 도둑 or 경찰...
@@ -19,31 +19,37 @@ public class Player5 : MonoBehaviour
     float speed = 2.0f;
     //int player_number;
 
-    public Camera main_camera;
+    //public Camera main_camera;
 
     // Use this for initialization
 
     void Awake()
     {
         ani = GetComponentInChildren<Animator>();
+        isPlayer = false;
+
         //can.SetActive(false);
     }
 
     void Start()
     {
-        if (count == 0)
-        {
-            main_camera.enabled = true;
-            isPlayer = true;
-        }
+        //        if (count == 0)
+        //        {
+        //            //      main_camera.enabled = true;
+
+        ////            headCamera.SetActive(true);
+        //            isPlayer = true;
+        //        }
 
 
-        UniqueId = count++;
+        //        UniqueId = count++;
         //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingReq, (short)SEND_TYPE.Single);
         //msg.Push(this.tag);
         //Queue<GameObject> queue = NetworkManager.GetInstance.numberingWaitObj;
         //queue.Enqueue(this.gameObject);
         //NetworkManager.GetInstance.Send(msg);
+
+        remoteID = gameObject.GetComponent<NetworkObj>().remoteId;
     }
 
     public void testMove()
@@ -81,7 +87,8 @@ public class Player5 : MonoBehaviour
         Packet msg = PacketBufferManager.Pop((short)PROTOCOL.PositionReq, (short)SEND_TYPE.BroadcastWithoutMe);
         //        msg.Push(NetworkManager.GetInstance.networkID);//id...나중에가면 유저id가 아니라 각 객체마다 서버에서 id를 할당해주고 그걸 기준으로 객체의 정보 통신...
         //하나의 객체에 여러 상호작용이 일어날수 있으니 나중에 해당 메시지를 보낸 시간도 추가해야할것 같다.
-        msg.Push(NetworkManager.GetInstance.networkID);
+
+        //msg.Push(NetworkManager.GetInstance.remoteID);
         msg.Push(transform.position.x, transform.position.y, transform.position.z);
         NetworkManager.GetInstance.Send(msg);
     }
