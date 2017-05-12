@@ -3,10 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfServer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="MainWindow" Height="350" Width="525" SizeChanged="Window_SizeChanged">
+
+    <DockPanel x:Name="dockPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Height="318" Width="515">
+        <TextBox x:Name="leftBox" TextWrapping="Wrap" Text="graph" VerticalAlignment="Top" IsReadOnly="True"/>
+        <TextBox x:Name="rightBox" TextWrapping="Wrap" Text="button" VerticalAlignment="Top" DockPanel.Dock="Right"/>
+        <TextBox x:Name="inputBox" TextWrapping="Wrap" Text="input" VerticalAlignment="Top" DockPanel.Dock="Bottom" Margin="0,0,0,20"/>
+        <TextBox x:Name="logBox" TextWrapping="Wrap" Text="log" VerticalAlignment="Top"/>
+    </DockPanel>
 </Window>

@@ -28,8 +28,7 @@ namespace WpfServer
         DispatcherTimer timer = new DispatcherTimer();
         ServerMonitor serverState = ServerMonitor.Instance;
 
-        DockPanel dock;
-        TextBox leftBox;
+        //double WindowHeight { get => SystemParameters.MaximizedPrimaryScreenHeight/2; }
 
         public MainWindow()
         {
@@ -45,46 +44,16 @@ namespace WpfServer
             Width = SystemParameters.MaximizedPrimaryScreenWidth / 2;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            dock = new DockPanel();
-            Content = dock;
-
-            leftBox = new TextBox
-            {
-                Width = Width / 4,
-                IsReadOnly = true
-            };
-            AddDock(leftBox, Dock.Left);
-
-            TextBox logBox2 = new TextBox
-            {
-                Text = "test2...",
-                Width = Width / 4
-            };
-            AddDock(logBox2, Dock.Right);
-            //Background = Brushes.Black;
-
-            TextBox logBox3 = new TextBox
-            {
-                Text = "input"
-            };
-            AddDock(logBox3, Dock.Bottom);
-
-            TextBox logBox4 = new TextBox
-            {
-                Text = "log"
-            };
-            AddDock(logBox4);
+            UpdateSize();
         }
 
-        void AddDock(UIElement element, Dock position)
+        void UpdateSize()
         {
-            DockPanel.SetDock(element, position);
-            dock.Children.Add(element);
-        }
+            dockPanel.Width = Width;
+            dockPanel.Height = Height - SystemParameters.WindowCaptionHeight;
 
-        void AddDock(UIElement element)
-        {
-            dock.Children.Add(element);
+            leftBox.Width = Width / 4;
+            rightBox.Width = Width / 4;
         }
 
         void ServerStart()
@@ -108,6 +77,17 @@ namespace WpfServer
                 $"RAM Total: {serverState.GetMemoryTotal()}GB\n" +
                 $"Users: 00\n" +
                 $"Packet: 00";
+        }
+
+        void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            try
+            {
+                UpdateSize();
+            }
+            catch { }
+            //imcomplete
+            logBox.Height = inputBox.PointToScreen(new Point(0, 0)).Y - 300;
         }
     }
 }
