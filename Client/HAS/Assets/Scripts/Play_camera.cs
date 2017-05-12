@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class Play_camera : MonoBehaviour {
     
-    Vector3 V3;
-    float X;
-    float Y;
-    float speed;
+    Vector3 camera_rotateVector;
+    float camera_x;
+    float camera_speed;
 
 	// Use this for initialization
 	void Start () {
         Cursor.visible = false;
         
-        speed = 2.0f;
+        camera_speed = 2.0f;
     }
 
     void Update()
@@ -28,12 +27,11 @@ public class Play_camera : MonoBehaviour {
 
     void turn()
     {
-        X = Input.GetAxis("Mouse Y");
-        //Y = Input.GetAxis("Mouse X");
-        if (transform.rotation.eulerAngles.x - X <= 40f || transform.rotation.eulerAngles.x - X >= 320f)
+        camera_x = Input.GetAxis("Mouse Y");
+        if (transform.rotation.eulerAngles.x - camera_x <= 40f || transform.rotation.eulerAngles.x - camera_x >= 320f)
         {
-            V3 = new Vector3(-X, 0, 0);
-            transform.Rotate(V3 * speed);
+            camera_rotateVector = new Vector3(-camera_x, 0, 0);
+            transform.Rotate(camera_rotateVector * camera_speed);
         }
     }
 }

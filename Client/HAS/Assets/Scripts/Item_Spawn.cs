@@ -5,8 +5,8 @@ using UnityEngine;
 public class Item_Spawn : MonoBehaviour {
 
     int size = 10;
-    public GameObject[] spawn = new GameObject[10]; 
-    Vector3 posi;
+    public GameObject[] item_object = new GameObject[10]; 
+    Vector3 spawn_position;
     float range = 30.0f;
 
     // Use this for initialization
@@ -25,17 +25,15 @@ public class Item_Spawn : MonoBehaviour {
 
     void item_create()
     {
-        int i;
-
-        for (i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
         {
-            posi = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
+            spawn_position = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
 
-            Collider collider = spawn[i].GetComponent<BoxCollider>();
+            Collider collider = item_object[i].GetComponent<BoxCollider>();
             collider.isTrigger = true;
             ((BoxCollider)collider).size = new Vector3(2f, 2f, 2f);
 
-            Instantiate(spawn[i], posi, transform.rotation);
+            Instantiate(item_object[i], spawn_position, transform.rotation);
         }
     }
 }

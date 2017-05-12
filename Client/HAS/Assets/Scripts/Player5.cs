@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Player5 : MonoBehaviour
 {
-    Animator ani;
-    Vector3 addPosition;
-    Vector3 V3;
+    Animator player_animator;
+    Vector3 player_moveVector;
+    Vector3 player_rotateVector;
 
     public int UniqueId { get; set; }
     bool isPlayer = false;
@@ -14,19 +14,16 @@ public class Player5 : MonoBehaviour
     //경찰인지 도둑인지 구별...해야한다.
     int player_job; //1 or 2 = 도둑 or 경찰...
 
-    public GameObject can;
+    public GameObject pressE_key_canvas;
 
-    float speed = 2.0f;
-    //int player_number;
+    float player_speed = 2.0f;
 
     public Camera main_camera;
 
-    // Use this for initialization
-
     void Awake()
     {
-        ani = GetComponentInChildren<Animator>();
-        //can.SetActive(false);
+        player_animator = GetComponentInChildren<Animator>();
+        pressE_key_canvas.SetActive(false);
     }
 
     void Start()
@@ -36,8 +33,7 @@ public class Player5 : MonoBehaviour
             main_camera.enabled = true;
             isPlayer = true;
         }
-
-
+        
         UniqueId = count++;
         //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingReq, (short)SEND_TYPE.Single);
         //msg.Push(this.tag);
@@ -46,23 +42,10 @@ public class Player5 : MonoBehaviour
         //NetworkManager.GetInstance.Send(msg);
     }
 
-    public void testMove()
-    {
-        addPosition = Vector3.zero;
-        {
-            float s = 1.0f;
-            addPosition.z = speed * s;
-            ani.SetBool("isRunning", true);
-            ani.SetFloat("speed", speed * s);
-        }
-        transform.position += ((transform.rotation * addPosition) * Time.deltaTime);
-    }
-
     // Update is called once per frame
     void Update()
     {
         AnimationUpdate();
-
         //NetUpdate();
     }
 
@@ -70,7 +53,6 @@ public class Player5 : MonoBehaviour
     {
         if (isPlayer)
         {
-            
             run();
             turn();
         }
@@ -88,20 +70,15 @@ public class Player5 : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        /*if(other.gameObject.name == "item")
-        {
-            Debug.Log("2");
-            can.SetActive(true);
-        }*/
         if (other.gameObject.tag == "item1")
         {
-            can.SetActive(true);
+            pressE_key_canvas.SetActive(true);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        can.SetActive(false);
+        pressE_key_canvas.SetActive(false);
     }
 
     private void OnTriggerStay(Collider other)
@@ -109,26 +86,26 @@ public class Player5 : MonoBehaviour
         if (Input.GetKey(KeyCode.E) == true)
         {
             Destroy(other.gameObject);
-            can.SetActive(false);
+            pressE_key_canvas.SetActive(false);
         }
     }
 
     void AnimationUpdate()
     {
-        if (addPosition.x == 0 && addPosition.z == 0)
+        if (player_moveVector.x == 0 && player_moveVector.z == 0)
         {
-            ani.SetBool("isforwarding", false);
-            ani.SetBool("isRunning", false);
+            player_animator.SetBool("isforwarding", false);
+            player_animator.SetBool("isRunning", false);
         }
         else
         {
-            ani.SetBool("isforwarding", true);
+            player_animator.SetBool("isforwarding", true);
         }
     }
 
     void run()
     {
-        addPosition = Vector3.zero;
+        player_moveVector = Vector3.zero;
         {
             float s = 1.0f;
             if (Input.GetKey(KeyCode.LeftShift))
@@ -138,13 +115,13 @@ public class Player5 : MonoBehaviour
             }
             if (Input.GetKey(KeyCode.W) == true)
             {
-                addPosition.z = speed * s;
-                ani.SetBool("isRunning", true);
+                player_moveVector.z = player_speed * s;
+                player_animator.SetBool("isRunning", true);
             }
             if (Input.GetKey(KeyCode.S) == true)
             {
-                addPosition.z = -speed;
-                ani.SetBool("isRunning", false);
+                player_moveVector.z = -player_speed;
+                player_animator.SetBool("isRunning", false);
             }
             if (Input.GetKey(KeyCode.A) == true)
             {
@@ -158,14 +135,14 @@ public class Player5 : MonoBehaviour
             {
 
             }
-            ani.SetFloat("speed", speed * s);
+            player_animator.SetFloat("speed", player_speed * s);
         }
-        transform.position += ((transform.rotation * addPosition) * Time.deltaTime);
+        transform.position += ((transform.rotation * player_moveVector) * Time.deltaTime);
     }
 
     void turn()
     {
-        V3 = new Vector3(0, Input.GetAxis("Mouse X"), 0);
-        transform.Rotate(V3 * speed);
+        player_rotateVector = new Vector3(0, Input.GetAxis("Mouse X"), 0);
+        transform.Rotate(player_rotateVector * player_speed);
     }
 }
