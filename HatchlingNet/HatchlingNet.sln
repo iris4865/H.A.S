@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{200A6A19-08AC-4A86-9DC3-2CAAB59858F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfServer", "WpfServer\WpfServer.csproj", "{CBB18F35-0531-44F2-A9DC-6D327E3C51DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfServer", "WpfServer\WpfServer.csproj", "{CEDC3A82-A580-4C28-BE20-79AD00E802D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,10 +32,10 @@ Global
 		{200A6A19-08AC-4A86-9DC3-2CAAB59858F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{200A6A19-08AC-4A86-9DC3-2CAAB59858F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{200A6A19-08AC-4A86-9DC3-2CAAB59858F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBB18F35-0531-44F2-A9DC-6D327E3C51DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBB18F35-0531-44F2-A9DC-6D327E3C51DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBB18F35-0531-44F2-A9DC-6D327E3C51DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBB18F35-0531-44F2-A9DC-6D327E3C51DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEDC3A82-A580-4C28-BE20-79AD00E802D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEDC3A82-A580-4C28-BE20-79AD00E802D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEDC3A82-A580-4C28-BE20-79AD00E802D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEDC3A82-A580-4C28-BE20-79AD00E802D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

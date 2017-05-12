@@ -58,15 +58,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="00.Main\ServerApp.cs" />
+    <Compile Include="00.Main\UserList\ServerApp.cs" />
+    <Compile Include="01.ListenerController\ListenerController.cs" />
+    <Compile Include="01.ListenerController\Listener\Listener.cs" />
     <Compile Include="96.DataBase\Core\DataBaseInventory.cs" />
     <Compile Include="96.DataBase\Core\MySqlAdapter.cs" />
     <Compile Include="96.DataBase\Core\DataBase.cs" />
     <Compile Include="96.DataBase\MysqlCommand.cs" />
     <Compile Include="96.DataBase\MySQLDataType.cs" />
     <Compile Include="95.Object\GameUser.cs" />
-    <Compile Include="01.ListenerController\Listener\Listener.cs" />
-    <Compile Include="01.ListenerController\ListenerController.cs" />
     <Compile Include="96.DataBase\Core\Table.cs" />
     <Compile Include="Monitor\ServerMonitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
