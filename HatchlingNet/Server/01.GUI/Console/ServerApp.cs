@@ -3,10 +3,16 @@ using System;
 
 namespace Server
 {
-    class ServerApp
+    public class ServerApp
     {
         ListenerController listenerController;
         //NumberingPool objNumberingPool;
+        static void Main()
+        {
+            ServerApp server = new ServerApp();
+            server.Initialize();
+            server.Update();
+        }
 
         public void Initialize()
         {
