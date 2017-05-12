@@ -9,20 +9,25 @@ using UnityEngine.SceneManagement;
 public class NetworkManager : MonoBehaviour
 {
     private static NetworkManager instance = null;
+    private static readonly object padlock = new object();
+
     public static NetworkManager GetInstance
     {
         get
         {
-            if (instance == null)
+            lock (padlock)
             {
-                instance = FindObjectOfType(typeof(NetworkManager)) as NetworkManager;
-//                instance = new NetworkManager();
-
                 if (instance == null)
-                    Debug.LogError("no active NetworkManager ");
-                else
-                    Debug.Log("active NetworkManager ");
+                {
+                 //   instance = tag(typeof(NetworkManager)) as NetworkManager;
+                    instance = new NetworkManager();
 
+                    if (instance == null)
+                        Debug.LogError("no active NetworkManager ");
+                    else
+                        Debug.Log("active NetworkManager ");
+
+                }
             }
 
             return instance;
@@ -31,7 +36,9 @@ public class NetworkManager : MonoBehaviour
 
     HatchlingNetUnityService gameserver;
     Dictionary<int, GameObject> networkObj;
-    public Queue<GameObject> numberingWaitObj {get; set;}
+    object csNetworkObj = new object();
+    public Queue<string> numberingWaitObjTag {get; set;}
+    object csNumberingWaitObj = new object();
     public int networkID { get; set; }
     public string userID { get; set; }
 
@@ -44,7 +51,7 @@ public class NetworkManager : MonoBehaviour
         this.gameserver.callbackAppStatusChanged += CallStatusChange;
         this.gameserver.callbackAppReceiveMessage += CallMessage;
         networkObj = new Dictionary<int, GameObject>();
-        numberingWaitObj = new Queue<GameObject>();
+        numberingWaitObjTag = new Queue<string>();
 
         userID = "test";
 
@@ -130,47 +137,99 @@ public class NetworkManager : MonoBehaviour
 
             case PROTOCOL.ObjNumberingAck:
                 {
-                    GameObject obj = null;
-                    networkID = msg.PopInt32();
+                    string numberingTag;
 
-                    lock (numberingWaitObj)
+                    lock (csNumberingWaitObj)
                     {
-                        obj = numberingWaitObj.Dequeue();
+                        numberingTag = msg.PopString();//태그...큐에있는거랑 일치하나 검사 해줘야할것같긴 한디
+//                        numberingTag = numberingWaitObjTag.Dequeue();
                     }
 
-                    lock (networkObj)
+                    print("태그 : " + numberingTag);
+
+                    Vector3 position; position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
+                    print("벡터에 담긴거 x : " + position.x + " y : " + position.y + " z : " + position.z);
+                    int remoteID = msg.PopInt32();
+                    print("ID : " + remoteID);
+
+                    string msgUserID = msg.PopString();
+
+                    if (msgUserID == userID)
                     {
-                        networkObj.Add(networkID, obj);
+                        numberingWaitObjTag.Dequeue();
                     }
 
-                    PacketBufferManager.Push(msg);
-                    msg = PacketBufferManager.Pop((short)PROTOCOL.CreateObjReq, (short)SEND_TYPE.Single);
-                    msg.Push(networkID);
-                    msg.Push(obj.tag);//tag는 유니티 내에서 각 객체에 설정된거임...
-                                      //자세한건 유니티 실행 후  윈도우탭/inspector탭/  을 참고
-                    msg.Push(transform.position.x, transform.position.y, transform.position.z);
 
-                    Send(msg);
+                    GameObject objSpawner = GameObject.Find("Player_Spawn");
+                    Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
+
+                    print("너버링태그 : " + numberingTag);
+                    switch (numberingTag)
+                    {
+                        case "Identify":
+                            print("플레안까지옴");
+                            GameObject myPlayer = componentSpawner.CreateMyPlayer(position);
+                            //                            myPlayer.GetComponent<Player5>().headCamera.SetActive(false); //디폴트를 비활성화 시킴 
+                            NetworkObj objNetInfo = myPlayer.GetComponent<NetworkObj>();
+                            objNetInfo.remoteId = remoteID;
+
+                            lock (csNetworkObj)
+                            {
+                                networkObj.Add(objNetInfo.remoteId, myPlayer);
+                            }
+
+                            if (this.userID == msgUserID)
+                            {
+                                myPlayer.GetComponent<Player5>().isPlayer = true;
+
+                                //npc나 remotePlayer의 경우에는 각각 별도의 스크립트를 만들어서 붙여주는게 낫지 않나?
+                                //그래야 로직 분리도 되고...
+                            }
+
+                            break;
+ 
+                    }
+
+
+
+                    //PacketBufferManager.Push(msg);
+                    //msg = PacketBufferManager.Pop((short)PROTOCOL.CreateObjReq, (short)SEND_TYPE.Single);
+                    //msg.Push(networkID);
+                    //msg.Push(obj.tag);//tag는 유니티 내에서 각 객체에 설정된거임...
+                    //                  //자세한건 유니티 실행 후  윈도우탭/inspector탭/  을 참고
+                    //msg.Push(transform.position.x, transform.position.y, transform.position.z);
+
+                    //Send(msg);
 
                     
                 }
                 break;
 
-            case PROTOCOL.CreateObjAck:
-                {
-                    //int objNumbering = msg.PopInt32();
-                    //string objTag = msg.PopString();
-                    //Vector3 position;   position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
-                    
-                    //lock (networkObj)
-                    //{
-                    //    //   GameObject obj = Instantiate(Resources.Load("Prefabs/" + "Player") as GameObject, position, new Quaternion(0, 0, 0, 0));
-                    //    GameObject obj = Instantiate(Resources.Load("Prefabs/" + "Player") as GameObject, position, new Quaternion(0, 0, 0, 0));
+            //case PROTOCOL.CreateObjAck:
+            //    {
+            //        int objNumbering = msg.PopInt32();
+            //        string objTag = msg.PopString();
+            //        Vector3 position; position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
 
-                    //    networkObj.Add(networkID, obj);
-                    //}
-                }
-                break;
+            //        lock (csNumberingWaitObj)
+            //        {
+            //            print(numberingWaitObj.Count);
+            //            GameObject createObj = numberingWaitObj.Peek();
+            //            numberingWaitObj.Clear();
+            //            NetworkObj netInfoObj = createObj.GetComponent<NetworkObj>();
+            //            netInfoObj.remoteId = networkID;
+
+            //            lock (networkObj)
+            //            {
+            //                networkObj.Add(networkID, createObj);
+            //                createObj.SetActive(true);
+            //            }
+            //        }
+
+
+
+            //    }
+            //    break;
 
             default:
                 {
