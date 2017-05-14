@@ -1,5 +1,6 @@
 ## Custom
-Client/HAS/Library/metadata/
+Client/HAS/Library/
+Client/HAS/testBuild_Data/
 ## Custom END
 
 ## Ignore Visual Studio temporary files, build results, and
