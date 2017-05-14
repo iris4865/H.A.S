@@ -11,7 +11,7 @@ public class Item_Spawn : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        item_create();
+        //item_create();
     }
 
     void Awake(){

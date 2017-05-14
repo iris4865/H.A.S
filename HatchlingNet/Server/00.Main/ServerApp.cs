@@ -6,11 +6,14 @@ namespace Server
     public class ServerApp
     {
         ListenerController listenerController;
+
         //NumberingPool objNumberingPool;
 
         static void Main()
         {
-
+            ServerApp mainServer = new ServerApp();
+            mainServer.Initialize();
+            mainServer.Update();
         }
 
         public void Initialize()

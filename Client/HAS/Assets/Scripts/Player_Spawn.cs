@@ -7,7 +7,7 @@ public class Player_Spawn : MonoBehaviour {
     //GameObject player1 = GameObject.Find("player");
     //GameObject[] players = GameObject.FindGameObjectsWithTag("player");
     //GameObject[] players2 = GameObject.FindGameObjectsWithTag("Player");
-    Queue<string> numberingWaitObjTag = NetworkManager.GetInstance.numberingWaitObjTag;
+    Queue<string> numberingWaitObjTag = null;
 
     int nonPlayerCount = 4;
     private List<Player5> playerList = new List<Player5>();
@@ -17,6 +17,7 @@ public class Player_Spawn : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        numberingWaitObjTag = NetworkManager.GetInstance.numberingWaitObjTag; 
         numberingWaitObjTag.Enqueue(player.tag);
         Vector3 createPosition = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
 

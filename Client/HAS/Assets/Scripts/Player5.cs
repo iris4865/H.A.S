@@ -8,7 +8,7 @@ public class Player5 : MonoBehaviour
     Vector3 player_rotateVector;
 
     public int UniqueId { get; set; }
-    bool isPlayer = false;
+    public bool isPlayer = false;
     public static int count = 0;
 
     //경찰인지 도둑인지 구별...해야한다.
@@ -23,18 +23,19 @@ public class Player5 : MonoBehaviour
     void Awake()
     {
         player_animator = GetComponentInChildren<Animator>();
-        pressE_key_canvas.SetActive(false);
+        //pressE_key_canvas.SetActive(false);
     }
 
     void Start()
     {
-        if (count == 0)
-        {
-            main_camera.enabled = true;
-            isPlayer = true;
-        }
+//        if (count == 0)
+//        {
+////            main_camera.enabled = true;
+//            isPlayer = true;
+//        }
         
-        UniqueId = count++;
+//        UniqueId = count++;
+
         //Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingReq, (short)SEND_TYPE.Single);
         //msg.Push(this.tag);
         //Queue<GameObject> queue = NetworkManager.GetInstance.numberingWaitObj;
@@ -46,7 +47,7 @@ public class Player5 : MonoBehaviour
     void Update()
     {
         AnimationUpdate();
-        //NetUpdate();
+        NetUpdate();
     }
 
     void FixedUpdate()
@@ -63,7 +64,8 @@ public class Player5 : MonoBehaviour
         Packet msg = PacketBufferManager.Pop((short)PROTOCOL.PositionReq, (short)SEND_TYPE.BroadcastWithoutMe);
         //        msg.Push(NetworkManager.GetInstance.networkID);//id...나중에가면 유저id가 아니라 각 객체마다 서버에서 id를 할당해주고 그걸 기준으로 객체의 정보 통신...
         //하나의 객체에 여러 상호작용이 일어날수 있으니 나중에 해당 메시지를 보낸 시간도 추가해야할것 같다.
-        msg.Push(NetworkManager.GetInstance.networkID);
+        
+        msg.Push(GetComponent<NetworkObj>().remoteId);
         msg.Push(transform.position.x, transform.position.y, transform.position.z);
         NetworkManager.GetInstance.Send(msg);
     }

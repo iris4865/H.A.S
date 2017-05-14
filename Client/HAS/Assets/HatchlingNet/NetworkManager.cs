@@ -6,9 +6,10 @@ using UnityEngine.SceneManagement;
 //클라에게 제공하게될 인터페이스가 되겠네
 
 
-public class NetworkManager : MonoBehaviour
+public sealed class NetworkManager : MonoBehaviour
 {
     private static NetworkManager instance = null;
+    private static GameObject container = null;
     private static readonly object padlock = new object();
 
     public static NetworkManager GetInstance
@@ -19,8 +20,18 @@ public class NetworkManager : MonoBehaviour
             {
                 if (instance == null)
                 {
-                 //   instance = tag(typeof(NetworkManager)) as NetworkManager;
-                    instance = new NetworkManager();
+                    
+                    //   instance = tag(typeof(NetworkManager)) as NetworkManager;
+                    //instance = new NetworkManager();                    출처: http://unityindepth.tistory.com/38 [UNITY IN DEPTH]
+
+                    instance = GameObject.FindObjectOfType(typeof(NetworkManager)) as NetworkManager; //http://unityindepth.tistory.com/38
+                                                                                                      //
+
+                  
+                    //container = new GameObject();
+                    //container.name = "NetworkManager";
+                    //instance = container.AddComponent(typeof(NetworkManager)) as NetworkManager;
+     
 
                     if (instance == null)
                         Debug.LogError("no active NetworkManager ");
@@ -32,6 +43,10 @@ public class NetworkManager : MonoBehaviour
 
             return instance;
         }
+    }
+
+    private NetworkManager()
+    {
     }
 
     HatchlingNetUnityService gameserver;
@@ -53,7 +68,6 @@ public class NetworkManager : MonoBehaviour
         networkObj = new Dictionary<int, GameObject>();
         numberingWaitObjTag = new Queue<string>();
 
-        userID = "test";
 
         Debug.Log("ㅇㅇ");
     }
@@ -61,6 +75,8 @@ public class NetworkManager : MonoBehaviour
     void Start()
     {
         Debug.Log("ㅇㅇㅁ");
+        userID = "test" + Random.Range(1, 100);
+
         Connect();
     }
 
@@ -150,12 +166,13 @@ public class NetworkManager : MonoBehaviour
                     Vector3 position; position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
                     print("벡터에 담긴거 x : " + position.x + " y : " + position.y + " z : " + position.z);
                     int remoteID = msg.PopInt32();
-                    print("ID : " + remoteID);
+                    print("remoteID : " + remoteID);
 
                     string msgUserID = msg.PopString();
 
                     if (msgUserID == userID)
                     {
+                        print("msgID : " + msgUserID + ", userID : " + userID);
                         numberingWaitObjTag.Dequeue();
                     }
 
@@ -176,6 +193,7 @@ public class NetworkManager : MonoBehaviour
                             lock (csNetworkObj)
                             {
                                 networkObj.Add(objNetInfo.remoteId, myPlayer);
+                                print("추가됨");
                             }
 
                             if (this.userID == msgUserID)

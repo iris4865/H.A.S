@@ -19,19 +19,19 @@ Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Manage
 Loading C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
 Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\HatchlingNet.dll (this message is harmless)
 Loading C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\HatchlingNet.dll into Unity Child Domain
-- Completed reload, in  0.073 seconds
+- Completed reload, in  0.076 seconds
 Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Ryong\Desktop\H.A.S\Client\HAS\testBuild_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 1.410766 ms
+UnloadTime: 1.298173 ms
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 251c -> priority: 1 
-  Thread -> id: 4108 -> priority: 1 
+  Thread -> id: 1fa0 -> priority: 1 
+  Thread -> id: 3220 -> priority: 1 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 4.924843 ms
+UnloadTime: 6.659953 ms
 active NetworkManager 
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
@@ -41,80 +41,24 @@ active NetworkManager
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
 
-Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 330.
-Total: 0.335407 ms (FindLiveObjects: 0.026864 ms CreateObjectMapping: 0.013037 ms MarkObjects: 0.284049 ms  DeleteObjects: 0.011061 ms)
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 328.
+Total: 0.407703 ms (FindLiveObjects: 0.035555 ms CreateObjectMapping: 0.019358 ms MarkObjects: 0.340938 ms  DeleteObjects: 0.011061 ms)
 
 ㅇㅇㅁ
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
-메세지완성!
-대기
-지나감
-콜백 리시브컴플리트!
-콜메세지 ChatAck
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-메세지완성!
-대기
-지나감
-콜백 리시브컴플리트!
 Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.894815 ms
+UnloadTime: 1.034272 ms
 
-Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 312.
-Total: 0.263901 ms (FindLiveObjects: 0.040691 ms CreateObjectMapping: 0.013827 ms MarkObjects: 0.199506 ms  DeleteObjects: 0.009481 ms)
-
-콜메세지 LoginAck
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-로그인액크
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 310.
+Total: 0.349629 ms (FindLiveObjects: 0.054518 ms CreateObjectMapping: 0.018172 ms MarkObjects: 0.263111 ms  DeleteObjects: 0.013432 ms)
 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.391901 ms
+UnloadTime: 0.495407 ms
 
-Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 1066.
-Total: 0.592593 ms (FindLiveObjects: 0.081382 ms CreateObjectMapping: 0.089679 ms MarkObjects: 0.406123 ms  DeleteObjects: 0.014617 ms)
-
-메세지완성!
-대기
-지나감
-콜백 리시브컴플리트!콜메세지 ObjNumberingAck
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-
-태그 : Identify
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-벡터에 담긴거 x : 0.2958357 y : 0 z : -6.809587
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-ID : 19999
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-너버링태그 : Identify
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-플레안까지옴
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-메세지완성!
-대기
-지나감
-콜백 리시브컴플리트!
-콜메세지 ChatAck
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 867.
+Total: 0.316839 ms (FindLiveObjects: 0.035160 ms CreateObjectMapping: 0.029629 ms MarkObjects: 0.237827 ms  DeleteObjects: 0.013827 ms)
 
 앱콰이트1
  
