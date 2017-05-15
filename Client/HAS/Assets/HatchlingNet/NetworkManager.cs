@@ -198,7 +198,7 @@ public sealed class NetworkManager : MonoBehaviour
 
                             if (this.userID == msgUserID)
                             {
-                                myPlayer.GetComponent<Player5>().isPlayer = true;
+                                //myPlayer.GetComponent<Player5>().isPlayer = true;
 
                                 //npc나 remotePlayer의 경우에는 각각 별도의 스크립트를 만들어서 붙여주는게 낫지 않나?
                                 //그래야 로직 분리도 되고...
