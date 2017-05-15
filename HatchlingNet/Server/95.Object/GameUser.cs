@@ -10,6 +10,9 @@ namespace Server
     {
         static NumberingPool objNumberingPool = null;
         static Dictionary<int, string> objList = new Dictionary<int, string>();//<remoteID, 객체 태그>
+        static object csObjList = new object();
+        static object csObjNumberingPool = new object();
+
         UserToken userToken;
         MysqlCommand command;
         public string UserID { get; set; }
@@ -169,10 +172,30 @@ namespace Server
                         response.Push(UserID);         //만약 이 메세지를 받은 클라의 userID와 같으면 그건 그사람이 주체적으로 만든거고
                                                        //그 플레이어 조종하려고 만든거일 확률이 높음
 
+                        Send(response);
+
+                        int otherPlayerNum = objList.Count;
+
+
+
+                        foreach (var iter in objList)
+                        {
+                            Packet otherPlayer = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.Single);
+                            string otherPlayerTag;
+
+                            otherPlayerTag = iter.Value;
+
+                            MyVector3 otherPlayerPos; otherPlayerPos.x = 0f; otherPlayerPos.y = 10f; otherPlayerPos.z = 0f;
+                            otherPlayer.Push(objTag);//태그
+                            otherPlayer.Push(otherPlayerPos.x);//위치
+                            otherPlayer.Push(otherPlayerPos.y);//위치
+                            otherPlayer.Push(otherPlayerPos.z);//위치
+                            otherPlayer.Push(iter.Key);//remoteID
+                            otherPlayer.Push("None");//remoteID
+                            Send(otherPlayer);
+                        }
 
                         objList.Add(number, objTag);
-
-                        Send(response);
                     }
                     break;
 

@@ -142,7 +142,7 @@ namespace Server
         public void CallBroadCast(Packet msg, int withOut = -1)
         {
             //foreach (KeyValuePair<int, UserToken> user in tokenList)
-            if (withOut != -1)
+            if (withOut == -1)
             {
                 foreach (var user in tokenList)
                     user.Value.Send(msg);

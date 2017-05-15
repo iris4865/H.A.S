@@ -137,15 +137,17 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.PositionAck:
                 {
-                    int networkID = msg.PopInt32();
+                    int remoteID = msg.PopInt32();
                     Vector3 position;
                     position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
 
                     lock (networkObj)
                     {
-                        if (networkObj.ContainsKey(networkID) == true)
+                        if (networkObj.ContainsKey(remoteID) == true)
                         {
-                            networkObj[networkID].GetComponent<Transform>().position = position;
+                            //   networkObj.
+                            Debug.Log("포지션액크");
+                            networkObj[remoteID].GetComponent<Transform>().position = position;
                         }
                     }
                 }
@@ -198,7 +200,7 @@ public sealed class NetworkManager : MonoBehaviour
 
                             if (this.userID == msgUserID)
                             {
-                                //myPlayer.GetComponent<Player5>().isPlayer = true;
+                                myPlayer.GetComponent<Player5>().isPlayer = true;
 
                                 //npc나 remotePlayer의 경우에는 각각 별도의 스크립트를 만들어서 붙여주는게 낫지 않나?
                                 //그래야 로직 분리도 되고...
