@@ -47,7 +47,11 @@ public class Player5 : MonoBehaviour
     void Update()
     {
         AnimationUpdate();
-        NetUpdate();
+
+        if (isPlayer)
+        {
+            NetUpdate();
+        }
     }
 
     void FixedUpdate()
@@ -64,8 +68,11 @@ public class Player5 : MonoBehaviour
         Packet msg = PacketBufferManager.Pop((short)PROTOCOL.PositionReq, (short)SEND_TYPE.BroadcastWithoutMe);
         //        msg.Push(NetworkManager.GetInstance.networkID);//id...나중에가면 유저id가 아니라 각 객체마다 서버에서 id를 할당해주고 그걸 기준으로 객체의 정보 통신...
         //하나의 객체에 여러 상호작용이 일어날수 있으니 나중에 해당 메시지를 보낸 시간도 추가해야할것 같다.
-        
-        msg.Push(GetComponent<NetworkObj>().remoteId);
+
+        int remoteid = GetComponent<NetworkObj>().remoteId;
+        Debug.Log("플레안속 네트워크오브젝트 수 : " + NetworkManager.GetInstance.networkObj.Count);
+        Debug.Log("나 " + remoteid + "위치전송: " );
+        msg.Push(remoteid);
         msg.Push(transform.position.x, transform.position.y, transform.position.z);
         NetworkManager.GetInstance.Send(msg);
     }
