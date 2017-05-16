@@ -140,11 +140,17 @@ namespace Server
                         //Packet response = PacketBufferManager.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
                         //int networkID = msg.PopInt32();
 
-                        Packet response = msg;
-                        response.SetProtocol((short)PROTOCOL.PositionAck);
-                        response.SetSendType((short)SEND_TYPE.BroadcastWithoutMe);
+                        
+                        //response.SetProtocol((short)PROTOCOL.PositionAck);
+                        //response.SetSendType((short)SEND_TYPE.BroadcastWithoutMe);
 
-                        Send(msg);
+                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
+                        response.Push(msg.PopInt32());
+                        response.Push(msg.PopFloat());
+                        response.Push(msg.PopFloat());
+                        response.Push(msg.PopFloat());
+
+                        Send(response);
                     }
                     break;
 
