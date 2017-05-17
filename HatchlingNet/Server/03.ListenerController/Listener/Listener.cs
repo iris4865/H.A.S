@@ -9,11 +9,11 @@ namespace Server
 {
     public class Listener
     {
+        public Action<UserToken> BeginReceive;
         //비동기 Accept를 위한 객체;
         SocketAsyncEventArgs acceptArgs;
         Socket listenSocket;
 
-        ServerNetwork network;
         Dictionary<int, UserToken> tokenList;
         NumberingPool tokenNumberingPool;
 
@@ -24,11 +24,6 @@ namespace Server
         //        int assignIDToUser;
         //int bufferSize;
 
-
-        public Listener(ServerNetwork network)
-        {
-            this.network = network;
-        }
 
         public Listener(int maxConnection)
         {
@@ -112,11 +107,12 @@ namespace Server
                 Socket clientSocket = e.AcceptSocket;
 
                 Interlocked.Increment(ref this.connectionCount);
-                SocketAsyncEventArgs receiveArgs = network.PopReceiveEventArgs();
-                SocketAsyncEventArgs sendArgs = network.PopSendEventArgs();
+                SocketAsyncEventArgs receiveArgs = SocketAsyncEventArgsPool.receiveInstance.Pop();
+                SocketAsyncEventArgs sendArgs = SocketAsyncEventArgsPool.sendInstance.Pop();
 
                 UserToken userToken = receiveArgs.UserToken as UserToken;
 
+                //여기서 send, receive, socket 다 연결하는데 BeginReceive에 userToken을 주면 안되나?
                 userToken.socket = clientSocket;
                 userToken.sendEventArgs = sendArgs;
                 userToken.receiveEventArgs = receiveArgs;
@@ -131,7 +127,7 @@ namespace Server
 
                 UserList.Instance.SessionCreate(clientSocket, userToken);
 
-                network.BeginReceive(clientSocket, receiveArgs, sendArgs);
+                BeginReceive(userToken);
 
                 flowController.Set();
 

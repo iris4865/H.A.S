@@ -10,6 +10,10 @@ namespace HatchlingNet
             SocketAsyncEventArgs receiveEventArg = GetEventArgs(token, CallReceiveComplete);
             SocketAsyncEventArgs sendEventArg = GetEventArgs(token, CallSendComplete);
 
+            //token에 집어넣고 보내는 방법도 있다.
+            //token.socket = clientSocket;
+            //token.sendEventArgs = sendEventArg;
+            //token.receiveEventArgs = receiveEventArg;
             BeginReceive(clientSocket, receiveEventArg, sendEventArg);
         }
 

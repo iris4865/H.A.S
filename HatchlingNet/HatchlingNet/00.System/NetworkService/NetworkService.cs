@@ -24,7 +24,7 @@ namespace HatchlingNet
             return args;
         }
 
-        public void BeginReceive(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
+        public virtual void BeginReceive(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
         {
             UserToken token = receiveArgs.UserToken as UserToken;
             //token.receiveEventArgs = receiveArgs;

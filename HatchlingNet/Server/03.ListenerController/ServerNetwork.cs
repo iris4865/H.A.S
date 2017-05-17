@@ -11,8 +11,8 @@ namespace Server
         BufferManager buffer_manager;
 
         //메시지 송수신객체, 풀링해서 사용예정
-        SocketAsyncEventArgsPool receiveEventArgsPool;
-        SocketAsyncEventArgsPool sendEventArgsPool;
+        SocketAsyncEventArgsPool receiveEventArgsPool = SocketAsyncEventArgsPool.receiveInstance;
+        SocketAsyncEventArgsPool sendEventArgsPool = SocketAsyncEventArgsPool.sendInstance;
 
         int maxConnection;//모든 리스너들의 연결 맥스
         //int connectionCount;//모든 리스너들의 연결 총합
@@ -28,8 +28,6 @@ namespace Server
         {
             bufferSize = 1024;
 
-            receiveEventArgsPool = SocketAsyncEventArgsPool.receiveInstance;
-            sendEventArgsPool = SocketAsyncEventArgsPool.sendInstance;
             receiveEventArgsPool.Count = maxConnection;
             sendEventArgsPool.Count = maxConnection;
 
@@ -49,9 +47,24 @@ namespace Server
             }
         }
 
+        public void BeginReceive(UserToken userToken)
+        {
+            Socket clientSocket = userToken.socket;
+            SocketAsyncEventArgs receiveArgs = userToken.receiveEventArgs;
+            bool pending = clientSocket.ReceiveAsync(receiveArgs);
+            if (!pending)
+            {
+                Console.WriteLine("비긴 리시브");
+                ProcessReceive(receiveArgs);
+            }
+        }
+
         public void Listen(string host, int port, int backlog)
         {
-            Listener listener = new Listener(this);
+            Listener listener = new Listener(maxConnection)
+            {
+                BeginReceive = BeginReceive
+            };
             listener.Initialize();
             listener.Start(host, port, backlog);
         }
@@ -63,16 +76,6 @@ namespace Server
 
             receiveEventArgsPool.Push(token.receiveEventArgs);
             sendEventArgsPool.Push(token.sendEventArgs);
-        }
-
-        public SocketAsyncEventArgs PopReceiveEventArgs()
-        {
-            return receiveEventArgsPool.Pop();
-        }
-
-        public SocketAsyncEventArgs PopSendEventArgs()
-        {
-            return sendEventArgsPool.Pop();
         }
     }
 }
