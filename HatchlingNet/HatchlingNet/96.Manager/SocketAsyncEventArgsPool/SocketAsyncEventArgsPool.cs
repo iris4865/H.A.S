@@ -9,16 +9,42 @@ namespace HatchlingNet
 {
     public class SocketAsyncEventArgsPool
     {
+        public static SocketAsyncEventArgsPool receiveInstance { get { return CreateInstance.receiveInstance; } }
+        public static SocketAsyncEventArgsPool sendInstance { get { return CreateInstance.sendInstance; } }
+
         Stack<SocketAsyncEventArgs> pool;
+
+        private class CreateInstance
+        {
+            static CreateInstance() { }
+
+            internal static readonly SocketAsyncEventArgsPool sendInstance = new SocketAsyncEventArgsPool();
+            internal static readonly SocketAsyncEventArgsPool receiveInstance = new SocketAsyncEventArgsPool();
+        }
+        private SocketAsyncEventArgsPool() { }
+
+        public int Count
+        {
+            set
+            {
+                if (pool == null)
+                    pool = new Stack<SocketAsyncEventArgs>(value);
+            }
+            get
+            {
+                return pool.Count;
+            }
+        }
 
         // Initializes the object pool to the specified size
         //
         // The "capacity" parameter is the maximum number of 
         // SocketAsyncEventArgs objects the pool can hold
-        public SocketAsyncEventArgsPool(int capacity)
-        {
-            pool = new Stack<SocketAsyncEventArgs>(capacity);
-        }
+
+        //public SocketAsyncEventArgsPool(int capacity)
+        //{
+        //    pool = new Stack<SocketAsyncEventArgs>(capacity);
+        //}
 
         // Add a SocketAsyncEventArg instance to the pool
         //
@@ -44,15 +70,5 @@ namespace HatchlingNet
                 return pool.Pop();
             }
         }
-
-        // The number of SocketAsyncEventArgs instances in the pool
-        public int Count
-        {
-            get
-            {
-                return pool.Count;
-            }
-        }
-
     }
 }

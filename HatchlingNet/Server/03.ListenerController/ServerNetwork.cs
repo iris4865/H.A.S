@@ -28,8 +28,13 @@ namespace Server
         {
             bufferSize = 1024;
 
-            receiveEventArgsPool = new SocketAsyncEventArgsPool(maxConnection);
-            sendEventArgsPool = new SocketAsyncEventArgsPool(maxConnection);
+            receiveEventArgsPool = SocketAsyncEventArgsPool.receiveInstance;
+            sendEventArgsPool = SocketAsyncEventArgsPool.sendInstance;
+            receiveEventArgsPool.Count = maxConnection;
+            sendEventArgsPool.Count = maxConnection;
+
+            //receiveEventArgsPool = new SocketAsyncEventArgsPool(maxConnection);
+            //sendEventArgsPool = new SocketAsyncEventArgsPool(maxConnection);
 
             buffer_manager = new BufferManager(maxConnection * bufferSize * preAllocCount, bufferSize);
             buffer_manager.InitBuffer();
