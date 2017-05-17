@@ -7,13 +7,13 @@ using System.Threading;
 
 namespace Server
 {
-    public class ListenerController
+    public class Listener
     {
         //비동기 Accept를 위한 객체;
         SocketAsyncEventArgs acceptArgs;
         Socket listenSocket;
 
-        Listener Listener;
+        ServerNetwork network;
         Dictionary<int, UserToken> tokenList;
         NumberingPool tokenNumberingPool;
 
@@ -24,7 +24,13 @@ namespace Server
         //        int assignIDToUser;
         //int bufferSize;
 
-        public ListenerController(int maxConnection)
+
+        public Listener(ServerNetwork network)
+        {
+            this.network = network;
+        }
+
+        public Listener(int maxConnection)
         {
             this.maxConnection = maxConnection;
         }
@@ -35,9 +41,6 @@ namespace Server
 
             tokenList = new Dictionary<int, UserToken>();
             this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
-
-            Listener = new Listener(maxConnection);
-            Listener.Initialize();
 
             tokenNumberingPool = new NumberingPool(10000);
             for (int i = 0; i < tokenNumberingPool.capacity; ++i)
@@ -109,8 +112,8 @@ namespace Server
                 Socket clientSocket = e.AcceptSocket;
 
                 Interlocked.Increment(ref this.connectionCount);
-                SocketAsyncEventArgs receiveArgs = Listener.PopReceiveEventArgs();
-                SocketAsyncEventArgs sendArgs = Listener.PopSendEventArgs();
+                SocketAsyncEventArgs receiveArgs = network.PopReceiveEventArgs();
+                SocketAsyncEventArgs sendArgs = network.PopSendEventArgs();
 
                 UserToken userToken = receiveArgs.UserToken as UserToken;
 
@@ -128,7 +131,7 @@ namespace Server
 
                 UserList.Instance.SessionCreate(clientSocket, userToken);
 
-                Listener.BeginReceive(clientSocket, receiveArgs, sendArgs);
+                network.BeginReceive(clientSocket, receiveArgs, sendArgs);
 
                 flowController.Set();
 

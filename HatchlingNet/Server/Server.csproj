@@ -59,8 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="00.Main\ServerApp.cs" />
-    <Compile Include="03.ListenerController\ListenerController.cs" />
-    <Compile Include="03.ListenerController\Listener\Listener.cs" />
+    <Compile Include="03.ListenerController\Listener.cs" />
+    <Compile Include="03.ListenerController\Listener\ServerNetwork.cs" />
+    <Compile Include="03.ListenerController\Listener\ServerNetwork_Partial.cs" />
     <Compile Include="96.DataBase\Core\DataBaseInventory.cs" />
     <Compile Include="96.DataBase\Core\MySqlAdapter.cs" />
     <Compile Include="96.DataBase\Core\DataBase.cs" />

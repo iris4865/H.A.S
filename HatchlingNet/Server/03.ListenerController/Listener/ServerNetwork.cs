@@ -6,7 +6,7 @@ namespace Server
 {
     //Date: 4. 21
     //NetworkController식이 더 어울려 보인다.
-    public class Listener : NetworkService
+    public partial class ServerNetwork : NetworkService
     {
         BufferManager buffer_manager;
 
@@ -19,7 +19,7 @@ namespace Server
         int bufferSize;
         readonly int preAllocCount = 2;
 
-        public Listener(int maxConnection)
+        public ServerNetwork(int maxConnection)
         {
             this.maxConnection = maxConnection;
         }
@@ -44,30 +44,13 @@ namespace Server
             }
         }
 
-        //receive pool
-        private void PushReceiveEventArgsPool(UserToken token)
+        public void Listen(string host, int port, int backlog)
         {
-            SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, CallReceiveComplete);
-            receiveEventArgsPool.Push(args);
+            Listener listener = new Listener(this);
+            listener.Initialize();
+            listener.Start(host, port, backlog);
         }
 
-        //send pool
-        private void PushSendEventArgsPool(UserToken token)
-        {
-            SocketAsyncEventArgs args = PreAllocateSocketAsyncEventArgs(token, CallSendComplete);
-            sendEventArgsPool.Push(args);
-        }
-
-        private SocketAsyncEventArgs PreAllocateSocketAsyncEventArgs(UserToken token, EventHandler<SocketAsyncEventArgs> handler)
-        {
-            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-            args.Completed += handler;
-            args.UserToken = token;
-
-            buffer_manager.SetBuffer(args);
-
-            return args;
-        }
 
         public override void CloseClientSocket(UserToken token)
         {

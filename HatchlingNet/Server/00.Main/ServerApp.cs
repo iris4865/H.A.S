@@ -5,7 +5,7 @@ namespace Server
 {
     public class ServerApp
     {
-        ListenerController listenerController;
+        ServerNetwork network;
 
         //NumberingPool objNumberingPool;
 
@@ -13,7 +13,7 @@ namespace Server
         {
             ServerApp mainServer = new ServerApp();
             mainServer.Initialize();
-            mainServer.Start();
+            mainServer.Update();
         }
 
         public void Initialize()
@@ -22,8 +22,8 @@ namespace Server
             PacketBufferManager.Initialize(2000);
             //objNumberingPool = new NumberingPool(20000);
 
-            listenerController = new ListenerController(10000);
-            listenerController.Initialize();
+            network = new ServerNetwork(10000);
+            network.Initialize();
         }
 
         public void Update()//콘솔용
@@ -36,7 +36,7 @@ namespace Server
 
         public void Start()//gui용
         {
-            listenerController.Start("0.0.0.0", 7979, 1000);
+            network.Listen("0.0.0.0", 7979, 1000);
         }
     }
 }
