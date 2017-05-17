@@ -63,7 +63,7 @@ namespace Server
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
             args.Completed += handler;
             args.UserToken = token;
-            
+
             buffer_manager.SetBuffer(args);
 
             return args;
