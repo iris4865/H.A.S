@@ -69,15 +69,16 @@ namespace Server
 
                         command = new MysqlCommand();
                         //db id, password 입력
-                        command.ConnectMysql("localhost", "id", "password");
+                        if (command.ConnectMysql("localhost", "root", "anstjd"))
+                        {
+                            command.OpenDatabase("hatchlingdb");
+                            command.OpenTable("userinfo");
 
-                        command.OpenDatabase("hatchlingdb");
-                        command.OpenTable("userinfo");
-
-                        if (command.CheckLogin("a", "d"))
-                            Console.WriteLine("login sucess");
-                        else
-                            Console.WriteLine("fail");
+                            if (command.CheckLogin("a", "d"))
+                                Console.WriteLine("login sucess");
+                            else
+                                Console.WriteLine("fail");
+                        }
 
 
 
@@ -140,7 +141,7 @@ namespace Server
                         //Packet response = PacketBufferManager.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
                         //int networkID = msg.PopInt32();
 
-                        
+
                         //response.SetProtocol((short)PROTOCOL.PositionAck);
                         //response.SetSendType((short)SEND_TYPE.BroadcastWithoutMe);
 
@@ -205,21 +206,21 @@ namespace Server
                     }
                     break;
 
-                //case PROTOCOL.CreateObjReq:
-                //    {
-                //        int objNumbering = msg.PopInt32();
-                //        string objTag = msg.PopString();
+                    //case PROTOCOL.CreateObjReq:
+                    //    {
+                    //        int objNumbering = msg.PopInt32();
+                    //        string objTag = msg.PopString();
 
-                //        lock(objList)
-                //            objList.Add(objNumbering, objTag);
+                    //        lock(objList)
+                    //            objList.Add(objNumbering, objTag);
 
-                //        Packet response = PacketBufferManager.Pop((short)PROTOCOL.CreateObjAck, (short)SEND_TYPE.BroadcastWithMe);
-                //        response.Push(objNumbering);
-                //        response.Push(objTag);
-                //        Send(response);
-                //    }
+                    //        Packet response = PacketBufferManager.Pop((short)PROTOCOL.CreateObjAck, (short)SEND_TYPE.BroadcastWithMe);
+                    //        response.Push(objNumbering);
+                    //        response.Push(objTag);
+                    //        Send(response);
+                    //    }
 
-                //    break;
+                    //    break;
             }
         }
 
