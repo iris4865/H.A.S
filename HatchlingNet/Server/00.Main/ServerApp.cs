@@ -13,7 +13,7 @@ namespace Server
         {
             ServerApp mainServer = new ServerApp();
             mainServer.Initialize();
-            mainServer.Update();
+            mainServer.Start();
         }
 
         public void Initialize()
