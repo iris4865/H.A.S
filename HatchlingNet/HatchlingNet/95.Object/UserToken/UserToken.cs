@@ -90,7 +90,7 @@ namespace HatchlingNet
                                                                                     //사용하는공간이 적으면 그만큼만 보내서 더 빠르게...
                                                                                     //그래서 거기선 인자3개 넘기고 여기선 인자 2개만 넘김...
 
-                Array.Copy(msg.buffer, 0, this.sendEventArgs.Buffer, this.sendEventArgs.Offset, msg.position);
+                Array.Copy(msg.buffer, 0, sendEventArgs.Buffer, sendEventArgs.Offset, msg.position);
 
                 bool pending = this.socket.SendAsync(this.sendEventArgs);//전송!
                 if (!pending)
