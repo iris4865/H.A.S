@@ -47,18 +47,6 @@ namespace Server
             }
         }
 
-        public void BeginReceive(UserToken userToken)
-        {
-            Socket clientSocket = userToken.socket;
-            SocketAsyncEventArgs receiveArgs = userToken.receiveEventArgs;
-            bool pending = clientSocket.ReceiveAsync(receiveArgs);
-            if (!pending)
-            {
-                Console.WriteLine("비긴 리시브");
-                ProcessReceive(receiveArgs);
-            }
-        }
-
         public void Listen(string host, int port, int backlog)
         {
             Listener listener = new Listener(maxConnection)
