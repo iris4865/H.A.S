@@ -33,7 +33,7 @@ namespace HatchlingNet
             {
                 if (pool.Count <= 0)
                 {
-                    Console.WriteLine("reallocate");
+//                    Console.WriteLine("reallocate");
                     Allocate();
                 }
 

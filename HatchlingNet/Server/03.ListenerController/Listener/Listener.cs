@@ -99,7 +99,7 @@ namespace Server
 
         public void AcceptComplete(Object sender, SocketAsyncEventArgs e)
         {
-            Console.WriteLine("액셉컴플리트");
+            //            Console.WriteLine("액셉컴플리트");
 
             if (e.SocketError == SocketError.Success)
             {
@@ -133,7 +133,9 @@ namespace Server
                 return;
             }
             else
-                Console.WriteLine("Failed to Accept client");
+            {
+//                Console.WriteLine("Failed to Accept client");
+            }
         }
 
 

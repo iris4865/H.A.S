@@ -51,7 +51,7 @@ namespace HatchlingNet
         //피어는 메인에서 결정됨
         public void CompleteMessage(byte[] buffer)
         {
-            Console.WriteLine("메세지완성!");
+//            Console.WriteLine("메세지완성!");
 
             if (this.peer != null)
             {
@@ -123,7 +123,7 @@ namespace HatchlingNet
                 if (sendArgs.BytesTransferred != size)
                 {
                     string error = string.Format("Need to send more! transferred {0},  packet size {1}", sendArgs.BytesTransferred, size);
-                    Console.WriteLine(error);
+//                    Console.WriteLine(error);
                     return;
                 }
 

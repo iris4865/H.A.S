@@ -54,8 +54,8 @@ namespace Server
             SEND_TYPE sendType = (SEND_TYPE)msg.PopSendType();
 
 
-            Console.WriteLine("-------------------------------------------");
-            Console.WriteLine("protocolType " + protocol);
+ //           Console.WriteLine("-------------------------------------------");
+//            Console.WriteLine("protocolType " + protocol);
 
             switch (protocol)
             {
@@ -97,7 +97,7 @@ namespace Server
 
                 case PROTOCOL.LoginReq:
                     {
-                        Console.WriteLine("들어옴");
+//                        Console.WriteLine("들어옴");
 
                         string id = msg.PopString();
                         string password = msg.PopString();
@@ -127,7 +127,7 @@ namespace Server
                 case PROTOCOL.ChatReq:
                     {
                         string text = msg.PopString();
-                        Console.WriteLine(string.Format("text {0}", text));
+//                        Console.WriteLine(string.Format("text {0}", text));
 
                         Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)sendType);
 
@@ -172,7 +172,7 @@ namespace Server
                             number = objNumberingPool.Pop();
                         }
 
-                        Console.WriteLine("태그 : " + objTag + " 위치 x : " + position.x + " y : " + position.y + " z : " + position.z + " remoteID : " + number);
+  //                      Console.WriteLine("태그 : " + objTag + " 위치 x : " + position.x + " y : " + position.y + " z : " + position.z + " remoteID : " + number);
 
 
                         response.Push(number);        //remote ID
