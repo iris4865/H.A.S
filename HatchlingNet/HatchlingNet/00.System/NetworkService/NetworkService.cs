@@ -4,34 +4,12 @@ using System.Net.Sockets;
 
 namespace HatchlingNet
 {
-    public class NetworkService
+    public abstract class NetworkService
     {
-        public void Initialize(Socket clientSocket, UserToken token)//클라에서 Initialize대신 사용
+        public void BeginReceive(UserToken userToken)
         {
-            SocketAsyncEventArgs receiveEventArg = GetEventArgs(token, CallReceiveComplete);
-            SocketAsyncEventArgs sendEventArg = GetEventArgs(token, CallSendComplete);
-
-            BeginReceive(clientSocket, receiveEventArg, sendEventArg);
-        }
-
-        SocketAsyncEventArgs GetEventArgs(UserToken token, EventHandler<SocketAsyncEventArgs> handler)
-        {
-            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-            args.Completed += handler;
-            args.UserToken = token;
-            args.SetBuffer(new Byte[1204], 0, 1024);
-
-            return args;
-        }
-
-        public virtual void BeginReceive(Socket clientSocket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
-        {
-            UserToken token = receiveArgs.UserToken as UserToken;
-            //token.receiveEventArgs = receiveArgs;
-            token.sendEventArgs = sendArgs;
-
-            token.socket = clientSocket;
-
+            Socket clientSocket = userToken.socket;
+            SocketAsyncEventArgs receiveArgs = userToken.receiveEventArgs;
             bool pending = clientSocket.ReceiveAsync(receiveArgs);
             if (!pending)
             {
@@ -78,7 +56,7 @@ namespace HatchlingNet
                 CloseClientSocket(token);
             }
         }
-        
+
         private bool IsArgsSocketClosed(int value)
         {
             if (value > 0)
@@ -87,10 +65,7 @@ namespace HatchlingNet
             return true;
         }
 
-        public virtual void CloseClientSocket(UserToken token)
-        {
-            token.OnRemove();
-        }
+        public abstract void CloseClientSocket(UserToken token);
 
         public void CallSendComplete(object sender, SocketAsyncEventArgs sendArgs)
         {

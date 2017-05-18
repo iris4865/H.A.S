@@ -9,9 +9,8 @@ namespace Server
 {
     public class Listener
     {
-        public Action<UserToken> BeginReceive;
-        //비동기 Accept를 위한 객체;
-        SocketAsyncEventArgs acceptArgs;
+        public Action<UserToken> BeginReceive;//Action을 이용하면 델리게이트 사용안하고 짦게 사용가능 대신 인자 하나만 넘길수 있음.
+        SocketAsyncEventArgs acceptArgs; //비동기 Accept를 위한 객체;
         Socket listenSocket;
 
         Dictionary<int, UserToken> tokenList;
