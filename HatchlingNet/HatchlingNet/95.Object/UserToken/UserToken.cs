@@ -97,6 +97,12 @@ namespace HatchlingNet
                 {
                     ProcessSend(this.sendEventArgs);
                 }
+                //else
+                //{
+                //    Packet garbageMsg = this.sendingQueue.Dequeue();
+
+                //    PacketBufferManager.Push(garbageMsg);
+                //}
 
             }
         }
@@ -107,7 +113,7 @@ namespace HatchlingNet
         //테스트만하고 NetowowrkService클래스로 넘기자
         public void ProcessSend(SocketAsyncEventArgs sendArgs)
         {
-            if (sendArgs.BytesTransferred <= 0)
+            if (sendArgs.BytesTransferred <= 0)//
             {
                 return;
             }
@@ -128,7 +134,10 @@ namespace HatchlingNet
                 }
 
                 //전송 완료된 패킷을 큐에서 제거
-                this.sendingQueue.Dequeue();
+                Packet garbageMsg = this.sendingQueue.Dequeue();
+                
+                PacketBufferManager.Push(garbageMsg);
+
 
                 // 아직 전송되지 않은 패킷이 있다면 다시한번 요청
                 if (this.sendingQueue.Count > 0)
