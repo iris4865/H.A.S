@@ -23,7 +23,7 @@ public class Player5 : MonoBehaviour
     void Awake()
     {
         player_animator = GetComponentInChildren<Animator>();
-        //pressE_key_canvas.SetActive(false);
+        pressE_key_canvas.SetActive(false);
     }
 
     void Start()

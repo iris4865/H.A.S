@@ -55,7 +55,7 @@ public class game_login_click : MonoBehaviour
             networkManager.userID = id_s;
         }
 
-        SceneManager.LoadScene(3);
+        //SceneManager.LoadScene(3);
     }
     public void click_1()
     {

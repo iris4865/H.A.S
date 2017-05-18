@@ -137,25 +137,15 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.PositionAck:
                 {
-                    int remoteID = msg.PopInt32();
+                    int networkID = msg.PopInt32();
                     Vector3 position;
                     position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
-                    Debug.Log("됨?네트워크오브젝트 수 : " + GetInstance.networkObj.Count);
 
-                    lock (csNetworkObj)
+                    lock (networkObj)
                     {
-                        Debug.Log("포지션액크 : " + remoteID + "네트워크오브젝트 수 : " + GetInstance.networkObj.Count);
-//                        networkObj[remoteID].GetComponent<Transform>().position = position;
-                        
-                        if (networkObj.ContainsKey(remoteID) == true)
+                        if (networkObj.ContainsKey(networkID) == true)
                         {
-                            //   networkObj.
-                            Debug.Log("액킄성공");
-                            networkObj[remoteID].GetComponent<Transform>().position = position;
-                        }
-                        else
-                        {
-                            Debug.Log("액킄실패");
+                            networkObj[networkID].GetComponent<Transform>().position = position;
                         }
                     }
                 }
@@ -186,7 +176,6 @@ public sealed class NetworkManager : MonoBehaviour
                         numberingWaitObjTag.Dequeue();
                     }
 
-                    Debug.Log("네트워크오브젝트 수 : " + networkObj.Count);
 
                     GameObject objSpawner = GameObject.Find("Player_Spawn");
                     Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
@@ -195,28 +184,26 @@ public sealed class NetworkManager : MonoBehaviour
                     switch (numberingTag)
                     {
                         case "Identify":
+                            print("플레안까지옴");
+                            GameObject myPlayer = componentSpawner.CreateMyPlayer(position);
+                            //                            myPlayer.GetComponent<Player5>().headCamera.SetActive(false); //디폴트를 비활성화 시킴 
+                            NetworkObj objNetInfo = myPlayer.GetComponent<NetworkObj>();
+                            objNetInfo.remoteId = remoteID;
+
+                            lock (csNetworkObj)
                             {
-                                print("플레안까지옴");
-                                GameObject myPlayer = componentSpawner.CreateMyPlayer(position);
-                                //                            myPlayer.GetComponent<Player5>().headCamera.SetActive(false); //디폴트를 비활성화 시킴 
-                                NetworkObj objNetInfo = myPlayer.GetComponent<NetworkObj>();
-                                objNetInfo.remoteId = remoteID;
-
-                                lock (csNetworkObj)
-                                {
-                                    networkObj.Add(objNetInfo.remoteId, myPlayer);
-                                    print("추가됨");
-                                }
-
-                                if (this.userID == msgUserID)
-                                {
-                                    myPlayer.GetComponent<Player5>().isPlayer = true;
-                                    myPlayer.GetComponent<Player5>().main_camera.gameObject.SetActive(true);
-                                    //npc나 remotePlayer의 경우에는 각각 별도의 스크립트를 만들어서 붙여주는게 낫지 않나?
-                                    //그래야 로직 분리도 되고...
-                                }
+                                networkObj.Add(objNetInfo.remoteId, myPlayer);
+                                print("추가됨");
                             }
-                            print("사라짐?" + networkObj.Count);
+
+                            if (this.userID == msgUserID)
+                            {
+                                myPlayer.GetComponent<Player5>().isPlayer = true;
+                                myPlayer.GetComponent<Player5>().main_camera.gameObject.SetActive(true);
+                                //npc나 remotePlayer의 경우에는 각각 별도의 스크립트를 만들어서 붙여주는게 낫지 않나?
+                                //그래야 로직 분리도 되고...
+                            }
+
                             break;
  
                     }
