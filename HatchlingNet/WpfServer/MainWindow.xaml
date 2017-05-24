@@ -10,6 +10,6 @@
         <TextBox x:Name="leftBox" TextWrapping="Wrap" Text="graph" VerticalAlignment="Top" IsReadOnly="True"/>
         <TextBox x:Name="rightBox" TextWrapping="Wrap" Text="button" VerticalAlignment="Top" DockPanel.Dock="Right"/>
         <TextBox x:Name="inputBox" TextWrapping="Wrap" Text="input" VerticalAlignment="Top" DockPanel.Dock="Bottom" Margin="0,0,0,20"/>
-        <TextBox x:Name="logBox" TextWrapping="Wrap" Text="log" VerticalAlignment="Top"/>
+        <TextBox x:Name="logBox" TextWrapping="Wrap" Text="log" VerticalAlignment="Top" IsReadOnly="True"/>
     </DockPanel>
 </Window>

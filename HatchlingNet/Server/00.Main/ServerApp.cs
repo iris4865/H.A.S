@@ -1,5 +1,5 @@
 ﻿using HatchlingNet;
-using System;
+using System.Diagnostics;
 
 namespace Server
 {
@@ -11,6 +11,7 @@ namespace Server
 
         static void Main()
         {
+            Trace.Listeners.Add(new ConsoleTraceListener());
             ServerApp mainServer = new ServerApp();
             mainServer.Initialize();
             mainServer.Update();
@@ -18,7 +19,7 @@ namespace Server
 
         public void Initialize()
         {
-            Console.WriteLine("Server Start");
+            Trace.WriteLine("1. Server Start");
             PacketBufferManager.Initialize(2000);
             //objNumberingPool = new NumberingPool(20000);
 

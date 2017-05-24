@@ -2,6 +2,8 @@
 using Server;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +29,7 @@ namespace WpfServer
         ServerApp server;
         DispatcherTimer timer = new DispatcherTimer();
         ServerMonitor serverState = ServerMonitor.Instance;
+        WpfTraceListener trace = new WpfTraceListener();
 
         //double WindowHeight { get => SystemParameters.MaximizedPrimaryScreenHeight/2; }
 
@@ -34,11 +37,17 @@ namespace WpfServer
         {
             InitializeComponent();
             CustomInitialize();
-            //ServerStart();
+            ServerStart();
             Update();
         }
 
         void CustomInitialize()
+        {
+            Trace.Listeners.Add(trace);
+            WindowInitialize();
+        }
+
+        void WindowInitialize()
         {
             Height = SystemParameters.MaximizedPrimaryScreenHeight / 2;
             Width = SystemParameters.MaximizedPrimaryScreenWidth / 2;
@@ -66,6 +75,7 @@ namespace WpfServer
         void Update()
         {
             timer.Tick += UpdateCpuUsage;
+            timer.Tick += TraceChanged;
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Start();
         }
@@ -88,6 +98,11 @@ namespace WpfServer
             catch { }
             //imcomplete
             logBox.Height = inputBox.PointToScreen(new Point(0, 0)).Y - 300;
+        }
+
+        void TraceChanged(object sender, EventArgs e)
+        {
+            logBox.Text = trace.Data;
         }
     }
 }

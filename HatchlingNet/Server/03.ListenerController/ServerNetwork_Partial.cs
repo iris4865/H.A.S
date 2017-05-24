@@ -4,8 +4,6 @@ using System.Net.Sockets;
 
 namespace Server
 {
-    //Date: 4. 21
-    //NetworkController식이 더 어울려 보인다.
     public partial class ServerNetwork : NetworkService
     {
         //receive pool

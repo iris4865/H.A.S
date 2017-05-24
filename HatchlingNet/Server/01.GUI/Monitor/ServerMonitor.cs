@@ -37,8 +37,6 @@ namespace Management
         {
             while (true)
             {
-
-
                 Console.WriteLine($"thisPcpu: {cpuUsage.NextValue()}, TOTAL: {cpuTotalUsage.NextValue()}.");
                 Console.WriteLine($"mem: {memUsage.NextValue() / 1024 / 1024}MB, available: {memAvailable.NextValue() / 1024}, total: {((double)info.TotalPhysicalMemory) / 1024 / 1024 / 1024}");
                 Thread.Sleep(1500);
