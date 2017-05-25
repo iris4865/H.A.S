@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Net.Sockets;
 
-
 namespace HatchlingNet
 {
-    public abstract class NetworkService
+    public sealed class NetworkService
     {
+        public Action<UserToken> CloseClientSocket;
+
         public void BeginReceive(UserToken userToken)
         {
             Socket clientSocket = userToken.socket;
@@ -15,19 +16,6 @@ namespace HatchlingNet
             {
 //                Console.WriteLine("비긴 리시브");
                 ProcessReceive(receiveArgs);
-            }
-        }
-
-        public void CallReceiveComplete(object sender, SocketAsyncEventArgs receiveArgs)
-        {
-            if (receiveArgs.LastOperation == SocketAsyncOperation.Receive)
-            {
-                ProcessReceive(receiveArgs);
-//                Console.WriteLine("콜백 리시브컴플리트!");
-            }
-            else
-            {
-  //              Console.WriteLine("콜백 리시브컴플리트 실패!");
             }
         }
 
@@ -51,21 +39,10 @@ namespace HatchlingNet
 
             }
             else
-            {
-//                Console.WriteLine(string.Format("error {0}, transferred {1}", receiveArgs.SocketError, receiveArgs.BytesTransferred));
                 CloseClientSocket(token);
-            }
         }
 
-        private bool IsArgsSocketClosed(int value)
-        {
-            if (value > 0)
-                return false;
-
-            return true;
-        }
-
-        public abstract void CloseClientSocket(UserToken token);
+        bool IsArgsSocketClosed(int value) => value <= 0;
 
         public void CallSendComplete(object sender, SocketAsyncEventArgs sendArgs)
         {
@@ -74,5 +51,17 @@ namespace HatchlingNet
             token.ProcessSend(sendArgs);
         }
 
+        public void CallReceiveComplete(object sender, SocketAsyncEventArgs receiveArgs)
+        {
+            if (receiveArgs.LastOperation == SocketAsyncOperation.Receive)
+            {
+                ProcessReceive(receiveArgs);
+                //                Console.WriteLine("콜백 리시브컴플리트!");
+            }
+            else
+            {
+                //              Console.WriteLine("콜백 리시브컴플리트 실패!");
+            }
+        }
     }
 }

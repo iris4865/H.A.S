@@ -1,53 +1,50 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace HatchlingNet
 {
     public class Connector
     {
-        private ConnectorController networkService;
-        private Socket client;
+        Socket client;
 
-        public delegate void ConnectHandler(UserToken token);
-        public ConnectHandler CallbackConnect { get; set; }//클라 main로직에서 직접적으로 처리되야하는것들 정의한 함수 호출할 핸들러
+        public Action<Socket, UserToken> ConnectProcess { private get => ConnectProcess; set => ConnectProcess = value; }
+        public Action<UserToken> CallbackConnect;
 
-
-        public Connector(ConnectorController networkService)
+        public IPEndPoint RemoteEndPoint
         {
-            this.networkService = networkService;
+            private get => RemoteEndPoint;
+            set
+            {
+                if (RemoteEndPoint == null)
+                    RemoteEndPoint = value;
+            }
         }
 
-        public void Connect(IPEndPoint remoteEndPoint)
+        public Connector(IPEndPoint remoteEndPoint)
         {
-            this.client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            RemoteEndPoint = remoteEndPoint;
+        }
+
+        public void Connect()
+        {
+            client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             SocketAsyncEventArgs eventArgs = new SocketAsyncEventArgs();
             eventArgs.Completed += CallConnectComplete;
-            eventArgs.RemoteEndPoint = remoteEndPoint;
+            eventArgs.RemoteEndPoint = RemoteEndPoint;
 
-
-            bool pending = this.client.ConnectAsync(eventArgs);
+            bool pending = client.ConnectAsync(eventArgs);
             if (!pending)
-            {
                 CallConnectComplete(null, eventArgs);
-            }
-
-            
         }
 
-        public void CallConnectComplete(object sender, SocketAsyncEventArgs args)
+        void CallConnectComplete(object sender, SocketAsyncEventArgs args)
         {
             UserToken token = new UserToken();
-//            token.sendEventArgs = 
-            this.networkService.ConnectProcess(this.client, token);
+            ConnectProcess(client, token);
 
-            if (this.CallbackConnect != null)
-            {
-                this.CallbackConnect(token);
-            }
-            
+            CallbackConnect?.Invoke(token);
         }
-
-
     }
 }

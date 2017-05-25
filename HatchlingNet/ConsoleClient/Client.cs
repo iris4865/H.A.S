@@ -16,16 +16,20 @@ namespace client
 
         public void Initialize(int i = 12)
         {
-            this.index = i;
+            index = i;
             PacketBufferManager.Initialize(2000);
-            service = new ConnectorController();
-
-            Connector connector = new Connector(service);
-            connector.CallbackConnect += CallConnectGameserver;
 
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7979);
+
+            service = new ConnectorController();
+            Connector connector = new Connector(endPoint)
+            {
+                CallbackConnect = CallConnectGameserver,
+                ConnectProcess = service.ConnectProcess
+            };
+
             Console.WriteLine("connect start");
-            connector.Connect(endPoint);//리시브도 이안에서 해결
+            connector.Connect();//리시브도 이안에서 해결
             Console.WriteLine("connect end");
 
             this.whileActive();

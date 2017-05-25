@@ -1,9 +1,11 @@
 ﻿using HatchlingNet;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using static System.Threading.Tasks.Parallel;
 
 namespace Server
 {
@@ -34,41 +36,27 @@ namespace Server
             //            assignIDToUser = 0;
 
             tokenList = new Dictionary<int, UserToken>();
-            this.acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
+            acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
 
             tokenNumberingPool = new NumberingPool(10000);
-            for (int i = 0; i < tokenNumberingPool.capacity; ++i)
-            {
-                int number = new int();
-                number = i;
 
+            for (int number = 0; number < tokenNumberingPool.capacity; number++)
                 tokenNumberingPool.Push(number);
-            }
-
-
         }
 
         public void Start(string host, int port, int backlog)//backlog : 대기큐의 크기
         {
-            listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
+            //0.0.0.0 ==> any
             IPAddress address;
-            if (host == "0.0.0.0")
-            {
-                address = IPAddress.Any;
-            }
-            else
-            {
-                address = IPAddress.Parse(host);
-            }
+            address = (host == "0.0.0.0" ? IPAddress.Any : IPAddress.Parse(host));
 
             IPEndPoint endpoint = new IPEndPoint(address, port);
 
-            this.listenSocket.Bind(endpoint); //호스트의 정보 등록
-            this.listenSocket.Listen(backlog); //받아들일 클라이언트 수 결정
+            listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            listenSocket.Bind(endpoint); //호스트의 정보 등록
+            listenSocket.Listen(backlog); //받아들일 클라이언트 수 결정
 
-            this.acceptArgs.Completed += AcceptComplete;
-            //연결이 되었을경우 호출할 콜백함수의 핸들러를 Completed에 저장함...다만 연결이 되었는지에 대한 검사는 별도로 해야됨. 그게 바로 아래 코드
+            acceptArgs.Completed += AcceptComplete;
 
             Thread listenThread = new Thread(DoListen);
             listenThread.Start();
@@ -76,24 +64,23 @@ namespace Server
 
         public void DoListen()
         {
-            this.flowController = new AutoResetEvent(false);
+            flowController = new AutoResetEvent(false);
 
             while (true)
             {
-                this.acceptArgs.AcceptSocket = null;
-                bool pending = true;
+                acceptArgs.AcceptSocket = null;
 
-                pending = listenSocket.AcceptAsync(this.acceptArgs);
                 //반환값이 false이면 동기적 처리. 동기적 처리이면 콜백함수 호출 안됨
                 //listenSocket에만 콜백 등록해놨지 다른 소켓에는 콜백 등록 안했으니
                 //연결됨으로써 새롭게 만들어지는 소켓에는 콜백이 없는거임 착각 ㄴㄴ
 
+                //Date. 5.25 true로 준 이유가?
+                bool pending = true;
+                pending = listenSocket.AcceptAsync(acceptArgs);
                 if (!pending)
-                {
-                    AcceptComplete(null, this.acceptArgs);
-                }
+                    AcceptComplete(null, acceptArgs);
 
-                this.flowController.WaitOne();
+                flowController.WaitOne();
             }
         }
 
@@ -101,14 +88,14 @@ namespace Server
         {
             //            Console.WriteLine("액셉컴플리트");
 
-            if (e.SocketError == SocketError.Success)
+            if (CanAcceptSuccess(e.SocketError))
             {
-                Socket clientSocket = e.AcceptSocket;
+                Interlocked.Increment(ref connectionCount);
 
-                Interlocked.Increment(ref this.connectionCount);
                 SocketAsyncEventArgs receiveArgs = SocketAsyncEventArgsPool.receiveInstance.Pop();
                 SocketAsyncEventArgs sendArgs = SocketAsyncEventArgsPool.sendInstance.Pop();
 
+                Socket clientSocket = e.AcceptSocket;
                 UserToken userToken = receiveArgs.UserToken as UserToken;
 
                 //여기서 send, receive, socket 다 연결하는데 BeginReceive에 userToken을 주면 안되나?
@@ -132,16 +119,20 @@ namespace Server
 
                 return;
             }
-            else
-            {
-//                Console.WriteLine("Failed to Accept client");
-            }
+            Trace.WriteLine("Failed to Accept client");
         }
 
 
         public void CallBroadCast(Packet msg, int withOut = -1)
         {
+            ForEach(tokenList, (user) =>
+                {
+                    if (user.Key != withOut)
+                        user.Value.Send(msg);
+                }
+                );
             //foreach (KeyValuePair<int, UserToken> user in tokenList)
+            /*
             if (withOut == -1)
             {
                 foreach (var user in tokenList)
@@ -155,6 +146,7 @@ namespace Server
                         user.Value.Send(msg);
                 }
             }
+            */
         }
 
         public void CallSendTo(int tokenID, Packet msg)
@@ -162,5 +154,6 @@ namespace Server
             tokenList[tokenID].Send(msg);
         }
 
+        bool CanAcceptSuccess(SocketError socketError) => socketError == SocketError.Success;
     }
 }
