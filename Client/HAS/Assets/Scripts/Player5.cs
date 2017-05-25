@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Player5 : MonoBehaviour
 {
+    public GameObject foot;
     Animator player_animator;
     Vector3 player_moveVector;
     Vector3 player_rotateVector;
@@ -12,7 +13,7 @@ public class Player5 : MonoBehaviour
     public static int count = 0;
 
     //경찰인지 도둑인지 구별...해야한다.
-    int player_job; //1 or 2 = 도둑 or 경찰...
+    int player_job  = 1; //1 or 2 = 도둑 or 경찰...
 
     public GameObject pressE_key_canvas;
 
@@ -60,6 +61,10 @@ public class Player5 : MonoBehaviour
         {
             run();
             turn();
+            if(player_job == 1)
+            {
+                action();
+            }
         }
     }
 
@@ -81,7 +86,10 @@ public class Player5 : MonoBehaviour
     {
         if (other.gameObject.tag == "item1")
         {
-            pressE_key_canvas.SetActive(true);
+            if (player_job == 2)//도둑
+            {
+                pressE_key_canvas.SetActive(true);
+            }
         }
     }
 
@@ -94,8 +102,11 @@ public class Player5 : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.E) == true)
         {
-            Destroy(other.gameObject);
-            pressE_key_canvas.SetActive(false);
+            if (player_job == 2)//도둑
+            {
+                Destroy(other.gameObject);
+                pressE_key_canvas.SetActive(false);
+            }
         }
     }
 
@@ -153,5 +164,21 @@ public class Player5 : MonoBehaviour
     {
         player_rotateVector = new Vector3(0, Input.GetAxis("Mouse X"), 0);
         transform.Rotate(player_rotateVector * player_speed);
+    }
+
+    void action()
+    {
+        Collider collider = foot.GetComponent<SphereCollider>();
+
+        if (Input.GetKey(KeyCode.E))
+        {
+            collider.isTrigger = true;
+            player_animator.SetBool("isaction", true);
+        }
+        else
+        {
+            //collider.isTrigger = false;
+            player_animator.SetBool("isaction", false);
+        }
     }
 }
