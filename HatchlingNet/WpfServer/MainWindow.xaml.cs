@@ -102,7 +102,7 @@ namespace WpfServer
 
         void TraceChanged(object sender, EventArgs e)
         {
-            logBox.Text = trace.Data;
+            logBox.Text = trace.LogData;
         }
     }
 }

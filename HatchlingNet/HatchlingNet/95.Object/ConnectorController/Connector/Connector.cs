@@ -8,12 +8,15 @@ namespace HatchlingNet
     {
         Socket client;
 
-        public Action<Socket, UserToken> ConnectProcess { private get => ConnectProcess; set => ConnectProcess = value; }
+        public Action<Socket, UserToken> ConnectProcess { private get; set; }
         public Action<UserToken> CallbackConnect;
 
         public IPEndPoint RemoteEndPoint
         {
-            private get => RemoteEndPoint;
+            private get
+            {
+                return RemoteEndPoint;
+            }
             set
             {
                 if (RemoteEndPoint == null)

@@ -9,19 +9,17 @@ namespace Management
     /// </summary>
     public class WpfTraceListener : TraceListener, INotifyPropertyChanged
     {
-        string logString;
-
-        public string Data { get => logString; }
+        public string LogData { get; private set; }
 
         public override void Write(string message)
         {
-            logString += message;
+            LogData += message;
             OnPropertyChanged(new PropertyChangedEventArgs("Trace"));
         }
 
         public override void WriteLine(string message)
         {
-            logString += message + Environment.NewLine;
+            LogData += message + Environment.NewLine;
             OnPropertyChanged(new PropertyChangedEventArgs("Trace"));
         }
 
