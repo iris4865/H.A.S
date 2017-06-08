@@ -12,12 +12,25 @@ public class Player5 : MonoBehaviour
     public bool isPlayer = false;
     public static int count = 0;
 
+    bool caninput {get; set;}
+
     //경찰인지 도둑인지 구별...해야한다.
     int player_job  = 1; //1 or 2 = 도둑 or 경찰...
 
     public GameObject pressE_key_canvas;
 
-    float player_speed = 2.0f;
+    float originalSpeed = 2.0f;
+    float player_speed {
+        get
+        {
+            return player_speed;
+        }
+        set
+        {
+            player_speed = originalSpeed * value;
+        }
+
+    }
 
     public Camera main_camera;
 
@@ -25,6 +38,8 @@ public class Player5 : MonoBehaviour
     {
         player_animator = GetComponentInChildren<Animator>();
         pressE_key_canvas.SetActive(false);
+        player_speed = 1;
+        caninput = true;
     }
 
     void Start()
@@ -59,11 +74,14 @@ public class Player5 : MonoBehaviour
     {
         if (isPlayer)
         {
-            run();
-            turn();
-            if(player_job == 1)
+            if (caninput)
             {
-                action();
+                run();
+                turn();
+                if (player_job == 1)
+                {
+                    action();
+                }
             }
         }
     }
