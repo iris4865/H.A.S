@@ -86,7 +86,7 @@ namespace Server
 
         public void AcceptComplete(Object sender, SocketAsyncEventArgs e)
         {
-            //            Console.WriteLine("액셉컴플리트");
+            Trace.WriteLine("Client Accept");
 
             if (CanAcceptSuccess(e.SocketError))
             {

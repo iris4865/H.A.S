@@ -3,13 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:servergui="clr-namespace:WpfServer"
+        xmlns:management="clr-namespace:Management;assembly=Server"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" SizeChanged="Window_SizeChanged">
+        Title="MainWindow" SizeChanged="Window_SizeChanged" SizeToContent="WidthAndHeight"
+        HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Window.Resources>
+        <management:LogTracedListener x:Key="LogTracer"/>
+    </Window.Resources>
 
-    <DockPanel x:Name="dockPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Height="318" Width="515">
-        <TextBox x:Name="leftBox" TextWrapping="Wrap" Text="graph" VerticalAlignment="Top" IsReadOnly="True"/>
+    <DockPanel x:Name="dockPanel" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+        <Border DockPanel.Dock="Left" BorderBrush="Black" BorderThickness="3">
+            <servergui:ServerStateDisplay DockPanel.Dock="Left" x:Name="LeftStateList"/>
+        </Border>
         <TextBox x:Name="rightBox" TextWrapping="Wrap" Text="button" VerticalAlignment="Top" DockPanel.Dock="Right"/>
         <TextBox x:Name="inputBox" TextWrapping="Wrap" Text="input" VerticalAlignment="Top" DockPanel.Dock="Bottom" Margin="0,0,0,20"/>
-        <TextBox x:Name="logBox" TextWrapping="Wrap" Text="log" VerticalAlignment="Top" IsReadOnly="True"/>
+        <!--TextBox x:Name="logBox" TextWrapping="Wrap" AcceptsReturn="True" VerticalAlignment="Top" Text="{Binding traceOutput}"/-->
+        <!--TextBox x:Name="logBox" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True"
+                 /-->
+        <servergui:ServerLogDisplay x:Name="logDisplay" VerticalAlignment="Top"/>
     </DockPanel>
+    
 </Window>

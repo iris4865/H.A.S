@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,37 +22,24 @@ using System.Windows.Threading;
 
 namespace WpfServer
 {
-    /// <summary>
-    /// MainWindow.xaml에 대한 상호 작용 논리
-    /// </summary>
     public partial class MainWindow : Window
     {
-        ServerApp server;
-        DispatcherTimer timer = new DispatcherTimer();
-        ServerMonitor serverState = ServerMonitor.Instance;
-        WpfTraceListener trace = new WpfTraceListener();
-
-        //double WindowHeight { get => SystemParameters.MaximizedPrimaryScreenHeight/2; }
-
+        ServerApp app = new ServerApp();
         public MainWindow()
         {
             InitializeComponent();
             CustomInitialize();
-            ServerStart();
-            Update();
         }
 
         void CustomInitialize()
         {
-            Trace.Listeners.Add(trace);
-            WindowInitialize();
-        }
-
-        void WindowInitialize()
-        {
             Height = SystemParameters.MaximizedPrimaryScreenHeight / 2;
             Width = SystemParameters.MaximizedPrimaryScreenWidth / 2;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            app.Initialize();
+            Thread server = new Thread(app.Start);
+            server.Start();
 
             UpdateSize();
         }
@@ -61,32 +49,8 @@ namespace WpfServer
             dockPanel.Width = Width;
             dockPanel.Height = Height - SystemParameters.WindowCaptionHeight;
 
-            leftBox.Width = Width / 4;
+            LeftStateList.Width = Width / 4;
             rightBox.Width = Width / 4;
-        }
-
-        void ServerStart()
-        {
-            server = new ServerApp();
-            server.Initialize();
-            server.Start();
-        }
-
-        void Update()
-        {
-            timer.Tick += UpdateCpuUsage;
-            timer.Tick += TraceChanged;
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Start();
-        }
-
-        void UpdateCpuUsage(object sender, EventArgs e)
-        {
-            leftBox.Text = $"CPU: {serverState.GetUsageCpu()}%\n" +
-                $"RAM Usage: {serverState.GetMemoryUsage()}\n" +
-                $"RAM Total: {serverState.GetMemoryTotal()}GB\n" +
-                $"Users: 00\n" +
-                $"Packet: 00";
         }
 
         void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -97,12 +61,7 @@ namespace WpfServer
             }
             catch { }
             //imcomplete
-            logBox.Height = inputBox.PointToScreen(new Point(0, 0)).Y - 300;
-        }
-
-        void TraceChanged(object sender, EventArgs e)
-        {
-            logBox.Text = trace.LogData;
+            logDisplay.Height = inputBox.PointToScreen(new Point(0, 0)).Y - 300;
         }
     }
 }

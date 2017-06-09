@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="00.Main\ServerApp.cs" />
-    <Compile Include="01.GUI\Monitor\WpfTraceListener.cs" />
+    <Compile Include="01.GUI\Monitor\LogTracedListener.cs" />
     <Compile Include="03.ListenerController\Listener\Listener.cs" />
     <Compile Include="03.ListenerController\ServerNetwork.cs" />
     <Compile Include="03.ListenerController\ServerNetwork_Partial.cs" />
@@ -72,7 +72,6 @@
     <Compile Include="96.DataBase\Core\Table.cs" />
     <Compile Include="01.GUI\Monitor\ServerMonitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="98.Header\PROTOCOL.cs" />
     <Compile Include="00.Main\UserList\UserList.cs" />
   </ItemGroup>
   <ItemGroup>

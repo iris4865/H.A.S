@@ -7,20 +7,22 @@ namespace Management
     /// <summary>
     /// 추적 및 디버그 출력을 모니터링하는 수신기의 abstract 기본 클래스를 제공합니다.
     /// </summary>
-    public class WpfTraceListener : TraceListener, INotifyPropertyChanged
+    public class LogTracedListener : TraceListener, INotifyPropertyChanged
     {
-        public string LogData { get; private set; }
+        string logString;
+
+        public string Data { get => logString; }
 
         public override void Write(string message)
         {
-            LogData += message;
-            OnPropertyChanged(new PropertyChangedEventArgs("Trace"));
+            logString += message;
+            OnPropertyChanged(new PropertyChangedEventArgs("Data"));
         }
 
         public override void WriteLine(string message)
         {
-            LogData += message + Environment.NewLine;
-            OnPropertyChanged(new PropertyChangedEventArgs("Trace"));
+            logString += message + Environment.NewLine;
+            OnPropertyChanged(new PropertyChangedEventArgs("Data"));
         }
 
         #region INotifyPropertyChanged Members
