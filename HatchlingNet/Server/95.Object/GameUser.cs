@@ -146,10 +146,14 @@ namespace Server
                         //response.SetSendType((short)SEND_TYPE.BroadcastWithoutMe);
 
                         Packet response = PacketBufferManager.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
-                        response.Push(msg.PopInt32());
-                        response.Push(msg.PopFloat());
-                        response.Push(msg.PopFloat());
-                        response.Push(msg.PopFloat());
+                        
+                        response.Push(msg.PopInt32());  //remoteid
+                        response.Push(msg.PopFloat());  //x
+                        response.Push(msg.PopFloat());  //y
+                        response.Push(msg.PopFloat());  //z
+                        response.Push(msg.PopFloat());  //rotate y
+                        response.Push(msg.PopFloat());  //speed
+                        response.Push(msg.PopInt32());  //animation_type
 
                         Send(response);
                     }

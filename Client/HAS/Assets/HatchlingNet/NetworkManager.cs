@@ -141,11 +141,14 @@ public sealed class NetworkManager : MonoBehaviour
                     Vector3 position;
                     position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
 
-                    lock (networkObj)
+                    lock (networkObj) //thread 안정적으로 사용하려고 
                     {
                         if (networkObj.ContainsKey(networkID) == true)
                         {
                             networkObj[networkID].GetComponent<Transform>().position = position;
+                            networkObj[networkID].GetComponent<Transform>().Rotate(0, msg.PopFloat(), 0);
+                            networkObj[networkID].GetComponent<Player5>().player_speed = msg.PopFloat();
+                            networkObj[networkID].GetComponent<Player5>().animation_type = msg.PopInt32();
                         }
                     }
                 }
