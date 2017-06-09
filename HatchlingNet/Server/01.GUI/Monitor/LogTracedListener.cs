@@ -11,7 +11,7 @@ namespace Management
     {
         string logString;
 
-        public string Data { get => logString; }
+        public string Data { get { return logString; } }
 
         public override void Write(string message)
         {

@@ -28,7 +28,7 @@ namespace WpfServer
                 if (value >= 0)
                     limitCount = value;
             }
-            get => limitCount;
+            get { return limitCount; }
         }
 
         new public void Start()

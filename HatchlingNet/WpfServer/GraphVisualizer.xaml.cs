@@ -54,7 +54,7 @@ namespace WpfServer
             {
                 SetValue(DesiredWidthProperty, value);
             }
-            get => (double)GetValue(DesiredWidthProperty);
+            get { return (double)GetValue(DesiredWidthProperty); }
         }
     }
 }
