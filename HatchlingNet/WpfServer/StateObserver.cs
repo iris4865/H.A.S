@@ -87,7 +87,7 @@ namespace WpfServer
 
         public static double Period
         {
-            private set => periodValueRefreshing = value;
+            private set { periodValueRefreshing = value; }
             get
             {
                 return periodValueRefreshing;
