@@ -25,6 +25,11 @@ public class Player5 : MonoBehaviour
 
     public Camera main_camera;
 
+    public AudioClip attack_sound;
+    public AudioClip walk_sound;
+    //public AudioClip sound_3;
+    private AudioSource audio;
+
     void Awake()
     {
         player_animator = GetComponentInChildren<Animator>();
@@ -143,7 +148,7 @@ public class Player5 : MonoBehaviour
         }
         else if(animation_type == (short)ANIMATION_TYPE.Attack)
         {
-
+            player_animator.SetBool("isaction", true);
         }
     }
 
@@ -212,8 +217,10 @@ public class Player5 : MonoBehaviour
 
         if (Input.GetKey(KeyCode.E))
         {
+            this.audio.clip = this.attack_sound;
+            audio.Play();
             collider.isTrigger = true;
-            //player_animator.SetBool("isaction", true);
+            animation_type = (short)ANIMATION_TYPE.Attack;
         }
         else
         {

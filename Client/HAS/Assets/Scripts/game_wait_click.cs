@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class game_wait_click : MonoBehaviour {
 
     object networkManager;
 
-	// Use this for initialization
-	void Start () {
+    public Image[] user = new Image[4];
+
+    // Use this for initialization
+    void Start () {
         networkManager = GameObject.FindWithTag("eNetworkManager");
 	}
 	

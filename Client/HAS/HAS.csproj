@@ -99,11 +99,16 @@
     <Compile Include="Assets\Scripts\Player4.cs" />
     <Compile Include="Assets\Scripts\Player5.cs" />
     <Compile Include="Assets\Scripts\Player_Spawn.cs" />
-    <Compile Include="Assets\Scripts\audio_test.cs" />
     <Compile Include="Assets\Scripts\game_join_click.cs" />
     <Compile Include="Assets\Scripts\game_login_click.cs" />
     <Compile Include="Assets\Scripts\game_title_click.cs" />
     <Compile Include="Assets\Scripts\game_wait_click.cs" />
+    <Compile Include="Assets\Scripts\sound_script\join_sound.cs" />
+    <Compile Include="Assets\Scripts\sound_script\login_sound.cs" />
+    <Compile Include="Assets\Scripts\sound_script\title_end_button_sound.cs" />
+    <Compile Include="Assets\Scripts\sound_script\title_sound.cs" />
+    <Compile Include="Assets\Scripts\sound_script\title_start_button_sound.cs" />
+    <Compile Include="Assets\Scripts\sound_script\wait_sound.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Fonts\Documentation\JazzCreateAltKeys_BubbleFont.txt" />

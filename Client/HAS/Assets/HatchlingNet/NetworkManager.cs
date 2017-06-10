@@ -123,8 +123,15 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.LoginAck:
                 {
+                    
                     Debug.Log("로그인액크");
                     //SceneManager.LoadScene(3);
+
+                    for(int i = 0; i < 4; i++)
+                    {
+                        
+                    }
+
                     SceneManager.LoadScene(4);
                 }
                 break;
