@@ -44,7 +44,7 @@ namespace Server
                 tokenNumberingPool.Push(number);
         }
 
-        public void Start(string host, int port, int backlog)//backlog : 대기큐의 크기
+        public void Ready(string host, int port, int backlog)//backlog : 대기큐의 크기
         {
             //0.0.0.0 ==> any
             IPAddress address;
@@ -57,9 +57,6 @@ namespace Server
             listenSocket.Listen(backlog); //받아들일 클라이언트 수 결정
 
             acceptArgs.Completed += AcceptComplete;
-
-            Thread listenThread = new Thread(DoListen);
-            listenThread.Start();
         }
 
         public void DoListen()

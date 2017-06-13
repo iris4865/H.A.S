@@ -1,11 +1,19 @@
 ﻿using HatchlingNet;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Server
 {
     public class ServerApp
     {
         ServerNetwork network;
+        public Thread GetThread
+        {
+            get
+            {
+                return network.ListenerThread;
+            }
+        }
 
         //NumberingPool objNumberingPool;
 
@@ -29,7 +37,7 @@ namespace Server
 
         public void Update()//콘솔용
         {
-            Start();
+            network.Listen("0.0.0.0", 7979, 1000);
 
             while (true)
                 System.Threading.Thread.Sleep(10000);

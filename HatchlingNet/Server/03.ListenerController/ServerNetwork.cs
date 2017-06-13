@@ -1,4 +1,5 @@
 ﻿using HatchlingNet;
+using System.Threading;
 
 namespace Server
 {
@@ -17,6 +18,8 @@ namespace Server
         //int connectionCount;//모든 리스너들의 연결 총합
         int bufferSize;
         readonly int preAllocCount = 2;
+
+        public Thread ListenerThread { get; private set; }
 
         public ServerNetwork(int maxConnection)
         {
@@ -51,7 +54,11 @@ namespace Server
                 BeginReceive = network.BeginReceive
             };
             listener.Initialize();
-            listener.Start(host, port, backlog);
+
+            listener.Ready(host, port, backlog);
+
+            ListenerThread = new Thread(listener.DoListen);
+            ListenerThread.Start();
         }
 
 

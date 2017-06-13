@@ -25,6 +25,8 @@ namespace WpfServer
     public partial class MainWindow : Window
     {
         ServerApp app = new ServerApp();
+        Thread appThread;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,8 +40,9 @@ namespace WpfServer
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             app.Initialize();
-            Thread server = new Thread(app.Start);
-            server.Start();
+            app.Start();
+            appThread = app.GetThread;
+            Closed += (object sender, EventArgs e) => appThread.Abort();
 
             UpdateSize();
         }
@@ -59,9 +62,17 @@ namespace WpfServer
             {
                 UpdateSize();
             }
-            catch { }
+            catch (Exception a)
+            {
+                Trace.WriteLine(a.Data);
+            }
             //imcomplete
             logDisplay.Height = inputBox.PointToScreen(new Point(0, 0)).Y - 300;
+        }
+
+        void Exited(object sender, EventArgs e)
+        {
+            appThread.Abort();
         }
     }
 }
