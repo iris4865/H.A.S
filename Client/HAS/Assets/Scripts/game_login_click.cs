@@ -33,6 +33,7 @@ public class game_login_click : MonoBehaviour
 
     public void click()
     {
+        print("login start");
         id_s = id.text;
         password_s = password.text;
 
@@ -43,14 +44,15 @@ public class game_login_click : MonoBehaviour
         }
 
 //        NetworkManager networkManager = NetworkManager.GetInstance.GetComponent<;
-        networkManager = networkManager = NetworkManager.GetInstance;
+        networkManager = NetworkManager.GetInstance;
 
         if (networkManager != null)
         {
-            Packet msg = PacketBufferManager.Pop((short)PROTOCOL.LoginReq, (short)SEND_TYPE.Single);
+            Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.Login, (short)SEND_TYPE.Single);
             msg.Push(id_s);
             msg.Push(password_s);
 
+            print("login Send");
             networkManager.Send(msg);
 
             networkManager.userID = id_s;

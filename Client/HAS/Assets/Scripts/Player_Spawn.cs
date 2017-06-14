@@ -22,7 +22,7 @@ public class Player_Spawn : MonoBehaviour {
         numberingWaitObjTag.Enqueue(player.tag);
         Vector3 createPosition = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
 
-        Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingReq, (short)SEND_TYPE.Single);
+        Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.ObjectNumbering, (short)SEND_TYPE.Single);
         msg.Push(player.tag);
         msg.Push(createPosition.x, createPosition.y, createPosition.z);
 

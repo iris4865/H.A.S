@@ -62,8 +62,13 @@
     <Compile Include="00.Main\ServerApp.cs" />
     <Compile Include="01.GUI\Monitor\LogTracedListener.cs" />
     <Compile Include="03.ListenerController\Listener\Listener.cs" />
-    <Compile Include="03.ListenerController\ServerNetwork.cs" />
-    <Compile Include="03.ListenerController\ServerNetwork_Partial.cs" />
+    <Compile Include="03.ListenerController\ServerController.cs" />
+    <Compile Include="95.Object\IResponse.cs" />
+    <Compile Include="95.Object\Response\Chat.cs" />
+    <Compile Include="95.Object\Response\Login.cs" />
+    <Compile Include="95.Object\Response\ObjectNumbering.cs" />
+    <Compile Include="95.Object\Response\Position.cs" />
+    <Compile Include="95.Object\Response\SignUp.cs" />
     <Compile Include="96.DataBase\Core\DataBaseInventory.cs" />
     <Compile Include="96.DataBase\Core\MySqlAdapter.cs" />
     <Compile Include="96.DataBase\Core\DataBase.cs" />

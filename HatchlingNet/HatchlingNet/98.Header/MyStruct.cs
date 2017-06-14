@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace HatchlingNet
+﻿namespace HatchlingNet
 {
     public struct MyVector3
     {

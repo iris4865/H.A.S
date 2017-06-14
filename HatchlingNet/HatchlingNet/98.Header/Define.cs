@@ -5,10 +5,9 @@ using System.Text;
 
 namespace HatchlingNet
 {
-    class Define
+    static class Define
     {
         public static readonly Int16 HeaderSize = 2;
         public static readonly Int16 ProtocolSize = 2;
-
     }
 }

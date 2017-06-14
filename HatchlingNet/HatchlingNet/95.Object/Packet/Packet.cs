@@ -144,40 +144,36 @@ namespace HatchlingNet
             header.CopyTo(this.buffer, 0);
         }
 
+        public void Push(byte[] data)
+        {
+            data.CopyTo(buffer, position);
+            position += data.Length;
+        }
 
         public void Push(byte data)
         {
-            byte[] tempBuffer = BitConverter.GetBytes(data);
-            tempBuffer.CopyTo(this.buffer, this.position);//CopyTo라는 함수이름 너무 잘지은듯 
-            this.position += tempBuffer.Length;
+            Push(BitConverter.GetBytes(data));
         }
 
         public void Push(Int16 data)
         {
-            byte[] tempBuffer = BitConverter.GetBytes(data);
-            tempBuffer.CopyTo(this.buffer, this.position);
-            this.position += tempBuffer.Length;
+            Push(BitConverter.GetBytes(data));
         }
 
         public void Push(Int32 data)
         {
-            byte[] tempBuffer = BitConverter.GetBytes(data);
-            tempBuffer.CopyTo(this.buffer, this.position);
-            this.position += tempBuffer.Length;
+            Push(BitConverter.GetBytes(data));
         }
-
 
         public void Push(float data)
         {
-            byte[] tempBuffer = BitConverter.GetBytes(data);
-            tempBuffer.CopyTo(this.buffer, this.position);
-            this.position += tempBuffer.Length;
+            Push(BitConverter.GetBytes(data));
         }
 
         public void Push(params float[] datas)
         {
             foreach(float data in datas)
-                Push(data);
+                Push(BitConverter.GetBytes(data));
         }
 
         public void Push(MyVector3 data)
@@ -189,9 +185,7 @@ namespace HatchlingNet
 
         public void Push(double data)
         {
-            byte[] tempBuffer = BitConverter.GetBytes(data);
-            tempBuffer.CopyTo(this.buffer, this.position);
-            this.position += tempBuffer.Length;
+            Push(BitConverter.GetBytes(data));
         }
 
         //왜 문자열일때만 문자열의 크기를 따로 저장하는 코드가 있는거지?

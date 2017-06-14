@@ -5,14 +5,14 @@ namespace Header
 {
     public enum PROTOCOL : Int16
     {
-        LoginReq = 1000, LoginAck, LoginRej,
-        SignupReq = 1100, SignupAck, SignupRej,
+        Login = 1000, LoginAck, LoginRej,
+        SignUp = 1100, SignUpAck, SignUpRej,
 
-        ChatReq = 2000, ChatAck,
-        PositionReq = 3000, PositionAck,
-        CreateObjReq = 4000, CreateObjAck, CreateObjRej,
-        DestroyObjReq, DestroyObjAck, DestroyObjRej,
-        ObjNumberingReq, ObjNumberingAck, ObjNumberingRej,
+        Chat = 2000, ChatAck,
+        Position = 3000, PositionAck,
+        CreateObj = 4000, CreateObjAck, CreateObjRej,
+        DestroyObj, DestroyObjAck, DestroyObjRej,
+        ObjectNumbering, ObjectNumberingAck, ObjectNumberingRej,
         PlayerExit,
 
         END

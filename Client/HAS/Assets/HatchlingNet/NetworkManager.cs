@@ -92,7 +92,7 @@ public sealed class NetworkManager : MonoBehaviour
         {
             case NETWORK_EVENT.connected:
                 {
-                    Packet msg = PacketBufferManager.Pop((short)PROTOCOL.ChatReq, (short)SEND_TYPE.BroadcastWithMe);
+                    Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.Chat, (short)SEND_TYPE.BroadcastWithMe);
                     msg.Push("Hello~!");
 
                     this.gameserver.Send(msg);
@@ -125,7 +125,7 @@ public sealed class NetworkManager : MonoBehaviour
             case PROTOCOL.LoginAck:
                 {
 
-                    //Debug.Log("로그인액크");
+                    Debug.Log("LoginAck");
                     //SceneManager.LoadScene(3);
 
                     for (int i = 0; i < 4; i++)
@@ -162,7 +162,7 @@ public sealed class NetworkManager : MonoBehaviour
                 }
                 break;
 
-            case PROTOCOL.ObjNumberingAck:
+            case PROTOCOL.ObjectNumberingAck:
                 {
                     string numberingTag;
 

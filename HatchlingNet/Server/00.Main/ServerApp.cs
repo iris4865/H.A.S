@@ -1,12 +1,11 @@
-﻿using HatchlingNet;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Threading;
 
 namespace Server
 {
     public class ServerApp
     {
-        ServerNetwork network;
+        ServerController network;
         public Thread GetThread
         {
             get
@@ -14,6 +13,7 @@ namespace Server
                 return network.ListenerThread;
             }
         }
+        int maxConnection = 10000;
 
         static void Main()
         {
@@ -26,23 +26,23 @@ namespace Server
         public void Initialize()
         {
             Trace.WriteLine("Server Start");
-            network = new ServerNetwork();
+            network = new ServerController();
 
-            int maxConnection = 10000;
             network.Initialize(maxConnection);
         }
 
         public void Update()//콘솔용
         {
-            network.Listen("0.0.0.0", 7979, 1000);
+            network.Listen("0.0.0.0", 7979, maxConnection);
 
+            //Thread.Sleep(Timeout.Infinite);
             while (true)
-                System.Threading.Thread.Sleep(10000);
+                Thread.Sleep(10000);
         }
 
         public void Start()//gui용
         {
-            network.Listen("0.0.0.0", 7979, 1000);
+            network.Listen("0.0.0.0", 7979, maxConnection);
         }
     }
 }

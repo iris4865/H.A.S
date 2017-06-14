@@ -16,8 +16,8 @@ namespace HatchlingNet
         {
             //token에 집어넣고 보내는 방법도 있다.
             token.socket = clientSocket;
-            token.sendEventArgs = GetEventArgs(token, network.CallSendComplete);
-            token.receiveEventArgs = GetEventArgs(token, network.CallReceiveComplete);
+            token.sendEventArgs = GetEventArgs(token, network.SendComplete);
+            token.receiveEventArgs = GetEventArgs(token, network.ReceiveComplete);
 
             network.BeginReceive(token);
         }
@@ -34,7 +34,7 @@ namespace HatchlingNet
 
         void CloseClientSocket(UserToken token)
         {
-            token.OnRemove();
+            token.Clear();
         }
     }
 }

@@ -11,46 +11,17 @@ namespace Server
 {
     public class Listener
     {
-        public Action<UserToken> BeginReceive;//Action을 이용하면 델리게이트 사용안하고 짦게 사용가능 대신 인자 하나만 넘길수 있음.
-        SocketAsyncEventArgs acceptArgs; //비동기 Accept를 위한 객체;
         Socket listenSocket;
+        public Action<UserToken> BeginReceive;
+        readonly SocketAsyncEventArgs acceptArgs = new SocketAsyncEventArgs(); //비동기 Accept를 위한 객체;
 
-        Dictionary<int, UserToken> tokenList;
-        NumberingPool tokenNumberingPool;
+        Dictionary<int, UserToken> tokenList = new Dictionary<int, UserToken>();
 
-        AutoResetEvent flowController;
-
-        int maxConnection;
         int connectionCount;
-        //        int assignIDToUser;
-        //int bufferSize;
-
-
-        public Listener(int maxConnection)
-        {
-            this.maxConnection = maxConnection;
-        }
-
-        public void Initialize()
-        {
-            //            assignIDToUser = 0;
-
-            tokenList = new Dictionary<int, UserToken>();
-            acceptArgs = new SocketAsyncEventArgs();//SocketAsyncEventArgs 라고하는 비동기 객체 생성 
-
-            tokenNumberingPool = new NumberingPool(10000);
-
-            for (int number = 0; number < tokenNumberingPool.Capacity; number++)
-                tokenNumberingPool.Push(number);
-        }
 
         public void Ready(string host, int port, int backlog)//backlog : 대기큐의 크기
         {
-            //0.0.0.0 ==> any
-            IPAddress address;
-            address = (host == "0.0.0.0" ? IPAddress.Any : IPAddress.Parse(host));
-
-            IPEndPoint endpoint = new IPEndPoint(address, port);
+            IPEndPoint endpoint = new IPEndPoint(GetServerIP(host), port);
 
             listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listenSocket.Bind(endpoint); //호스트의 정보 등록
@@ -59,76 +30,56 @@ namespace Server
             acceptArgs.Completed += AcceptComplete;
         }
 
-        public void DoListen()
+        public void AcceptStart()
         {
-            flowController = new AutoResetEvent(false);
+            acceptArgs.AcceptSocket = null;
 
-            while (true)
-            {
-                acceptArgs.AcceptSocket = null;
-
-                //반환값이 false이면 동기적 처리. 동기적 처리이면 콜백함수 호출 안됨
-                //listenSocket에만 콜백 등록해놨지 다른 소켓에는 콜백 등록 안했으니
-                //연결됨으로써 새롭게 만들어지는 소켓에는 콜백이 없는거임 착각 ㄴㄴ
-
-                //Date. 5.25 true로 준 이유가?
-                bool pending = true;
-                pending = listenSocket.AcceptAsync(acceptArgs);
-                if (!pending)
-                    AcceptComplete(null, acceptArgs);
-
-                flowController.WaitOne();
-            }
+            bool isAsync = listenSocket.AcceptAsync(acceptArgs);
+            if (!isAsync)
+                AcceptComplete(null, acceptArgs);
         }
 
-        public void AcceptComplete(Object sender, SocketAsyncEventArgs e)
+
+        public void AcceptComplete(Object sender, SocketAsyncEventArgs args)
         {
             Trace.WriteLine("Client Accept");
 
-            if (CanAcceptSuccess(e.SocketError))
+            if (CanAcceptSuccess(args.SocketError))
             {
                 Interlocked.Increment(ref connectionCount);
 
-                SocketAsyncEventArgs sendArgs = SocketAsyncEventArgsPool.sendInstance.Pop();
-                SocketAsyncEventArgs receiveArgs = SocketAsyncEventArgsPool.receiveInstance.Pop();
+                UserToken userToken = UserTokenPool.Instance.Pop();
 
-                Socket clientSocket = e.AcceptSocket;
-                UserToken userToken = receiveArgs.UserToken as UserToken;
-
-                userToken.socket = clientSocket;
-                userToken.sendEventArgs = sendArgs;
-                userToken.receiveEventArgs = receiveArgs;
-                userToken.TokenID = tokenNumberingPool.Pop();//연결해지시 push해주는거 아직 안함
-                userToken.CallbackBroadcast = CallBroadCast;
-                userToken.CallbackSendTo = CallSendTo;
+                userToken.socket = args.AcceptSocket;
+                userToken.Broadcast = CallBroadCast;
+                userToken.SendTo = CallSendTo;
 
                 lock (userToken)
                 {
                     tokenList.Add(userToken.TokenID, userToken);
                 }
 
-                UserList.Instance.SessionCreate(userToken);
+                UserList.Instance.AddUser(userToken);
 
                 BeginReceive(userToken);
-
-                flowController.Set();
-
-                return;
             }
-            Trace.WriteLine("Failed to Accept client");
+            else
+                Trace.WriteLine("Failed to Accept client");
+
+            AcceptStart();
         }
 
 
         public void CallBroadCast(Packet msg, int withOut = -1)
         {
-            ForEach (
+            ForEach(
                 tokenList, (user) =>
                 {
                     if (user.Key != withOut)
                         user.Value.Send(msg);
                 }
             );
-            
+
             /*
             foreach(var user in tokenList)
             {
@@ -138,7 +89,7 @@ namespace Server
             */
         }
 
-        public void CallSendTo(int tokenID, Packet msg)
+        public void CallSendTo(Packet msg, int tokenID)
         {
             tokenList[tokenID].Send(msg);
         }
@@ -146,19 +97,31 @@ namespace Server
         public void Disconnect(UserToken token)
         {
             Interlocked.Decrement(ref connectionCount);
-
-            SocketAsyncEventArgsPool.receiveInstance.Push(token.receiveEventArgs);
-            SocketAsyncEventArgsPool.sendInstance.Push(token.sendEventArgs);
-
-            token.OnRemove();
+            token.Clear();
             //tokenID 제거추가할것
             lock (token)
             {
                 tokenList.Remove(token.TokenID);
             }
             UserList.Instance.RemoveUser(token.Peer as GameUser);
+            UserTokenPool.Instance.Push(token);
         }
 
+        /// <summary>
+        /// IPAddress객체로 변환
+        /// </summary>
+        /// <param name="host"></param>
+        /// <returns></returns>
+        IPAddress GetServerIP(string host)
+        {
+            return (host == "0.0.0.0" ? IPAddress.Any : IPAddress.Parse(host));
+        }
+
+        /// <summary>
+        /// 접속성공 확인
+        /// </summary>
+        /// <param name="socketError"></param>
+        /// <returns></returns>
         bool CanAcceptSuccess(SocketError socketError)
         {
             return socketError == SocketError.Success;

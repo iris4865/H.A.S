@@ -21,22 +21,21 @@ public class HatchlingNetUnityService : MonoBehaviour
 
     public void Awake()
     {
-        PacketBufferManager.Initialize(10);
+        PacketBufferManager.Instance.Initialize(10);
         this.eventManager = new HatchlingNetEventManager();
     }
 
     public void Connect(string host, int port)
     {
         connectorController = new ConnectorController();
-
-
-        IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(host), port);
-        Connector connector = new Connector(endpoint)
+        Connector connector = new Connector()
         {
             ConnectProcess = connectorController.ConnectProcess,
             CallbackConnect = On_connected_gameserver
         };
-        connector.Connect();
+
+        IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(host), port);
+        connector.Connect(endpoint);
     }
 
     public void On_connected_gameserver(UserToken server_token)
@@ -75,7 +74,7 @@ public class HatchlingNetUnityService : MonoBehaviour
         try
         {
             this.gameserver.Send(msg);
-            PacketBufferManager.Push(msg);
+            PacketBufferManager.Instance.Push(msg);
         }
         catch (Exception e)
         {
