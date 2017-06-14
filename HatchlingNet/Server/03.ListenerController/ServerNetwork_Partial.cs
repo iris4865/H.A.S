@@ -30,5 +30,14 @@ namespace Server
 
             return args;
         }
+
+        SocketAsyncEventArgs GetArgs(EventHandler<SocketAsyncEventArgs> handler)
+        {
+            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+            args.Completed += handler;
+            args.SetBuffer(new byte[bufferSize], 0, bufferSize);
+
+            return args;
+        }
     }
 }

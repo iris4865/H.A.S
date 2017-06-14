@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="95.Object\ConnectorController\Connector\Connector.cs" />
     <Compile Include="95.Object\ConnectorController\ConnectorController.cs" />
+    <Compile Include="95.Object\UserToken\UserTokenPool.cs" />
     <Compile Include="96.Manager\NumberingPool\NumberingPool.cs" />
     <Compile Include="98.Header\MyStruct.cs" />
     <Compile Include="98.Header\Macro.cs" />
