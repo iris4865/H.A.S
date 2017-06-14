@@ -27,17 +27,19 @@ public class HatchlingNetUnityService : MonoBehaviour
 
     public void Connect(string host, int port)
     {
-        this.connectorController = new ConnectorController();
+        connectorController = new ConnectorController();
 
-
-        Connector connector = new Connector(connectorController);
-        connector.CallbackConnect += on_connected_gameserver;
 
         IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(host), port);
-        connector.Connect(endpoint);
+        Connector connector = new Connector(endpoint)
+        {
+            ConnectProcess = connectorController.ConnectProcess,
+            CallbackConnect = On_connected_gameserver
+        };
+        connector.Connect();
     }
 
-    public void on_connected_gameserver(UserToken server_token)
+    public void On_connected_gameserver(UserToken server_token)
     {
         this.gameserver = new RemoteServerPeer(server_token);//서버에 대한 토큰 보관하고
 

@@ -11,31 +11,13 @@ namespace HatchlingNet
         public Action<Socket, UserToken> ConnectProcess { private get; set; }
         public Action<UserToken> CallbackConnect;
 
-        public IPEndPoint RemoteEndPoint
-        {
-            private get
-            {
-                return RemoteEndPoint;
-            }
-            set
-            {
-                if (RemoteEndPoint == null)
-                    RemoteEndPoint = value;
-            }
-        }
-
-        public Connector(IPEndPoint remoteEndPoint)
-        {
-            RemoteEndPoint = remoteEndPoint;
-        }
-
-        public void Connect()
+        public void Connect(IPEndPoint remoteEndPoint)
         {
             client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             SocketAsyncEventArgs eventArgs = new SocketAsyncEventArgs();
             eventArgs.Completed += CallConnectComplete;
-            eventArgs.RemoteEndPoint = RemoteEndPoint;
+            eventArgs.RemoteEndPoint = remoteEndPoint;
 
             bool pending = client.ConnectAsync(eventArgs);
             if (!pending)

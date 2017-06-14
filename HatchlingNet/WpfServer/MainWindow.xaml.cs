@@ -42,7 +42,8 @@ namespace WpfServer
             app.Initialize();
             app.Start();
             appThread = app.GetThread;
-            Closed += (object sender, EventArgs e) => appThread.Abort();
+            Closed += (object sender, EventArgs e) => Environment.Exit(0);
+            
 
             UpdateSize();
         }
@@ -68,11 +69,6 @@ namespace WpfServer
             }
             //imcomplete
             logDisplay.Height = inputBox.PointToScreen(new Point(0, 0)).Y - 300;
-        }
-
-        void Exited(object sender, EventArgs e)
-        {
-            appThread.Abort();
         }
     }
 }

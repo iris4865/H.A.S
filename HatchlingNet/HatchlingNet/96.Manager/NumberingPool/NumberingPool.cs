@@ -7,13 +7,13 @@ namespace HatchlingNet
 {
     public class NumberingPool
     {
-        Stack<int> pool;
-        public int capacity { get; private set; }
+        readonly Stack<int> pool;
+        public int Capacity { get; private set; }
 
         public NumberingPool(int capacity)
         {
             pool = new Stack<int>(capacity);
-            this.capacity = capacity;
+            Capacity = capacity;
 
             //for (int i = 0; i < capacity; ++i)
             //{

@@ -18,7 +18,7 @@ namespace HatchlingNet
             this.owner = owner;
             this.buffer = buffer;
 
-            position = Define.HEADERSIZE;
+            position = Define.HeaderSize;
         }
 
         //인자없는건 버퍼에 메모리 할당하고 인자 있는생성자는 메모리 할당 안한다는걸 주의
@@ -41,7 +41,7 @@ namespace HatchlingNet
 
         public Int16 PeekSendType()
         {
-            Int16 data = BitConverter.ToInt16(this.buffer, Define.HEADERSIZE + Define.PROTOCOLSIZE);//this.buffer[this.position]에서 Int16만큼 변환
+            Int16 data = BitConverter.ToInt16(this.buffer, Define.HeaderSize + Define.ProtocolSize);//this.buffer[this.position]에서 Int16만큼 변환
 
             return data;
         }
@@ -124,7 +124,7 @@ namespace HatchlingNet
         public void SetProtocol(Int16 protocolType)
         {
             this.protocolType = protocolType;
-            this.position = Define.HEADERSIZE;            //헤더는 나중에 넣을것이므로 데이터부터 넣을수 있도록 위치를 점프 시켜놓는다
+            this.position = Define.HeaderSize;            //헤더는 나중에 넣을것이므로 데이터부터 넣을수 있도록 위치를 점프 시켜놓는다
                                                             //RecordSize호출 위치 참고
             Push(protocolType);
         }
@@ -132,14 +132,14 @@ namespace HatchlingNet
         public void SetSendType(Int16 sendType)
         {
             this.sendType = sendType;
-            this.position = Define.HEADERSIZE + Define.PROTOCOLSIZE;            
+            this.position = Define.HeaderSize + Define.ProtocolSize;            
             Push(sendType);
         }
 
         //패킷의 헤더부분에 body의 크기를 입력한다
         public void RecordSize()
         {
-            Int16 bodySize = (Int16)(this.position - Define.HEADERSIZE);
+            Int16 bodySize = (Int16)(this.position - Define.HeaderSize);
             byte[] header = BitConverter.GetBytes(bodySize);
             header.CopyTo(this.buffer, 0);
         }

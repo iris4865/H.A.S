@@ -18,7 +18,7 @@ namespace Server
             userList = new List<GameUser>();
         }
 
-        public void SessionCreate(Socket socket, UserToken token)
+        public void SessionCreate(UserToken token)
         {
             GameUser user = new GameUser(token);
 

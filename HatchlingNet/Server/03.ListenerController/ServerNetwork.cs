@@ -20,6 +20,7 @@ namespace Server
         readonly int preAllocCount = 2;
 
         public Thread ListenerThread { get; private set; }
+        Listener listener;
 
         public ServerNetwork(int maxConnection)
         {
@@ -49,7 +50,7 @@ namespace Server
 
         public void Listen(string host, int port, int backlog)
         {
-            Listener listener = new Listener(maxConnection)
+            listener = new Listener(maxConnection)
             {
                 BeginReceive = network.BeginReceive
             };
@@ -61,13 +62,9 @@ namespace Server
             ListenerThread.Start();
         }
 
-
         public void CloseClientSocket(UserToken token)
         {
-            token.OnRemove();
-
-            receiveEventArgsPool.Push(token.receiveEventArgs);
-            sendEventArgsPool.Push(token.sendEventArgs);
+            listener.Disconnect(token);
         }
     }
 }

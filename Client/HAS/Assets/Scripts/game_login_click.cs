@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Header;
 
 public class game_login_click : MonoBehaviour
 {

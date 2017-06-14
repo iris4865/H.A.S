@@ -16,14 +16,7 @@ namespace HatchlingNet
 
         //int bufferSize;
 
-        IPeer peer;
-        public IPeer Peer
-        {
-            set
-            {
-                peer = value;
-            }
-        }
+        public IPeer Peer { get; set; }
 
         Queue<Packet> sendingQueue;
         private object csSendingQueue;
@@ -38,7 +31,7 @@ namespace HatchlingNet
         {
             csSendingQueue = new object();//락 조건용
             messageTranslator = new MessageTranslator();
-            peer = null;
+            Peer = null;
             sendingQueue = new Queue<Packet>();
         }
 
@@ -51,11 +44,11 @@ namespace HatchlingNet
         //피어는 메인에서 결정됨
         public void CompleteMessage(byte[] buffer)
         {
-//            Console.WriteLine("메세지완성!");
+            //            Console.WriteLine("메세지완성!");
 
-            if (this.peer != null)
+            if (this.Peer != null)
             {
-                this.peer.OnMessage(buffer);
+                this.Peer.OnMessage(buffer);
             }
         }
 
@@ -84,11 +77,11 @@ namespace HatchlingNet
                 msg.RecordSize();
 
                 this.sendEventArgs.SetBuffer(this.sendEventArgs.Offset, msg.position); //NetworkService클래스에서
-                                                                                     //풀에 들어가는 모든 이벤트객체들에게 버퍼할당했는데
-                                                                                     //여기서 또하네?
-                                                                                    //=> 여기서하는건 그버퍼중 어디서 어디까지 쓸건지 지정하는거임
-                                                                                    //사용하는공간이 적으면 그만큼만 보내서 더 빠르게...
-                                                                                    //그래서 거기선 인자3개 넘기고 여기선 인자 2개만 넘김...
+                                                                                       //풀에 들어가는 모든 이벤트객체들에게 버퍼할당했는데
+                                                                                       //여기서 또하네?
+                                                                                       //=> 여기서하는건 그버퍼중 어디서 어디까지 쓸건지 지정하는거임
+                                                                                       //사용하는공간이 적으면 그만큼만 보내서 더 빠르게...
+                                                                                       //그래서 거기선 인자3개 넘기고 여기선 인자 2개만 넘김...
 
                 Array.Copy(msg.buffer, 0, sendEventArgs.Buffer, sendEventArgs.Offset, msg.position);
 
@@ -129,13 +122,13 @@ namespace HatchlingNet
                 if (sendArgs.BytesTransferred != size)
                 {
                     string error = string.Format("Need to send more! transferred {0},  packet size {1}", sendArgs.BytesTransferred, size);
-//                    Console.WriteLine(error);
+                    //                    Console.WriteLine(error);
                     return;
                 }
 
                 //전송 완료된 패킷을 큐에서 제거
                 Packet garbageMsg = this.sendingQueue.Dequeue();
-                
+
                 PacketBufferManager.Push(garbageMsg);
 
 
@@ -147,6 +140,7 @@ namespace HatchlingNet
             }
         }
 
+        //클라
         public void Disconnect()
         {
             try
@@ -157,15 +151,19 @@ namespace HatchlingNet
 
             this.socket.Close();
         }
+
         //클라한테는 disconnect쓰고 서버에서는 OnRemove쓰고 막 섞여있네..?
         //하나로 합쳐야 될것같다.
+        //서버
         public void OnRemove()
         {
-            this.sendingQueue.Clear();
+            sendingQueue.Clear();
+            socket.Disconnect(false);
 
-            if (this.peer != null)
+
+            if (Peer != null)
             {
-                this.peer.Disconnect();
+                Peer.Destroy();
             }
         }
 

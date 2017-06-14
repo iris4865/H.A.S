@@ -1,4 +1,5 @@
 ﻿using HatchlingNet;
+using Header;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -81,7 +82,7 @@ public class Player_Spawn : MonoBehaviour {
 //        Vector3 position = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
         string objTag = player.tag;
 
-        GameObject myPlayer = Instantiate(player, new Vector3(0f, 0f, 0f), transform.rotation);
+        GameObject myPlayer = Instantiate(player, position, transform.rotation);
         //myPlayer.GetComponent<Player5>().headCamera.SetActive(true); //디폴트를 비활성화 시킴 
 //                                                                      //NetworkManager.GetInstance.numberingWaitObj.Enqueue(myPlayer);
 //                                                                      //  print("짐" + NetworkManager.GetInstance.numberingWaitObj.Count);
@@ -96,6 +97,8 @@ public class Player_Spawn : MonoBehaviour {
         return myPlayer;
     }
 
+
+    //이건 뭥미?
     GameObject CreateRemotePlayer()
     {
         Vector3 position = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
@@ -122,5 +125,10 @@ public class Player_Spawn : MonoBehaviour {
         }
 
   //      player.GetComponent<Player5>().main_camera.enabled = true;
+    }
+
+    void RemovePlayer()
+    {
+
     }
 }

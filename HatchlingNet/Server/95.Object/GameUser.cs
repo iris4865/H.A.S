@@ -3,6 +3,7 @@ using Header;
 using MySqlDataBase;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Server
 {
@@ -17,6 +18,7 @@ namespace Server
         MysqlCommand command;
         public string UserID { get; set; }
 
+        int gameUserID;
 
         public GameUser(UserToken userToken)
         {
@@ -24,12 +26,9 @@ namespace Server
             {
                 objNumberingPool = new NumberingPool(20000);
 
-                for (int i = 0; i < objNumberingPool.capacity; ++i)
+                for (int i = 0; i < objNumberingPool.Capacity; ++i)
                 {
-                    int number = new int();
-                    number = i;
-
-                    objNumberingPool.Push(number);
+                    objNumberingPool.Push(i);
                 }
             }
 
@@ -54,8 +53,8 @@ namespace Server
             SEND_TYPE sendType = (SEND_TYPE)msg.PopSendType();
 
 
- //           Console.WriteLine("-------------------------------------------");
-//            Console.WriteLine("protocolType " + protocol);
+            //           Console.WriteLine("-------------------------------------------");
+            //            Console.WriteLine("protocolType " + protocol);
 
             switch (protocol)
             {
@@ -97,7 +96,7 @@ namespace Server
 
                 case PROTOCOL.LoginReq:
                     {
-//                        Console.WriteLine("들어옴");
+                        //                        Console.WriteLine("들어옴");
 
                         string id = msg.PopString();
                         string password = msg.PopString();
@@ -127,7 +126,7 @@ namespace Server
                 case PROTOCOL.ChatReq:
                     {
                         string text = msg.PopString();
-//                        Console.WriteLine(string.Format("text {0}", text));
+                        //                        Console.WriteLine(string.Format("text {0}", text));
 
                         Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)sendType);
 
@@ -146,7 +145,7 @@ namespace Server
                         //response.SetSendType((short)SEND_TYPE.BroadcastWithoutMe);
 
                         Packet response = PacketBufferManager.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
-                        
+
                         response.Push(msg.PopInt32());  //remoteid
                         response.Push(msg.PopFloat());  //x
                         response.Push(msg.PopFloat());  //y
@@ -170,31 +169,26 @@ namespace Server
                         response.Push(position.y);//위치
                         response.Push(position.z);//위치
 
-                        int number = 0;
                         lock (objNumberingPool)
                         {
-                            number = objNumberingPool.Pop();
+                            gameUserID = objNumberingPool.Pop();
                         }
 
-  //                      Console.WriteLine("태그 : " + objTag + " 위치 x : " + position.x + " y : " + position.y + " z : " + position.z + " remoteID : " + number);
+                        Trace.WriteLine($"태그 : {objTag} 위치 x : {position.x} y : {position.y} z : {position.z} remoteID : {gameUserID}");
 
 
-                        response.Push(number);        //remote ID
+                        response.Push(gameUserID);        //remote ID
                         response.Push(UserID);         //만약 이 메세지를 받은 클라의 userID와 같으면 그건 그사람이 주체적으로 만든거고
                                                        //그 플레이어 조종하려고 만든거일 확률이 높음
 
                         Send(response);
 
-                        int otherPlayerNum = objList.Count;
-
-
+                        //int otherPlayerNum = objList.Count;
 
                         foreach (var iter in objList)
                         {
+                            //string otherPlayerTag = iter.Value;
                             Packet otherPlayer = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.Single);
-                            string otherPlayerTag;
-
-                            otherPlayerTag = iter.Value;
 
                             MyVector3 otherPlayerPos; otherPlayerPos.x = 0f; otherPlayerPos.y = 10f; otherPlayerPos.z = 0f;
                             otherPlayer.Push(objTag);//태그
@@ -205,8 +199,7 @@ namespace Server
                             otherPlayer.Push("None");//remoteID
                             Send(otherPlayer);
                         }
-
-                        objList.Add(number, objTag);
+                        objList.Add(gameUserID, objTag);
                     }
                     break;
 
@@ -256,13 +249,14 @@ namespace Server
 
         public void Destroy()
         {
-            UserList.Instance.RemoveUser(this);
-        }
+            Packet response = PacketBufferManager.Pop((short)PROTOCOL.PlayerExit, (short)SEND_TYPE.BroadcastWithoutMe);
+            response.Push(gameUserID);
+            Send(response);
 
-        public void Disconnect()
-        {
-            Destroy();
-            this.userToken.socket.Disconnect(false);
+            objNumberingPool.Push(gameUserID);
+            UserList.Instance.RemoveUser(this);
+            objList.Remove(gameUserID);
+            gameUserID = -1;
         }
 
         public void ProcessUserOperation()

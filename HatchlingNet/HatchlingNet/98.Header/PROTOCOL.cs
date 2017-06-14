@@ -13,6 +13,7 @@ namespace Header
         CreateObjReq = 4000, CreateObjAck, CreateObjRej,
         DestroyObjReq, DestroyObjAck, DestroyObjRej,
         ObjNumberingReq, ObjNumberingAck, ObjNumberingRej,
+        PlayerExit,
 
         END
     }

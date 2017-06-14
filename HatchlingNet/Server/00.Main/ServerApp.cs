@@ -15,8 +15,6 @@ namespace Server
             }
         }
 
-        //NumberingPool objNumberingPool;
-
         static void Main()
         {
             Trace.Listeners.Add(new ConsoleTraceListener());
@@ -29,7 +27,6 @@ namespace Server
         {
             Trace.WriteLine("1. Server Start");
             PacketBufferManager.Initialize(2000);
-            //objNumberingPool = new NumberingPool(20000);
 
             network = new ServerNetwork(10000);
             network.Initialize();

@@ -44,9 +44,9 @@ namespace HatchlingNet
             {
                 bool complete = false;
 
-                if (this.currentPosition < Define.HEADERSIZE)
+                if (this.currentPosition < Define.HeaderSize)
                 {
-                    this.goalPosition = Define.HEADERSIZE;
+                    this.goalPosition = Define.HeaderSize;
 
                     complete = ReadUntil(buffer, ref srcPosition, offset, transffered);
 
@@ -56,7 +56,7 @@ namespace HatchlingNet
                     }
 
                     this.messageSize = GetBodySize();
-                    this.goalPosition = this.messageSize + Define.HEADERSIZE;
+                    this.goalPosition = this.messageSize + Define.HeaderSize;
                 }
 
                 complete = ReadUntil(buffer, ref srcPosition, offset, transffered);

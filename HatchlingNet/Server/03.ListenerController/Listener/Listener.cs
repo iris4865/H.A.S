@@ -40,7 +40,7 @@ namespace Server
 
             tokenNumberingPool = new NumberingPool(10000);
 
-            for (int number = 0; number < tokenNumberingPool.capacity; number++)
+            for (int number = 0; number < tokenNumberingPool.Capacity; number++)
                 tokenNumberingPool.Push(number);
         }
 
@@ -89,13 +89,12 @@ namespace Server
             {
                 Interlocked.Increment(ref connectionCount);
 
-                SocketAsyncEventArgs receiveArgs = SocketAsyncEventArgsPool.receiveInstance.Pop();
                 SocketAsyncEventArgs sendArgs = SocketAsyncEventArgsPool.sendInstance.Pop();
+                SocketAsyncEventArgs receiveArgs = SocketAsyncEventArgsPool.receiveInstance.Pop();
 
                 Socket clientSocket = e.AcceptSocket;
                 UserToken userToken = receiveArgs.UserToken as UserToken;
 
-                //여기서 send, receive, socket 다 연결하는데 BeginReceive에 userToken을 주면 안되나?
                 userToken.socket = clientSocket;
                 userToken.sendEventArgs = sendArgs;
                 userToken.receiveEventArgs = receiveArgs;
@@ -108,7 +107,7 @@ namespace Server
                     tokenList.Add(userToken.TokenID, userToken);
                 }
 
-                UserList.Instance.SessionCreate(clientSocket, userToken);
+                UserList.Instance.SessionCreate(userToken);
 
                 BeginReceive(userToken);
 
@@ -122,26 +121,19 @@ namespace Server
 
         public void CallBroadCast(Packet msg, int withOut = -1)
         {
-            ForEach(tokenList, (user) =>
+            ForEach (
+                tokenList, (user) =>
                 {
                     if (user.Key != withOut)
                         user.Value.Send(msg);
                 }
-                );
-            //foreach (KeyValuePair<int, UserToken> user in tokenList)
+            );
+            
             /*
-            if (withOut == -1)
+            foreach(var user in tokenList)
             {
-                foreach (var user in tokenList)
+                if (user.Key != withOut)
                     user.Value.Send(msg);
-            }
-            else
-            {
-                foreach (var user in tokenList)
-                {
-                    if (user.Key != withOut)
-                        user.Value.Send(msg);
-                }
             }
             */
         }
@@ -151,6 +143,25 @@ namespace Server
             tokenList[tokenID].Send(msg);
         }
 
-        bool CanAcceptSuccess(SocketError socketError) => socketError == SocketError.Success;
+        public void Disconnect(UserToken token)
+        {
+            Interlocked.Decrement(ref connectionCount);
+
+            SocketAsyncEventArgsPool.receiveInstance.Push(token.receiveEventArgs);
+            SocketAsyncEventArgsPool.sendInstance.Push(token.sendEventArgs);
+
+            token.OnRemove();
+            //tokenID 제거추가할것
+            lock (token)
+            {
+                tokenList.Remove(token.TokenID);
+            }
+            UserList.Instance.RemoveUser(token.Peer as GameUser);
+        }
+
+        bool CanAcceptSuccess(SocketError socketError)
+        {
+            return socketError == SocketError.Success;
+        }
     }
 }

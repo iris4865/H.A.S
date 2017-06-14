@@ -1,4 +1,5 @@
 ﻿using HatchlingNet;
+using Header;
 using UnityEngine;
 
 public class Player5 : MonoBehaviour
@@ -78,7 +79,7 @@ public class Player5 : MonoBehaviour
 
         int remoteid = GetComponent<NetworkObj>().remoteId;
         Debug.Log("플레안속 네트워크오브젝트 수 : " + NetworkManager.GetInstance.networkObj.Count);
-        Debug.Log("나 " + remoteid + "위치전송: " );
+        //Debug.Log("나 " + remoteid + "위치전송: " );
         msg.Push(remoteid);
         msg.Push(transform.position.x, transform.position.y, transform.position.z);
         msg.Push(transform.rotation.y);
