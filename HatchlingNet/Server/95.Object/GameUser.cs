@@ -9,6 +9,7 @@ namespace Server
 {
     public class GameUser : IPeer
     {
+        PacketBufferManager packetBuffer = PacketBufferManager.Instance;
         static NumberingPool objNumberingPool = null;
         static Dictionary<int, string> objList = new Dictionary<int, string>();//<remoteID, 객체 태그>
         static object csObjList = new object();
@@ -86,9 +87,9 @@ namespace Server
                         Packet response;
 
                         if (isSignup)
-                            response = PacketBufferManager.Pop((short)PROTOCOL.SignupAck, (short)SEND_TYPE.Single);
+                            response = packetBuffer.Pop((short)PROTOCOL.SignupAck, (short)SEND_TYPE.Single);
                         else
-                            response = PacketBufferManager.Pop((short)PROTOCOL.SignupRej, (short)SEND_TYPE.Single);
+                            response = packetBuffer.Pop((short)PROTOCOL.SignupRej, (short)SEND_TYPE.Single);
 
                         Send(response);
                     }
@@ -106,7 +107,7 @@ namespace Server
 
                         if (isUser == true)
                         {
-                            Packet loginResult = PacketBufferManager.Pop((short)PROTOCOL.LoginAck, (short)SEND_TYPE.Single);
+                            Packet loginResult = packetBuffer.Pop((short)PROTOCOL.LoginAck, (short)SEND_TYPE.Single);
                             loginResult.Push(id);
                             Send(loginResult);
 
@@ -116,7 +117,7 @@ namespace Server
                         }
                         else
                         {
-                            Packet loginResult = PacketBufferManager.Pop((short)PROTOCOL.LoginRej, (short)SEND_TYPE.Single);
+                            Packet loginResult = packetBuffer.Pop((short)PROTOCOL.LoginRej, (short)SEND_TYPE.Single);
                             Send(loginResult);
                         }
 
@@ -128,7 +129,7 @@ namespace Server
                         string text = msg.PopString();
                         //                        Console.WriteLine(string.Format("text {0}", text));
 
-                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ChatAck, (short)sendType);
+                        Packet response = packetBuffer.Pop((short)PROTOCOL.ChatAck, (short)sendType);
 
                         response.Push(text);
                         Send(response);
@@ -144,7 +145,7 @@ namespace Server
                         //response.SetProtocol((short)PROTOCOL.PositionAck);
                         //response.SetSendType((short)SEND_TYPE.BroadcastWithoutMe);
 
-                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
+                        Packet response = packetBuffer.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
 
                         response.Push(msg.PopInt32());  //remoteid
                         response.Push(msg.PopFloat());  //x
@@ -160,7 +161,7 @@ namespace Server
 
                 case PROTOCOL.ObjNumberingReq:
                     {
-                        Packet response = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.BroadcastWithMe);
+                        Packet response = packetBuffer.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.BroadcastWithMe);
                         string objTag = msg.PopString();
                         MyVector3 position; position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
 
@@ -188,7 +189,7 @@ namespace Server
                         foreach (var iter in objList)
                         {
                             //string otherPlayerTag = iter.Value;
-                            Packet otherPlayer = PacketBufferManager.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.Single);
+                            Packet otherPlayer = packetBuffer.Pop((short)PROTOCOL.ObjNumberingAck, (short)SEND_TYPE.Single);
 
                             MyVector3 otherPlayerPos; otherPlayerPos.x = 0f; otherPlayerPos.y = 10f; otherPlayerPos.z = 0f;
                             otherPlayer.Push(objTag);//태그
@@ -249,7 +250,7 @@ namespace Server
 
         public void Destroy()
         {
-            Packet response = PacketBufferManager.Pop((short)PROTOCOL.PlayerExit, (short)SEND_TYPE.BroadcastWithoutMe);
+            Packet response = packetBuffer.Pop((short)PROTOCOL.PlayerExit, (short)SEND_TYPE.BroadcastWithoutMe);
             response.Push(gameUserID);
             Send(response);
 

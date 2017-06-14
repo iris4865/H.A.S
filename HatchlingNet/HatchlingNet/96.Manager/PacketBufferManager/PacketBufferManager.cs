@@ -6,19 +6,26 @@ namespace HatchlingNet
 {
     public class PacketBufferManager
     {
-        static object csBuffer = new object();
+        public static PacketBufferManager Instance { get { return CreateInstance.Instance; } }
+        class CreateInstance
+        {
+            static CreateInstance() { }
 
-        static Stack<Packet> pool;
-        static int poolCapacity;
+            internal static readonly PacketBufferManager Instance = new PacketBufferManager();
+        }
+        private PacketBufferManager() { }
 
+        Stack<Packet> pool;
+        int poolCapacity;
+        readonly object csBuffer = new object();
 
-        public static void Initialize(int capacity)
+        public void Initialize(int capacity)
         {
             poolCapacity = capacity;
             Allocate();
         }
 
-        static void Allocate()
+        void Allocate()
         {
             pool = new Stack<Packet>();
             for (int i = 0; i < poolCapacity; ++i)
@@ -27,7 +34,7 @@ namespace HatchlingNet
             }
         }
 
-        public static Packet Pop(Int16 protocolType, Int16 sendType)
+        public Packet Pop(Int16 protocolType, Int16 sendType)
         {
             lock (csBuffer)
             {
@@ -45,7 +52,7 @@ namespace HatchlingNet
             }
         }
 
-        public static void Push(Packet packet)
+        public void Push(Packet packet)
         {
             lock (csBuffer)
             {

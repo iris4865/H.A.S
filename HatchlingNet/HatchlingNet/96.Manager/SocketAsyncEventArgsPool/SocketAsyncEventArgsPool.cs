@@ -25,14 +25,14 @@ namespace HatchlingNet
 
         public int Count
         {
+            get
+            {
+                return pool.Count;
+            }
             set
             {
                 if (pool == null)
                     pool = new Stack<SocketAsyncEventArgs>(value);
-            }
-            get
-            {
-                return pool.Count;
             }
         }
 

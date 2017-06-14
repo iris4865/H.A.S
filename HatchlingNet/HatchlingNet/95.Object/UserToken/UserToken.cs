@@ -129,7 +129,7 @@ namespace HatchlingNet
                 //전송 완료된 패킷을 큐에서 제거
                 Packet garbageMsg = this.sendingQueue.Dequeue();
 
-                PacketBufferManager.Push(garbageMsg);
+                PacketBufferManager.Instance.Push(garbageMsg);
 
 
                 // 아직 전송되지 않은 패킷이 있다면 다시한번 요청

@@ -25,11 +25,11 @@ namespace Server
 
         public void Initialize()
         {
-            Trace.WriteLine("1. Server Start");
-            PacketBufferManager.Initialize(2000);
+            Trace.WriteLine("Server Start");
+            network = new ServerNetwork();
 
-            network = new ServerNetwork(10000);
-            network.Initialize();
+            int maxConnection = 10000;
+            network.Initialize(maxConnection);
         }
 
         public void Update()//콘솔용
