@@ -12,8 +12,11 @@ namespace Server
         float rotateY, speed;
         int animationType;
 
-        public void Initialize(Packet msg)
+        public IGameUser User { get; set; }
+
+        public void Initialize(IGameUser user, Packet msg)
         {
+            User = user;
             sendType = (SEND_TYPE)msg.PopSendType();
             remoteId = msg.PopInt32();
             vec = msg.PopVector();
@@ -22,11 +25,11 @@ namespace Server
             animationType = msg.PopInt32();
         }
 
-        public void Process(GameUser user)
+        public void Process()
         {
         }
 
-        public void Send(Action<Packet> send)
+        public void Send()
         {
             Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
             response.Push(remoteId);
@@ -34,7 +37,7 @@ namespace Server
             response.Push(rotateY);
             response.Push(speed);
             response.Push(animationType);
-            send(response);
+            User.Send(response);
         }
     }
 }

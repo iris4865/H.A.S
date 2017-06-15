@@ -1,6 +1,5 @@
 ﻿using HatchlingNet;
 using Header;
-using System;
 
 namespace Server
 {
@@ -9,21 +8,24 @@ namespace Server
         SEND_TYPE sendType;
         string text = "";
 
-        public void Initialize(Packet msg)
+        public IGameUser User { get; set; }
+
+        public void Initialize(IGameUser user, Packet msg)
         {
+            User = user;
             sendType = (SEND_TYPE)msg.PopSendType();
             text = msg.PopString();
         }
 
-        public void Process(GameUser user)
+        public void Process()
         {
         }
 
-        public void Send(Action<Packet> send)
+        public void Send()
         {
             Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ChatAck, (short)sendType);
             response.Push(text);
-            send(response);
+            User.Send(response);
         }
     }
 }

@@ -9,26 +9,28 @@ namespace Server
         SEND_TYPE sendType;
         public string Id { get; private set; }
         public string Password { get; private set; }
+        public IGameUser User { get; set; }
 
         bool isSucess;
 
-        public void Initialize(Packet msg)
+        public void Initialize(IGameUser user, Packet msg)
         {
+
             sendType = (SEND_TYPE)msg.PopSendType();
             Id = msg.PopString();
             Password = msg.PopString();
         }
 
-        public void Process(GameUser user)
+        public void Process()
         {
             //isSucess = command.CheckLogin(id, password);
             isSucess = true;
 
             if(isSucess)
-                user.UserID = Id;
+                User.UserID = Id;
         }
 
-        public void Send(Action<Packet> send)
+        public void Send()
         {
             Packet response;
             if (isSucess)
@@ -39,7 +41,7 @@ namespace Server
             else
                 response = PacketBufferManager.Instance.Pop((short)PROTOCOL.LoginRej, (short)SEND_TYPE.Single);
 
-            send(response);
+            User.Send(response);
         }
     }
 }

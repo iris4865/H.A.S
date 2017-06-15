@@ -1,26 +1,27 @@
 ﻿using HatchlingNet;
 using Header;
 using MySqlDataBase;
-using System;
 
 namespace Server
 {
     public class SignUp : IResponse
     {
+        public IGameUser User { get; set; }
         SEND_TYPE sendType;
         public string Id { get; private set; }
         public string Password { get; private set; }
 
         bool isSucess;
 
-        public void Initialize(Packet msg)
+        public void Initialize(IGameUser user, Packet msg)
         {
+            User = user;
             sendType = (SEND_TYPE)msg.PopSendType();
             Id = msg.PopString();
             Password = msg.PopString();
         }
 
-        public void Process(GameUser user)
+        public void Process()
         {
             MysqlCommand command = new MysqlCommand();
             //db id, password 입력
@@ -33,7 +34,7 @@ namespace Server
             }
         }
 
-        public void Send(Action<Packet> send)
+        public void Send()
         {
             Packet response;
             if (isSucess)
@@ -41,7 +42,7 @@ namespace Server
             else
                 response = PacketBufferManager.Instance.Pop((short)PROTOCOL.SignUpRej, (short)SEND_TYPE.Single);
 
-            send(response);
+            User.Send(response);
         }
     }
 }

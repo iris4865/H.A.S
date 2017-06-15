@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Server
 {
-    public class GameUser : IPeer
+    public class GameUser : IPeer, IGameUser
     {
         PacketBufferManager packetBuffer = PacketBufferManager.Instance;
         public static NumberingPool objNumberingPool;
@@ -54,9 +54,9 @@ namespace Server
             IResponse response = (IResponse)Activator.CreateInstance(Type.GetType(protocolName));
             if (response != null)
             {
-                response.Initialize(msg);
-                response.Process(this);
-                response.Send(Send);
+                response.Initialize(this, msg);
+                response.Process();
+                response.Send();
             }
         }
 

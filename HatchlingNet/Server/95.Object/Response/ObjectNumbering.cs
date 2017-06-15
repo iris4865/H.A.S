@@ -8,6 +8,7 @@ namespace Server
 {
     public class ObjectNumbering : IResponse
     {
+        public IGameUser User { get; set; }
         SEND_TYPE sendType;
         string objectTag;
         MyVector3 vec;
@@ -16,27 +17,28 @@ namespace Server
         Dictionary<int, string> objectList;
 
 
-        public void Initialize(Packet msg)
+        public void Initialize(IGameUser user, Packet msg)
         {
+            User = user;
             sendType = (SEND_TYPE)msg.PopSendType();
             objectTag = msg.PopString();
             vec = msg.PopVector();
         }
 
-        public void Process(GameUser user)
+        public void Process()
         {
             lock (GameUser.objNumberingPool)
             {
-                user.GameUserID = GameUser.objNumberingPool.Pop();
-                gameUserID = user.GameUserID;
+                User.GameUserID = GameUser.objNumberingPool.Pop();
+                gameUserID = User.GameUserID;
             }
-            userID = user.UserID;
+            userID = User.UserID;
             objectList = GameUser.objList;
 
-            Trace.WriteLine($"태그 : {objectTag} 위치 x : {vec.x} y : {vec.y} z : {vec.z} remoteID : {user.GameUserID}");
+            Trace.WriteLine($"태그 : {objectTag} 위치 x : {vec.x} y : {vec.y} z : {vec.z} remoteID : {gameUserID}");
         }
 
-        public void Send(Action<Packet> send)
+        public void Send()
         {
             Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ObjectNumberingAck, (short)SEND_TYPE.BroadcastWithMe);
 
@@ -47,7 +49,7 @@ namespace Server
             //만약 이 메세지를 받은 클라의 userID와 같으면 그건 그사람이 주체적으로 만든거고
             //그 플레이어 조종하려고 만든거일 확률이 높음
             response.Push(userID);
-            send(response);
+            User.Send(response);
 
 
             foreach (var iter in objectList)
@@ -59,7 +61,7 @@ namespace Server
                 response.Push(otherPlayerPos);
                 response.Push(iter.Key);
                 response.Push("None");
-                send(response);
+                User.Send(response);
             }
             objectList.Add(gameUserID, objectTag);
         }
