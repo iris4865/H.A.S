@@ -76,7 +76,6 @@ namespace Server
                     userToken.BroadCastWithMe(msg);
                     break;
             }
-
         }
 
         public void Receive()

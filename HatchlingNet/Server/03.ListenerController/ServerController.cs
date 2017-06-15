@@ -7,7 +7,7 @@ namespace Server
 {
     public class ServerController
     {
-        NetworkService network = new NetworkService();
+        NetworkService networkService = new NetworkService();
         BufferManager buffer_manager;
 
         int maxConnection;//모든 리스너들의 연결 맥스
@@ -41,9 +41,9 @@ namespace Server
         {
             listener = new Listener()
             {
-                BeginReceive = network.BeginReceive
+                BeginReceive = networkService.BeginReceive
             };
-            network.CloseClientSocket = listener.Disconnect;
+            networkService.CloseClientSocket = listener.Disconnect;
         }
 
         void AllocateBuffer()
@@ -65,8 +65,8 @@ namespace Server
         void AddToken(int i)
         {
             UserToken token = new UserToken();
-            token.receiveEventArgs = GetArgs(token, network.ReceiveComplete);
-            token.sendEventArgs = GetArgs(token, network.SendComplete);
+            token.receiveEventArgs = GetArgs(token, networkService.ReceiveComplete);
+            token.sendEventArgs = GetArgs(token, networkService.SendComplete);
             token.TokenID = i;
             UserTokenPool.Instance.Push(token);
         }

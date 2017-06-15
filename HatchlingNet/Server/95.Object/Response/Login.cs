@@ -15,7 +15,7 @@ namespace Server
 
         public void Initialize(IGameUser user, Packet msg)
         {
-
+            User = user;
             sendType = (SEND_TYPE)msg.PopSendType();
             Id = msg.PopString();
             Password = msg.PopString();
