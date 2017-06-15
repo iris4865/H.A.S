@@ -9,7 +9,6 @@ namespace Server
     public class ObjectNumbering : IResponse
     {
         public IGameUser User { get; set; }
-        SEND_TYPE sendType;
         string objectTag;
         MyVector3 vec;
         int gameUserID;
@@ -20,7 +19,6 @@ namespace Server
         public void Initialize(IGameUser user, Packet msg)
         {
             User = user;
-            sendType = (SEND_TYPE)msg.PopSendType();
             objectTag = msg.PopString();
             vec = msg.PopVector();
         }
@@ -40,7 +38,7 @@ namespace Server
 
         public void Send()
         {
-            Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ObjectNumberingAck, (short)SEND_TYPE.BroadcastWithMe);
+            Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ObjectNumberingAck);
 
             response.Push(objectTag);
             response.Push(vec);
@@ -49,19 +47,19 @@ namespace Server
             //만약 이 메세지를 받은 클라의 userID와 같으면 그건 그사람이 주체적으로 만든거고
             //그 플레이어 조종하려고 만든거일 확률이 높음
             response.Push(userID);
-            User.Send(response);
+            User.SendAll(response);
 
 
             foreach (var iter in objectList)
             {
-                response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ObjectNumberingAck, (short)SEND_TYPE.Single);
+                response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ObjectNumberingAck);
 
                 MyVector3 otherPlayerPos; otherPlayerPos.x = 0f; otherPlayerPos.y = 10f; otherPlayerPos.z = 0f;
                 response.Push(objectTag);
                 response.Push(otherPlayerPos);
                 response.Push(iter.Key);
                 response.Push("None");
-                User.Send(response);
+                User.SendTo(User.UserID, response);
             }
             objectList.Add(gameUserID, objectTag);
         }

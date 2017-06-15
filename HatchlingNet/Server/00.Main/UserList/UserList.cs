@@ -1,6 +1,6 @@
-﻿using HatchlingNet;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Server
 {
@@ -10,20 +10,18 @@ namespace Server
         public static UserList Instance => instance.Value;
 
         readonly object syncObj = new object();
-        readonly List<GameUser> userList;
+        readonly Dictionary<string, GameUser> userList;
 
         UserList()
         {
-            userList = new List<GameUser>();
+            userList = new Dictionary<string, GameUser>();
         }
 
-        public void AddUser(UserToken token)
+        public void AddUser(GameUser user)
         {
-            GameUser user = new GameUser(token);
-
             lock (syncObj)
             {
-                userList.Add(user);
+                userList[user.UserID] = user;
             }
         }
 
@@ -31,8 +29,23 @@ namespace Server
         {
             lock (syncObj)
             {
-                userList.Remove(user);
+                userList.Remove(user.UserID);
             }
+        }
+
+        public bool IsLoginUser(string userId)
+        {
+            return userList.ContainsKey(userId);
+        }
+
+        public GameUser GetUser(string userId)
+        {
+            return userList[userId];
+        }
+
+        public GameUser[] GetAllUser()
+        {
+            return userList.Values.ToArray();
         }
     }
 }

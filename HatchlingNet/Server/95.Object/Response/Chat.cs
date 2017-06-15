@@ -10,10 +10,11 @@ namespace Server
 
         public IGameUser User { get; set; }
 
+        //그룹일때 상정해서 코드 수정 요망
         public void Initialize(IGameUser user, Packet msg)
         {
             User = user;
-            sendType = (SEND_TYPE)msg.PopSendType();
+            sendType = (SEND_TYPE)msg.PopInt16();
             text = msg.PopString();
         }
 
@@ -23,9 +24,21 @@ namespace Server
 
         public void Send()
         {
-            Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ChatAck, (short)sendType);
+            Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ChatAck);
+            response.Push((short)sendType);
             response.Push(text);
-            User.Send(response);
+            switch(sendType)
+            {
+                case SEND_TYPE.Single:
+                    User.SendTo(User.UserID, response);
+                    break;
+                case SEND_TYPE.BroadcastWithMe:
+                    //
+                    break;
+                case SEND_TYPE.BroadcastWithoutMe:
+                    User.SendAllWithoutMe(response);
+                    break;
+            }
         }
     }
 }

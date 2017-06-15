@@ -68,6 +68,7 @@ namespace Server
             token.receiveEventArgs = GetArgs(token, networkService.ReceiveComplete);
             token.sendEventArgs = GetArgs(token, networkService.SendComplete);
             token.TokenID = i;
+            token.Peer = new GameUser(token);
             UserTokenPool.Instance.Push(token);
         }
 

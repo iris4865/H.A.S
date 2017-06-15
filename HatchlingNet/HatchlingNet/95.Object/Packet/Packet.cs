@@ -34,11 +34,6 @@ namespace HatchlingNet
             return PopInt16();
         }
 
-        public Int16 PopSendType()
-        {
-            return PopInt16();
-        }
-
         public Int16 PeekSendType()
         {
             Int16 data = BitConverter.ToInt16(this.Buffer, Define.HeaderSize + Define.ProtocolSize);//this.buffer[this.position]에서 Int16만큼 변환
@@ -49,7 +44,6 @@ namespace HatchlingNet
         public void CopyTo(Packet target)
         {
             target.SetProtocol(this.ProtocolType);
-            target.SetSendType(this.SendType);
             target.OverWrite(this.Buffer, this.Position);
         }
 
@@ -61,8 +55,8 @@ namespace HatchlingNet
 
         public byte PopByte()
         {
-            byte data = (byte)BitConverter.ToInt16(this.Buffer, this.Position);
-            this.Position += sizeof(byte);
+            byte data = Buffer[Position];
+            Position += sizeof(byte);
 
             return data;
         }
@@ -127,13 +121,6 @@ namespace HatchlingNet
             this.Position = Define.HeaderSize;            //헤더는 나중에 넣을것이므로 데이터부터 넣을수 있도록 위치를 점프 시켜놓는다
                                                             //RecordSize호출 위치 참고
             Push(protocolType);
-        }
-
-        public void SetSendType(Int16 sendType)
-        {
-            SendType = sendType;
-            Position = Define.HeaderSize + Define.ProtocolSize;            
-            Push(sendType);
         }
 
         //패킷의 헤더부분에 body의 크기를 입력한다

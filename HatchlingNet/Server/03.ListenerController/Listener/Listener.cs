@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using static System.Threading.Tasks.Parallel;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -51,15 +51,12 @@ namespace Server
                 UserToken userToken = UserTokenPool.Instance.Pop();
 
                 userToken.socket = args.AcceptSocket;
-                userToken.Broadcast = CallBroadCast;
-                userToken.SendTo = CallSendTo;
+                userToken.Broadcast = BroadCast;
 
                 lock (userToken)
                 {
                     tokenList.Add(userToken.TokenID, userToken);
                 }
-
-                UserList.Instance.AddUser(userToken);
 
                 BeginReceive(userToken);
             }
@@ -69,10 +66,19 @@ namespace Server
             AcceptStart();
         }
 
-
-        public void CallBroadCast(Packet msg, int withOut = -1)
+        public void SendToGroup(Packet msg, int[] idList)
         {
-            ForEach(
+            Parallel.ForEach(
+                idList, (id) =>
+                {
+                    tokenList[id].Send(msg);
+                }
+            );
+        }
+
+        public void BroadCast(Packet msg, int withOut = -1)
+        {
+            Parallel.ForEach(
                 tokenList, (user) =>
                 {
                     if (user.Key != withOut)
@@ -87,11 +93,6 @@ namespace Server
                     user.Value.Send(msg);
             }
             */
-        }
-
-        public void CallSendTo(Packet msg, int tokenID)
-        {
-            tokenList[tokenID].Send(msg);
         }
 
         public void Disconnect(UserToken token)

@@ -1,25 +1,19 @@
 ﻿using HatchlingNet;
 using Header;
-using MySqlDataBase;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Server
 {
     public class GameUser : IPeer, IGameUser
     {
-        PacketBufferManager packetBuffer = PacketBufferManager.Instance;
         public static NumberingPool objNumberingPool;
         public static Dictionary<int, string> objList = new Dictionary<int, string>();//<remoteID, 객체 태그>
-        static object csObjList = new object();
-        static object csObjNumberingPool = new object();
 
         UserToken userToken;
-        MysqlCommand command;
         public string UserID { get; set; }
-
         public int GameUserID { get; set; }
-        Dictionary<PROTOCOL, Action<Packet>> respondseMethods = new Dictionary<PROTOCOL, Action<Packet>>();
 
         public GameUser(UserToken userToken)
         {
@@ -50,7 +44,7 @@ namespace Server
             Packet msg = new Packet(buffer, this);
             PROTOCOL protocol = (PROTOCOL)msg.PopProtocolType();
 
-            string protocolName = "Server."+protocol.ToString();
+            string protocolName = "Server." + protocol.ToString();
             IResponse response = (IResponse)Activator.CreateInstance(Type.GetType(protocolName));
             if (response != null)
             {
@@ -60,22 +54,48 @@ namespace Server
             }
         }
 
+        public void SendTo(string userId, Packet msg)
+        {
+            GameUser target = UserList.Instance.GetUser(userId);
+            target.Send(msg);
+        }
+
+
+        public void SendTo(string[] userId, Packet msg)
+        {
+            Parallel.ForEach(
+                userId, (id) =>
+                {
+                    SendTo(id, msg);
+                }
+            );
+        }
+
+        public void SendAll(Packet msg)
+        {
+            GameUser[] users = UserList.Instance.GetAllUser();
+            Parallel.ForEach(
+                users, (user) =>
+                {
+                    user.Send(msg);
+                }
+            );
+        }
+        public void SendAllWithoutMe(Packet msg)
+        {
+            GameUser[] users = UserList.Instance.GetAllUser();
+            Parallel.ForEach(
+                users, (user) =>
+                {
+                    if (this.UserID != user.UserID)
+                        user.Send(msg);
+                }
+            );
+        }
+
         public void Send(Packet msg)
         {
-            switch ((SEND_TYPE)msg.PeekSendType())
-            {
-                case SEND_TYPE.Single:
-                    userToken.Send(msg);
-                    break;
-
-                case SEND_TYPE.BroadcastWithoutMe:
-                    userToken.Broadcast(msg, userToken.TokenID);
-                    break;
-
-                case SEND_TYPE.BroadcastWithMe:
-                    userToken.BroadCastWithMe(msg);
-                    break;
-            }
+            userToken.Send(msg);
         }
 
         public void Receive()
@@ -85,9 +105,9 @@ namespace Server
 
         public void Destroy()
         {
-            Packet response = packetBuffer.Pop((short)PROTOCOL.PlayerExit, (short)SEND_TYPE.BroadcastWithoutMe);
+            Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.PlayerExit);
             response.Push(GameUserID);
-            Send(response);
+            SendAllWithoutMe(response);
 
             objNumberingPool.Push(GameUserID);
             UserList.Instance.RemoveUser(this);

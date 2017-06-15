@@ -34,7 +34,7 @@ namespace HatchlingNet
             }
         }
 
-        public Packet Pop(Int16 protocolType, Int16 sendType)
+        public Packet Pop(Int16 protocolType)
         {
             lock (csBuffer)
             {
@@ -46,7 +46,6 @@ namespace HatchlingNet
 
                 Packet packet = pool.Pop();
                 packet.SetProtocol(protocolType);
-                packet.SetSendType(sendType);
 
                 return packet;
             }

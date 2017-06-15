@@ -37,6 +37,12 @@ namespace HatchlingNet
                 Peer.OnMessage(buffer);
         }
 
+        public Action<Packet, int> Broadcast { get; set; }
+        public void BroadCastWithMe(Packet message)
+        {
+            Broadcast(message, -1);
+        }
+
         public void Send(Packet msg)
         {
             Packet clone = new Packet();
@@ -71,12 +77,6 @@ namespace HatchlingNet
                 if (!isAsync)
                     ProcessSend(sendEventArgs);
             }
-        }
-        public Action<Packet, int> SendTo { get; set; }
-        public Action<Packet, int> Broadcast { get; set; }
-        public void BroadCastWithMe(Packet message)
-        {
-            Broadcast(message, -1);
         }
 
 

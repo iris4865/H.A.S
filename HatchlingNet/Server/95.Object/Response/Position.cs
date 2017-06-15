@@ -1,15 +1,15 @@
 ﻿using HatchlingNet;
 using Header;
-using System;
+using System.Diagnostics;
 
 namespace Server
 {
     public class Position : IResponse
     {
-        SEND_TYPE sendType;
         int remoteId;
         MyVector3 vec;
-        float rotateY, speed;
+        MyVector3 rotation;
+        float speed;
         int animationType;
 
         public IGameUser User { get; set; }
@@ -17,27 +17,27 @@ namespace Server
         public void Initialize(IGameUser user, Packet msg)
         {
             User = user;
-            sendType = (SEND_TYPE)msg.PopSendType();
             remoteId = msg.PopInt32();
             vec = msg.PopVector();
-            rotateY = msg.PopFloat();
+            rotation = msg.PopVector();
             speed = msg.PopFloat();
             animationType = msg.PopInt32();
         }
 
         public void Process()
         {
+            //Trace.WriteLine("rotateY: "+rotateY);
         }
 
         public void Send()
         {
-            Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.PositionAck, (short)SEND_TYPE.BroadcastWithoutMe);
+            Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.PositionAck);
             response.Push(remoteId);
             response.Push(vec);
-            response.Push(rotateY);
+            response.Push(rotation);
             response.Push(speed);
             response.Push(animationType);
-            User.Send(response);
+            User.SendAllWithoutMe(response);
         }
     }
 }

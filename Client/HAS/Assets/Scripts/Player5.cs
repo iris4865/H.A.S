@@ -13,13 +13,13 @@ public class Player5 : MonoBehaviour
     public bool isPlayer = false;
     public static int count = 0;
 
-    bool caninput {get; set;}
+    bool caninput { get; set; }
 
     //경찰인지 도둑인지 구별...해야한다.
-    int player_job  = 1; //1 or 2 = 도둑 or 경찰...
+    int player_job = 1; //1 or 2 = 도둑 or 경찰...
 
     public GameObject pressE_key_canvas;
-    
+
     public float player_speed;
 
     public int animation_type = (short)ANIMATION_TYPE.Wait;
@@ -47,33 +47,30 @@ public class Player5 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        AnimationUpdate();
-
-        if (isPlayer)
-        {
-            NetUpdate();
-        }
     }
 
     void FixedUpdate()
     {
+        AnimationUpdate();
+
         if (isPlayer)
         {
             if (caninput)
             {
-                run();
-                turn();
+                Run();
+                Turn();
                 if (player_job == 1)
                 {
-                    action();
+                    Action();
                 }
             }
+            NetUpdate();
         }
     }
 
     void NetUpdate()
     {
-        Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.Position, (short)SEND_TYPE.BroadcastWithoutMe);
+        Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.Position);
         //        msg.Push(NetworkManager.GetInstance.networkID);//id...나중에가면 유저id가 아니라 각 객체마다 서버에서 id를 할당해주고 그걸 기준으로 객체의 정보 통신...
         //하나의 객체에 여러 상호작용이 일어날수 있으니 나중에 해당 메시지를 보낸 시간도 추가해야할것 같다.
 
@@ -82,7 +79,10 @@ public class Player5 : MonoBehaviour
         //Debug.Log("나 " + remoteid + "위치전송: " );
         msg.Push(remoteid);
         msg.Push(transform.position.x, transform.position.y, transform.position.z);
-        msg.Push(transform.rotation.y);
+
+        MyVector3 vec;
+        vec.x = transform.rotation.x; vec.y = transform.rotation.y; vec.z = transform.rotation.z;
+        msg.Push(vec);
         msg.Push(player_speed);
         msg.Push(animation_type);
         NetworkManager.GetInstance.Send(msg);
@@ -127,92 +127,87 @@ public class Player5 : MonoBehaviour
         {
             player_animator.SetBool("isforwarding", true);
         }*/
-
-        if(animation_type == (short)ANIMATION_TYPE.Wait)
+        switch (animation_type)
         {
-            player_animator.SetBool("isforwarding", false);
-            player_animator.SetBool("isRunning", false);
-            player_animator.SetFloat("speed", player_speed);
-        }
-        else if(animation_type == (short)ANIMATION_TYPE.Walk)
-        {
-            player_animator.SetBool("isforwarding", true);
-            player_animator.SetBool("isRunning", false);
-            player_animator.SetFloat("speed", player_speed);
-        }
-        else if(animation_type == (short)ANIMATION_TYPE.Run)
-        {
-            //
-            player_animator.SetBool("isforwarding", false);
-            player_animator.SetBool("isRunning", true);
-            player_animator.SetFloat("speed", player_speed);
-        }
-        else if(animation_type == (short)ANIMATION_TYPE.Attack)
-        {
-            player_animator.SetBool("isaction", true);
+            case (short)ANIMATION_TYPE.Wait:
+                player_animator.SetBool("isforwarding", false);
+                player_animator.SetBool("isRunning", false);
+                player_animator.SetFloat("speed", player_speed);
+                break;
+            case (short)ANIMATION_TYPE.Walk:
+                player_animator.SetBool("isforwarding", true);
+                player_animator.SetBool("isRunning", false);
+                player_animator.SetFloat("speed", player_speed);
+                break;
+            case (short)ANIMATION_TYPE.Run:
+                player_animator.SetBool("isforwarding", false);
+                player_animator.SetBool("isRunning", true);
+                player_animator.SetFloat("speed", player_speed);
+                break;
+            case (short)ANIMATION_TYPE.Attack:
+                player_animator.SetBool("isaction", true);
+                break;
         }
     }
 
-    void run()
+    void Run()
     {
         player_moveVector = Vector3.zero;
+        animation_type = (short)ANIMATION_TYPE.Wait;
+        bool isMove = false;
+        if (Input.GetKey(KeyCode.W) == true)
         {
-            animation_type = (short)ANIMATION_TYPE.Wait;
-            bool isMove = false;
-            if (Input.GetKey(KeyCode.W) == true)
-            {
-                player_moveVector.z = player_speed;
-                isMove = true;
-                //animation_type = (short)ANIMATION_TYPE.Walk;
-            }
-            if (Input.GetKey(KeyCode.S) == true)
-            {
-                player_moveVector.z = -player_speed;
-                //player_animator.SetBool("isRunning", false);
-                isMove = true;
-                //animation_type = (short)ANIMATION_TYPE.Walk;
-            }
-            if (Input.GetKey(KeyCode.A) == true)
-            {
-                transform.Rotate(Vector3.down * Time.deltaTime * 100f);
-            }
-            if (Input.GetKey(KeyCode.D) == true)
-            {
-                transform.Rotate(Vector3.up * Time.deltaTime * 100f);
-            }
-            if (Input.GetKey(KeyCode.E) == true)
-            {
-
-            }
-            //player_animator.SetFloat("speed", player_speed * s);
-            
-            if (isMove)
-            {
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    //addPosition.z = 10;
-                    //player_animator.SetBool("isRunning", true);
-                    player_speed = 8.0f;
-                    animation_type = (short)ANIMATION_TYPE.Run;
-                }
-                else
-                {
-                    player_speed = 2.0f;
-                    animation_type = (short)ANIMATION_TYPE.Walk;
-                }
-            }
-            
+            player_moveVector.z = player_speed;
+            isMove = true;
+            //animation_type = (short)ANIMATION_TYPE.Walk;
         }
+        if (Input.GetKey(KeyCode.S) == true)
+        {
+            player_moveVector.z = -player_speed;
+            //player_animator.SetBool("isRunning", false);
+            isMove = true;
+            //animation_type = (short)ANIMATION_TYPE.Walk;
+        }
+        if (Input.GetKey(KeyCode.A) == true)
+        {
+            transform.Rotate(Vector3.down * Time.deltaTime * 100f);
+        }
+        if (Input.GetKey(KeyCode.D) == true)
+        {
+            transform.Rotate(Vector3.up * Time.deltaTime * 100f);
+        }
+        if (Input.GetKey(KeyCode.E) == true)
+        {
+
+        }
+        //player_animator.SetFloat("speed", player_speed * s);
+
+        if (isMove)
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                //addPosition.z = 10;
+                //player_animator.SetBool("isRunning", true);
+                player_speed = 8.0f;
+                animation_type = (short)ANIMATION_TYPE.Run;
+            }
+            else
+            {
+                player_speed = 2.0f;
+                animation_type = (short)ANIMATION_TYPE.Walk;
+            }
+        }
+
         transform.position += ((transform.rotation * player_moveVector) * Time.deltaTime);
     }
 
-    void turn()
+    void Turn()
     {
         player_rotateVector = new Vector3(0, Input.GetAxis("Mouse X"), 0);
         transform.Rotate(player_rotateVector * 2.0f);
     }
 
-    void action()
+    void Action()
     {
         Collider collider = foot.GetComponent<SphereCollider>();
 

@@ -92,10 +92,11 @@ public sealed class NetworkManager : MonoBehaviour
         {
             case NETWORK_EVENT.connected:
                 {
-                    Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.Chat, (short)SEND_TYPE.BroadcastWithMe);
-                    msg.Push("Hello~!");
+                    //뭐여 이건
+                    //Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.Chat);
+                    //msg.Push("Hello~!");
 
-                    this.gameserver.Send(msg);
+                    //this.gameserver.Send(msg);
                 }
                 break;
 
@@ -110,7 +111,6 @@ public sealed class NetworkManager : MonoBehaviour
     void CallMessage(Packet msg)//클라이언트 수신부
     {
         PROTOCOL protocolType = (PROTOCOL)msg.PopProtocolType();
-        SEND_TYPE sendType = (SEND_TYPE)msg.PopSendType();
 
         //Debug.Log("콜메세지 " + protocolType);
 
@@ -118,6 +118,7 @@ public sealed class NetworkManager : MonoBehaviour
         {
             case PROTOCOL.ChatAck:
                 {
+                    SEND_TYPE sendType = (SEND_TYPE)msg.PopInt16();
                     string text = msg.PopString();
                 }
                 break;
@@ -153,10 +154,16 @@ public sealed class NetworkManager : MonoBehaviour
                     {
                         if (networkObj.ContainsKey(networkID) == true)
                         {
-                            networkObj[networkID].GetComponent<Transform>().position = position;
-                            networkObj[networkID].GetComponent<Transform>().Rotate(0, msg.PopFloat(), 0);
-                            networkObj[networkID].GetComponent<Player5>().player_speed = msg.PopFloat();
-                            networkObj[networkID].GetComponent<Player5>().animation_type = msg.PopInt32();
+                            //여기 모르겠다.
+                            Transform userForm = networkObj[networkID].GetComponent<Transform>();
+                            userForm.position = position;
+                            Quaternion rotation =  userForm.rotation;
+                            rotation.x = msg.PopFloat(); rotation.y = msg.PopFloat(); rotation.z = msg.PopFloat();
+                            //userForm.Rotate(0, -msg.PopFloat(), 0);
+                            userForm.rotation = rotation;
+                            Player5 userPlayer = networkObj[networkID].GetComponent<Player5>();
+                            userPlayer.player_speed = msg.PopFloat();
+                            userPlayer.animation_type = msg.PopInt32();
                         }
                     }
                 }
