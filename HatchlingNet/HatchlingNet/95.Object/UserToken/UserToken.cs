@@ -62,9 +62,9 @@ namespace HatchlingNet
                 msg.RecordSize();
 
                 //패킷 크기만큼 버퍼 재설정
-                sendEventArgs.SetBuffer(sendEventArgs.Offset, msg.position);
+                sendEventArgs.SetBuffer(sendEventArgs.Offset, msg.Position);
 
-                Array.Copy(msg.buffer, 0, sendEventArgs.Buffer, sendEventArgs.Offset, msg.position);
+                Array.Copy(msg.Buffer, 0, sendEventArgs.Buffer, sendEventArgs.Offset, msg.Position);
 
                 //전송!
                 bool isAsync = socket.SendAsync(sendEventArgs);
@@ -94,7 +94,7 @@ namespace HatchlingNet
                 if (sendingQueue.Count <= 0)
                     throw new Exception("Sedning queue count is less than zero!");
 
-                int size = sendingQueue.Peek().position;
+                int size = sendingQueue.Peek().Position;
                 if (sendArgs.BytesTransferred != size)
                 {
                     Trace.WriteLine($"Need to send more! transferred {sendArgs.BytesTransferred},  packet size {size}");

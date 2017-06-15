@@ -14,7 +14,7 @@ namespace HatchlingNet
 
             internal static readonly UserTokenPool Instance = new UserTokenPool();
         }
-        private UserTokenPool() { }
+        UserTokenPool() { }
 
         public int Count
         {

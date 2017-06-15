@@ -58,24 +58,23 @@ namespace Server
         {
             UserTokenPool.Instance.Count = maxConnection;
 
-            UserToken token;
             for (int i = 0; i < maxConnection; ++i)
-            {
-                token = new UserToken()
-                {
-                    receiveEventArgs = GetArgs(network.ReceiveComplete),
-                    sendEventArgs = GetArgs(network.SendComplete),
-                    TokenID = i
-                };
-                token.receiveEventArgs.UserToken = token;
-                token.sendEventArgs.UserToken = token;
-                UserTokenPool.Instance.Push(token);
-            }
+                AddToken(i);
         }
 
-        SocketAsyncEventArgs GetArgs(EventHandler<SocketAsyncEventArgs> handler)
+        void AddToken(int i)
+        {
+            UserToken token = new UserToken();
+            token.receiveEventArgs = GetArgs(token, network.ReceiveComplete);
+            token.sendEventArgs = GetArgs(token, network.SendComplete);
+            token.TokenID = i;
+            UserTokenPool.Instance.Push(token);
+        }
+
+        SocketAsyncEventArgs GetArgs(UserToken token, EventHandler<SocketAsyncEventArgs> handler)
         {
             SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+            args.UserToken = token;
             args.Completed += handler;
             args.SetBuffer(new byte[bufferSize], 0, bufferSize);
 
