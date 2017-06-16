@@ -125,10 +125,6 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.LoginAck:
                 {
-
-                    Debug.Log("LoginAck");
-                    //SceneManager.LoadScene(3);
-
                     for (int i = 0; i < 4; i++)
                     {
 
@@ -146,21 +142,16 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.ObjectNumberingAck:
                 {
-                    string numberingTag;
+                    string numberingTag = msg.PopString();
 
                     lock (csNumberingWaitObj)
                     {
                         //태그...큐에있는거랑 일치하나 검사 해줘야할것같긴 한디
-                        numberingTag = msg.PopString();
                         //numberingTag = numberingWaitObjTag.Dequeue();
                     }
 
-                    //print("태그 : " + numberingTag);
-
                     Vector3 position = msg.PopVector().Vector;
-                    //print("벡터에 담긴거 x : " + position.x + " y : " + position.y + " z : " + position.z);
                     int remoteID = msg.PopInt32();
-
                     string msgUserLoginID = msg.PopString();
 
                     if (msgUserLoginID == userID)
@@ -172,13 +163,10 @@ public sealed class NetworkManager : MonoBehaviour
                     GameObject objSpawner = GameObject.Find("Player_Spawn");
                     Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
 
-                    //print("넘버링태그 : " + numberingTag);
-
                     //캐릭터 생성
                     switch (numberingTag)
                     {
                         case "Identify":
-                            //print("플레안까지옴");
                             GameObject myPlayer = componentSpawner.CreateMyPlayer(position);
                             //myPlayer.GetComponent<Player5>().headCamera.SetActive(false); //디폴트를 비활성화 시킴 
                             NetworkObj objNetInfo = myPlayer.GetComponent<NetworkObj>();
@@ -220,24 +208,18 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.PositionAck:
                 {
-                    int networkID = msg.PopInt32();
-                    Vector3 position;
-                    position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
-
+                    int remoteID = msg.PopInt32();
                     lock (networkObj) //thread 안정적으로 사용하려고 
                     {
-                        if (networkObj.ContainsKey(networkID) == true)
+                        if (networkObj.ContainsKey(remoteID) == true)
                         {
-                            //여기 모르겠다.
-                            Transform userForm = networkObj[networkID].GetComponent<Transform>();
-                            userForm.position = position;
-                            Quaternion rotation = userForm.rotation;
-                            rotation.x = 0; rotation.y = msg.PopFloat(); rotation.z = 0;
-                            //userForm.Rotate(0, -msg.PopFloat(), 0);
-                            userForm.rotation = rotation;
-                            Player5 userPlayer = networkObj[networkID].GetComponent<Player5>();
-                            userPlayer.player_speed = msg.PopFloat();
-                            userPlayer.currentAnimation = (ANIMATION_TYPE)msg.PopInt32();
+                            //Transform userForm = networkObj[remoteID].GetComponent<Transform>();
+
+                            Player5 userPlayer = networkObj[remoteID].GetComponent<Player5>();
+                            userPlayer.transform.position = msg.PopVector().Vector;
+                            userPlayer.currentAnimation = (ANIMATION_TYPE)msg.PopInt16();
+
+                            userPlayer.Turn(msg.PopFloat());
                         }
                     }
                 }

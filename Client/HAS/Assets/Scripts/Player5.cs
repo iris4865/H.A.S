@@ -30,7 +30,6 @@ public class Player5 : MonoBehaviour
     private AudioSource audio;
 
     int inputKeyCount;
-    bool isMove;
     KeyCode inputKey;
 
     void Awake()
@@ -60,24 +59,20 @@ public class Player5 : MonoBehaviour
             Turn();
             if (player_job == 1)
                 Action();
-
-            if (isMove)
-                NetUpdate();
+            NetUpdate();
         }
     }
 
     void NetUpdate()
     {
         Packet msg = PacketBufferManager.Instance.Pop(PROTOCOL.Position);
-        msg.Push((short)inputKey);
-        msg.Push();
-        msg.Push(transform.position.x, transform.position.y, transform.position.z);
-
-        MyVector3 vec;
-        vec.x = transform.rotation.x; vec.y = transform.rotation.y; vec.z = transform.rotation.z;
-        msg.Push(vec);
-        msg.Push(player_speed);
+        MyVector3 position = new MyVector3();
+        position.Vector = transform.position;
+        msg.Push(GetComponent<NetworkObj>().remoteId);
+        msg.Push(position);
         msg.Push((short)currentAnimation);
+        msg.Push(Input.GetAxis("Mouse X"));
+
         NetworkManager.GetInstance.Send(msg);
     }
 
@@ -109,7 +104,7 @@ public class Player5 : MonoBehaviour
         }
     }
 
-    void AnimationUpdate()
+    public void AnimationUpdate()
     {
         /*if (player_moveVector.x == 0 && player_moveVector.z == 0)
         {
@@ -143,21 +138,36 @@ public class Player5 : MonoBehaviour
         }
     }
 
-    void Run()
+    void SetDefault()
     {
         player_moveVector = Vector3.zero;
         currentAnimation = ANIMATION_TYPE.Wait;
-        isMove = false;
+    }
+
+    void Run()
+    {
+        SetDefault();
+
 
         if (Input.GetKey(KeyCode.W) == true)
         {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                currentAnimation = ANIMATION_TYPE.Run;
+                player_speed = 8.0f;
+            }
+            else
+            {
+                currentAnimation = ANIMATION_TYPE.Walk;
+                player_speed = 2.0f;
+            }
             player_moveVector.z = player_speed;
-            isMove = true;
         }
         if (Input.GetKey(KeyCode.S) == true)
         {
+            currentAnimation = ANIMATION_TYPE.Walk;
+            player_speed = 2.0f;
             player_moveVector.z = -player_speed;
-            isMove = true;
         }
         if (Input.GetKey(KeyCode.A) == true)
         {
@@ -172,25 +182,19 @@ public class Player5 : MonoBehaviour
 
         }
 
-        if (isMove)
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                player_speed = 8.0f;
-                currentAnimation = ANIMATION_TYPE.Run;
-            }
-            else
-            {
-                player_speed = 2.0f;
-                currentAnimation = ANIMATION_TYPE.Walk;
-            }
-        }
+
         transform.position += ((transform.rotation * player_moveVector) * Time.deltaTime);
     }
 
     void Turn()
     {
-        player_rotateVector = new Vector3(0, Input.GetAxis("Mouse X"), 0);
+        Turn(Input.GetAxis("Mouse X"));
+        Debug.LogWarning(Input.GetAxis("Mouse X"));
+    }
+
+    public void Turn(float axis)
+    {
+        player_rotateVector = new Vector3(0, axis, 0);
         transform.Rotate(player_rotateVector * 2.0f);
     }
 
