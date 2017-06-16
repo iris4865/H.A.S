@@ -110,7 +110,7 @@ public sealed class NetworkManager : MonoBehaviour
 
     void CallMessage(Packet msg)//클라이언트 수신부
     {
-        PROTOCOL protocolType = (PROTOCOL)msg.PopProtocolType();
+        PROTOCOL protocolType = msg.Protocol;
 
         //Debug.Log("콜메세지 " + protocolType);
 
@@ -144,31 +144,6 @@ public sealed class NetworkManager : MonoBehaviour
                 }
                 break;
 
-            case PROTOCOL.PositionAck:
-                {
-                    int networkID = msg.PopInt32();
-                    Vector3 position;
-                    position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
-
-                    lock (networkObj) //thread 안정적으로 사용하려고 
-                    {
-                        if (networkObj.ContainsKey(networkID) == true)
-                        {
-                            //여기 모르겠다.
-                            Transform userForm = networkObj[networkID].GetComponent<Transform>();
-                            userForm.position = position;
-                            Quaternion rotation =  userForm.rotation;
-                            rotation.x = 0; rotation.y = msg.PopFloat(); rotation.z = 0;
-                            //userForm.Rotate(0, -msg.PopFloat(), 0);
-                            userForm.rotation = rotation;
-                            Player5 userPlayer = networkObj[networkID].GetComponent<Player5>();
-                            userPlayer.player_speed = msg.PopFloat();
-                            userPlayer.animation_type = msg.PopInt32();
-                        }
-                    }
-                }
-                break;
-
             case PROTOCOL.ObjectNumberingAck:
                 {
                     string numberingTag;
@@ -182,10 +157,9 @@ public sealed class NetworkManager : MonoBehaviour
 
                     //print("태그 : " + numberingTag);
 
-                    Vector3 position; position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
+                    Vector3 position = msg.PopVector().Vector;
                     //print("벡터에 담긴거 x : " + position.x + " y : " + position.y + " z : " + position.z);
                     int remoteID = msg.PopInt32();
-                    print("remoteID : " + remoteID);
 
                     string msgUserLoginID = msg.PopString();
 
@@ -194,7 +168,6 @@ public sealed class NetworkManager : MonoBehaviour
                         print("내가 만듬: " + msgUserLoginID);
                         //numberingWaitObjTag.Dequeue();
                     }
-
 
                     GameObject objSpawner = GameObject.Find("Player_Spawn");
                     Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
@@ -243,6 +216,31 @@ public sealed class NetworkManager : MonoBehaviour
 
                 }
 
+                break;
+
+            case PROTOCOL.PositionAck:
+                {
+                    int networkID = msg.PopInt32();
+                    Vector3 position;
+                    position.x = msg.PopFloat(); position.y = msg.PopFloat(); position.z = msg.PopFloat();
+
+                    lock (networkObj) //thread 안정적으로 사용하려고 
+                    {
+                        if (networkObj.ContainsKey(networkID) == true)
+                        {
+                            //여기 모르겠다.
+                            Transform userForm = networkObj[networkID].GetComponent<Transform>();
+                            userForm.position = position;
+                            Quaternion rotation = userForm.rotation;
+                            rotation.x = 0; rotation.y = msg.PopFloat(); rotation.z = 0;
+                            //userForm.Rotate(0, -msg.PopFloat(), 0);
+                            userForm.rotation = rotation;
+                            Player5 userPlayer = networkObj[networkID].GetComponent<Player5>();
+                            userPlayer.player_speed = msg.PopFloat();
+                            userPlayer.currentAnimation = (ANIMATION_TYPE)msg.PopInt32();
+                        }
+                    }
+                }
                 break;
             case PROTOCOL.PlayerExit:
                 {

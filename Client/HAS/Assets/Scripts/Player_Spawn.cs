@@ -3,7 +3,8 @@ using Header;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_Spawn : MonoBehaviour {
+public class Player_Spawn : MonoBehaviour
+{
     public GameObject player;
     //GameObject player1 = GameObject.Find("player");
     //GameObject[] players = GameObject.FindGameObjectsWithTag("player");
@@ -12,19 +13,21 @@ public class Player_Spawn : MonoBehaviour {
 
     int nonPlayerCount = 4;
     private List<Player5> playerList = new List<Player5>();
-    
+
     float range = 10.0f;
     //생성자
     // Use this for initialization
     void Start()
     {
-        numberingWaitObjTag = NetworkManager.GetInstance.numberingWaitObjTag; 
+        numberingWaitObjTag = NetworkManager.GetInstance.numberingWaitObjTag;
         numberingWaitObjTag.Enqueue(player.tag);
-        Vector3 createPosition = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
 
-        Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.ObjectNumbering);
+        MyVector3 createPosition = new MyVector3();
+        createPosition.Vector = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
+
+        Packet msg = PacketBufferManager.Instance.Pop(PROTOCOL.ObjectNumbering);
         msg.Push(player.tag);
-        msg.Push(createPosition.x, createPosition.y, createPosition.z);
+        msg.Push(createPosition);
 
         NetworkManager.GetInstance.Send(msg);
 
@@ -79,21 +82,21 @@ public class Player_Spawn : MonoBehaviour {
 
     public GameObject CreateMyPlayer(Vector3 position)
     {
-//        Vector3 position = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
+        //        Vector3 position = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
         string objTag = player.tag;
 
         GameObject myPlayer = Instantiate(player, position, transform.rotation);
         //myPlayer.GetComponent<Player5>().headCamera.SetActive(true); //디폴트를 비활성화 시킴 
-//                                                                      //NetworkManager.GetInstance.numberingWaitObj.Enqueue(myPlayer);
-//                                                                      //  print("짐" + NetworkManager.GetInstance.numberingWaitObj.Count);
+        //                                                                      //NetworkManager.GetInstance.numberingWaitObj.Enqueue(myPlayer);
+        //                                                                      //  print("짐" + NetworkManager.GetInstance.numberingWaitObj.Count);
 
 
-        
-//        NetworkManager.GetInstance.numberingWaitObj.Enqueue(Instantiate(player, position, transform.rotation));
-//        print("안에서 : " + NetworkManager.GetInstance.numberingWaitObj.Count);
+
+        //        NetworkManager.GetInstance.numberingWaitObj.Enqueue(Instantiate(player, position, transform.rotation));
+        //        print("안에서 : " + NetworkManager.GetInstance.numberingWaitObj.Count);
 
 
-////        GameObject myPlayer = new GameObject();
+        ////        GameObject myPlayer = new GameObject();
         return myPlayer;
     }
 
@@ -103,14 +106,14 @@ public class Player_Spawn : MonoBehaviour {
     {
         Vector3 position = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
         GameObject remotePlayer = Instantiate(player, position, transform.rotation);
-//        remotePlayer.GetComponent<Player5>().headCamera.SetActive(false);
+        //        remotePlayer.GetComponent<Player5>().headCamera.SetActive(false);
 
         return remotePlayer;
     }
 
     void CreatePlayer()
     {
- //       player.GetComponent<Player5>().main_camera.enabled = false;
+        //       player.GetComponent<Player5>().main_camera.enabled = false;
         //GameObject gb = GameObject.Find("Player").gameObject;
         //playerList.Add(gb.GetComponent<Player5>());
 
@@ -118,13 +121,13 @@ public class Player_Spawn : MonoBehaviour {
         for (int i = 0; i < nonPlayerCount; i++)
         {
             Vector3 position = new Vector3(Random.Range(-range, range), 0f, Random.Range(-range, range));
-            
+
             GameObject copy = Instantiate(player, position, transform.rotation);
             //playerList.Add(copy.GetComponent<Player5>());
             //copy.GetComponent<Player5>().main_camera.enabled = false;
         }
 
-  //      player.GetComponent<Player5>().main_camera.enabled = true;
+        //      player.GetComponent<Player5>().main_camera.enabled = true;
     }
 
     void RemovePlayer()

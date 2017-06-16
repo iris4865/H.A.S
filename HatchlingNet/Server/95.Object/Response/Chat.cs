@@ -8,12 +8,12 @@ namespace Server
         SEND_TYPE sendType;
         string text = "";
 
-        public IGameUser User { get; set; }
+        public IGameUser Self { get; set; }
 
         //그룹일때 상정해서 코드 수정 요망
         public void Initialize(IGameUser user, Packet msg)
         {
-            User = user;
+            Self = user;
             sendType = (SEND_TYPE)msg.PopInt16();
             text = msg.PopString();
         }
@@ -30,13 +30,13 @@ namespace Server
             switch(sendType)
             {
                 case SEND_TYPE.Single:
-                    User.SendTo(User.UserID, response);
+                    Self.SendTo(Self.UserID, response);
                     break;
                 case SEND_TYPE.BroadcastWithMe:
                     //
                     break;
                 case SEND_TYPE.BroadcastWithoutMe:
-                    User.SendAllWithoutMe(response);
+                    Self.SendAllWithoutMe(response);
                     break;
             }
         }

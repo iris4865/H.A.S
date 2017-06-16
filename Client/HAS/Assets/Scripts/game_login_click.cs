@@ -48,7 +48,7 @@ public class game_login_click : MonoBehaviour
 
         if (networkManager != null)
         {
-            Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.Login);
+            Packet msg = PacketBufferManager.Instance.Pop(PROTOCOL.Login);
             msg.Push(id_s);
             msg.Push(password_s);
 

@@ -20,7 +20,7 @@ public class Player5 : MonoBehaviour
 
     public float player_speed;
 
-    public int animation_type = (short)ANIMATION_TYPE.Wait;
+    public ANIMATION_TYPE currentAnimation = ANIMATION_TYPE.Wait;
 
     public Camera main_camera;
 
@@ -32,7 +32,6 @@ public class Player5 : MonoBehaviour
     int inputKeyCount;
     bool isMove;
     KeyCode inputKey;
-    ANIMATION_TYPE activeAnimationType;
 
     void Awake()
     {
@@ -69,7 +68,7 @@ public class Player5 : MonoBehaviour
 
     void NetUpdate()
     {
-        Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.Position);
+        Packet msg = PacketBufferManager.Instance.Pop(PROTOCOL.Position);
         msg.Push((short)inputKey);
         msg.Push();
         msg.Push(transform.position.x, transform.position.y, transform.position.z);
@@ -78,7 +77,7 @@ public class Player5 : MonoBehaviour
         vec.x = transform.rotation.x; vec.y = transform.rotation.y; vec.z = transform.rotation.z;
         msg.Push(vec);
         msg.Push(player_speed);
-        msg.Push(animation_type);
+        msg.Push((short)currentAnimation);
         NetworkManager.GetInstance.Send(msg);
     }
 
@@ -121,24 +120,24 @@ public class Player5 : MonoBehaviour
         {
             player_animator.SetBool("isforwarding", true);
         }*/
-        switch (animation_type)
+        switch (currentAnimation)
         {
-            case (short)ANIMATION_TYPE.Wait:
+            case ANIMATION_TYPE.Wait:
                 player_animator.SetBool("isforwarding", false);
                 player_animator.SetBool("isRunning", false);
                 player_animator.SetFloat("speed", player_speed);
                 break;
-            case (short)ANIMATION_TYPE.Walk:
+            case ANIMATION_TYPE.Walk:
                 player_animator.SetBool("isforwarding", true);
                 player_animator.SetBool("isRunning", false);
                 player_animator.SetFloat("speed", player_speed);
                 break;
-            case (short)ANIMATION_TYPE.Run:
+            case ANIMATION_TYPE.Run:
                 player_animator.SetBool("isforwarding", false);
                 player_animator.SetBool("isRunning", true);
                 player_animator.SetFloat("speed", player_speed);
                 break;
-            case (short)ANIMATION_TYPE.Attack:
+            case ANIMATION_TYPE.Attack:
                 player_animator.SetBool("isaction", true);
                 break;
         }
@@ -147,28 +146,18 @@ public class Player5 : MonoBehaviour
     void Run()
     {
         player_moveVector = Vector3.zero;
-        animation_type = (short)ANIMATION_TYPE.Wait;
+        currentAnimation = ANIMATION_TYPE.Wait;
         isMove = false;
-
-        isMove = Event.current.isKey;
-        if (isMove)
-        {
-            inputKey = Event.current.keyCode;
-            
-        }
 
         if (Input.GetKey(KeyCode.W) == true)
         {
             player_moveVector.z = player_speed;
             isMove = true;
-            //animation_type = (short)ANIMATION_TYPE.Walk;
         }
         if (Input.GetKey(KeyCode.S) == true)
         {
             player_moveVector.z = -player_speed;
-            //player_animator.SetBool("isRunning", false);
             isMove = true;
-            //animation_type = (short)ANIMATION_TYPE.Walk;
         }
         if (Input.GetKey(KeyCode.A) == true)
         {
@@ -182,24 +171,20 @@ public class Player5 : MonoBehaviour
         {
 
         }
-        //player_animator.SetFloat("speed", player_speed * s);
 
         if (isMove)
         {
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                //addPosition.z = 10;
-                //player_animator.SetBool("isRunning", true);
                 player_speed = 8.0f;
-                animation_type = (short)ANIMATION_TYPE.Run;
+                currentAnimation = ANIMATION_TYPE.Run;
             }
             else
             {
                 player_speed = 2.0f;
-                animation_type = (short)ANIMATION_TYPE.Walk;
+                currentAnimation = ANIMATION_TYPE.Walk;
             }
         }
-
         transform.position += ((transform.rotation * player_moveVector) * Time.deltaTime);
     }
 
@@ -218,7 +203,7 @@ public class Player5 : MonoBehaviour
             this.audio.clip = this.attack_sound;
             audio.Play();
             collider.isTrigger = true;
-            animation_type = (short)ANIMATION_TYPE.Attack;
+            currentAnimation = ANIMATION_TYPE.Attack;
         }
         else
         {

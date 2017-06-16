@@ -42,7 +42,7 @@ namespace Server
         public void OnMessage(byte[] buffer)
         {
             Packet msg = new Packet(buffer);
-            PROTOCOL protocol = msg.PopProtocolType();
+            PROTOCOL protocol = msg.Protocol;
 
             string protocolName = "Server." + protocol.ToString();
             IResponse response = (IResponse)Activator.CreateInstance(Type.GetType(protocolName));
@@ -87,7 +87,7 @@ namespace Server
             Parallel.ForEach(
                 users, (user) =>
                 {
-                    if (this.UserID != user.UserID)
+                    if (UserID != user.UserID)
                         user.Send(msg);
                 }
             );

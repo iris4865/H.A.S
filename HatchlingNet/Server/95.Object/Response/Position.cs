@@ -8,11 +8,11 @@ namespace Server
         UnityEngine.KeyCode keyCode;
         MyVector3 vec;
 
-        public IGameUser User { get; set; }
+        public IGameUser Self { get; set; }
 
         public void Initialize(IGameUser user, Packet msg)
         {
-            User = user;
+            Self = user;
             keyCode = (UnityEngine.KeyCode)msg.PopInt16();
             vec = msg.PopVector();
         }
@@ -26,7 +26,7 @@ namespace Server
             Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.PositionAck);
             response.Push((short)keyCode);
             response.Push(vec);
-            User.SendAllWithoutMe(response);
+            Self.SendAllWithoutMe(response);
         }
     }
 }

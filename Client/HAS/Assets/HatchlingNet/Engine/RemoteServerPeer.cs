@@ -34,7 +34,7 @@ public class RemoteServerPeer : IPeer {
         byte[] app_buffer = new byte[buffer.Length];
         Array.Copy(buffer, app_buffer, buffer.Length);
 
-        Packet msg = new Packet(app_buffer, this);
+        Packet msg = new Packet(app_buffer);
 
         (this.hatchlingnetEventManager.Target as HatchlingNetEventManager).EnqueueNetworkMessage(msg);
     }

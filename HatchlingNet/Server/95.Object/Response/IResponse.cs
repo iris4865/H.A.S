@@ -5,7 +5,7 @@ namespace Server
 {
     public interface IResponse
     {
-        IGameUser User { get; set; }
+        IGameUser Self { get; set; }
         void Initialize(IGameUser user, Packet msg);
         void Process();
         void Send();

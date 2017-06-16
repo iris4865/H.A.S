@@ -7,37 +7,39 @@ namespace HatchlingNet
 {
     public class Packet
     {
-        //다른 용도의 이유가 없기 때문에 const로 수정
         public const int HeaderSize = 2;
         public const int ProtocolSize = 2;
 
         public byte[] Buffer { get; private set; }
         public int Position { get; private set; }
+        public PROTOCOL Protocol
+        {
+            get
+            {
+                return (PROTOCOL)BitConverter.ToInt16(Buffer, HeaderSize);
+            }
+            set
+            {
+                byte[] data = BitConverter.GetBytes((Int16)value);
+                Array.Copy(data, 0, Buffer, HeaderSize, ProtocolSize);
+            }
+        }
+
+        public Packet()
+        {
+            Buffer = new byte[1024];
+            Clear();
+        }
 
         public Packet(byte[] buffer)
         {
             Buffer = buffer;
-
-            Reallocate();
+            Clear();
         }
 
-        //인자없는건 버퍼에 메모리 할당하고 인자 있는생성자는 메모리 할당 안한다는걸 주의
-        //패킷버퍼매니저에서 메모리 풀링할때 인자없는생성자 사용해서 미리 다 해놓고
-        //인자있는건 보통 일회용으로 잠깐 패킷 해석할때 쓴다
-        public Packet()
-        {
-            Buffer = new byte[1024];
-        }
-
-        public void Reallocate()
+        public void Clear()
         {
             Position = HeaderSize + ProtocolSize;
-        }
-
-        public void SetProtocol(PROTOCOL protocolType)
-        {
-            Position = HeaderSize;
-            Push((Int16)protocolType);
         }
 
         //패킷의 헤더부분에 body의 크기를 입력한다
@@ -50,13 +52,8 @@ namespace HatchlingNet
 
         public void CopyTo(Packet target)
         {
-            Buffer.CopyTo(target.Buffer, Position);
+            Buffer.CopyTo(target.Buffer, 0);
             target.Position = Position;
-        }
-
-        public PROTOCOL PopProtocolType()
-        {
-            return (PROTOCOL)PopInt16();
         }
 
         public byte PopByte()
@@ -66,7 +63,6 @@ namespace HatchlingNet
 
             return data;
         }
-
 
         public Int16 PopInt16()
         {

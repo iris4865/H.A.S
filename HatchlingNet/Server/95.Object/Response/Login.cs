@@ -7,13 +7,13 @@ namespace Server
     {
         public string Id { get; private set; }
         public string Password { get; private set; }
-        public IGameUser User { get; set; }
+        public IGameUser Self { get; set; }
 
         bool isSucess;
 
         public void Initialize(IGameUser user, Packet msg)
         {
-            User = user;
+            Self = user;
             Id = msg.PopString();
             Password = msg.PopString();
         }
@@ -25,8 +25,8 @@ namespace Server
 
             if(isSucess)
             {
-                User.UserID = Id;
-                UserList.Instance.AddUser(User as GameUser);
+                Self.UserID = Id;
+                UserList.Instance.AddUser(Self as GameUser);
             }
         }
 
@@ -38,7 +38,7 @@ namespace Server
             else
                 response = PacketBufferManager.Instance.Pop(PROTOCOL.LoginRej);
 
-            User.SendTo(User.UserID, response);
+            Self.SendTo(Self.UserID, response);
         }
     }
 }

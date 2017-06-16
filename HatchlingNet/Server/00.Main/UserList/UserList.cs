@@ -29,7 +29,11 @@ namespace Server
         {
             lock (syncObj)
             {
-                userList.Remove(user.UserID);
+                try
+                {
+                    userList.Remove(user.UserID);
+                }
+                catch { }
             }
         }
 

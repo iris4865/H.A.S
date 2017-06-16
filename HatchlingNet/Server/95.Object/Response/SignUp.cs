@@ -6,7 +6,7 @@ namespace Server
 {
     public class SignUp : IResponse
     {
-        public IGameUser User { get; set; }
+        public IGameUser Self { get; set; }
         public string Id { get; private set; }
         public string Password { get; private set; }
 
@@ -14,7 +14,7 @@ namespace Server
 
         public void Initialize(IGameUser user, Packet msg)
         {
-            User = user;
+            Self = user;
             Id = msg.PopString();
             Password = msg.PopString();
         }
@@ -40,7 +40,7 @@ namespace Server
             else
                 response = PacketBufferManager.Instance.Pop(PROTOCOL.SignUpRej);
 
-            User.SendTo(User.UserID, response);
+            Self.SendTo(Self.UserID, response);
         }
     }
 }

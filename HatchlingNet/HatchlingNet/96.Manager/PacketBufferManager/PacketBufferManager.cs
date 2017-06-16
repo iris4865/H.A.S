@@ -32,6 +32,12 @@ namespace HatchlingNet
             for (int i = 0; i < poolCapacity; ++i)
             {
                 pool.Push(new Packet());
+                /*
+                Packet p = new Packet();
+                p.Protocol = PROTOCOL.Login;
+                p.Push(12);
+                pool.Push(p);
+                /**/
             }
         }
 
@@ -46,7 +52,7 @@ namespace HatchlingNet
                 }
 
                 Packet packet = pool.Pop();
-                packet.SetProtocol(protocolType);
+                packet.Protocol = protocolType;
 
                 return packet;
             }
@@ -54,6 +60,7 @@ namespace HatchlingNet
 
         public void Push(Packet packet)
         {
+            packet.Clear();
             lock (csBuffer)
             {
                 pool.Push(packet);
