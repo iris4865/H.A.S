@@ -28,8 +28,5 @@ namespace Header
     public enum SERVER_TYPE : Int16
     {
 
-
     }
-
-
 }

@@ -36,9 +36,9 @@ namespace Server
         {
             Packet response;
             if (isSucess)
-                response = PacketBufferManager.Instance.Pop((short)PROTOCOL.SignUpAck);
+                response = PacketBufferManager.Instance.Pop(PROTOCOL.SignUpAck);
             else
-                response = PacketBufferManager.Instance.Pop((short)PROTOCOL.SignUpRej);
+                response = PacketBufferManager.Instance.Pop(PROTOCOL.SignUpRej);
 
             User.SendTo(User.UserID, response);
         }

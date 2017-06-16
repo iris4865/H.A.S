@@ -13,8 +13,6 @@ public class Player5 : MonoBehaviour
     public bool isPlayer = false;
     public static int count = 0;
 
-    bool caninput { get; set; }
-
     //경찰인지 도둑인지 구별...해야한다.
     int player_job = 1; //1 or 2 = 도둑 or 경찰...
 
@@ -31,12 +29,16 @@ public class Player5 : MonoBehaviour
     //public AudioClip sound_3;
     private AudioSource audio;
 
+    int inputKeyCount;
+    bool isMove;
+    KeyCode inputKey;
+    ANIMATION_TYPE activeAnimationType;
+
     void Awake()
     {
         player_animator = GetComponentInChildren<Animator>();
         pressE_key_canvas.SetActive(false);
         player_speed = 2.0f;
-        caninput = true;
     }
 
     void Start()
@@ -55,29 +57,21 @@ public class Player5 : MonoBehaviour
 
         if (isPlayer)
         {
-            if (caninput)
-            {
-                Run();
-                Turn();
-                if (player_job == 1)
-                {
-                    Action();
-                }
-            }
-            NetUpdate();
+            Run();
+            Turn();
+            if (player_job == 1)
+                Action();
+
+            if (isMove)
+                NetUpdate();
         }
     }
 
     void NetUpdate()
     {
         Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.Position);
-        //        msg.Push(NetworkManager.GetInstance.networkID);//id...나중에가면 유저id가 아니라 각 객체마다 서버에서 id를 할당해주고 그걸 기준으로 객체의 정보 통신...
-        //하나의 객체에 여러 상호작용이 일어날수 있으니 나중에 해당 메시지를 보낸 시간도 추가해야할것 같다.
-
-        int remoteid = GetComponent<NetworkObj>().remoteId;
-        Debug.Log("플레안속 네트워크오브젝트 수 : " + NetworkManager.GetInstance.networkObj.Count);
-        //Debug.Log("나 " + remoteid + "위치전송: " );
-        msg.Push(remoteid);
+        msg.Push((short)inputKey);
+        msg.Push();
         msg.Push(transform.position.x, transform.position.y, transform.position.z);
 
         MyVector3 vec;
@@ -154,7 +148,15 @@ public class Player5 : MonoBehaviour
     {
         player_moveVector = Vector3.zero;
         animation_type = (short)ANIMATION_TYPE.Wait;
-        bool isMove = false;
+        isMove = false;
+
+        isMove = Event.current.isKey;
+        if (isMove)
+        {
+            inputKey = Event.current.keyCode;
+            
+        }
+
         if (Input.GetKey(KeyCode.W) == true)
         {
             player_moveVector.z = player_speed;

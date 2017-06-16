@@ -158,7 +158,7 @@ public sealed class NetworkManager : MonoBehaviour
                             Transform userForm = networkObj[networkID].GetComponent<Transform>();
                             userForm.position = position;
                             Quaternion rotation =  userForm.rotation;
-                            rotation.x = msg.PopFloat(); rotation.y = msg.PopFloat(); rotation.z = msg.PopFloat();
+                            rotation.x = 0; rotation.y = msg.PopFloat(); rotation.z = 0;
                             //userForm.Rotate(0, -msg.PopFloat(), 0);
                             userForm.rotation = rotation;
                             Player5 userPlayer = networkObj[networkID].GetComponent<Player5>();

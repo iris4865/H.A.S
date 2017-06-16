@@ -38,7 +38,7 @@ namespace Server
 
         public void Send()
         {
-            Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ObjectNumberingAck);
+            Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.ObjectNumberingAck);
 
             response.Push(objectTag);
             response.Push(vec);
@@ -52,7 +52,7 @@ namespace Server
 
             foreach (var iter in objectList)
             {
-                response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ObjectNumberingAck);
+                response = PacketBufferManager.Instance.Pop(PROTOCOL.ObjectNumberingAck);
 
                 MyVector3 otherPlayerPos; otherPlayerPos.x = 0f; otherPlayerPos.y = 10f; otherPlayerPos.z = 0f;
                 response.Push(objectTag);

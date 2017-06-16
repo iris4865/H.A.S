@@ -41,8 +41,8 @@ namespace Server
          */
         public void OnMessage(byte[] buffer)
         {
-            Packet msg = new Packet(buffer, this);
-            PROTOCOL protocol = (PROTOCOL)msg.PopProtocolType();
+            Packet msg = new Packet(buffer);
+            PROTOCOL protocol = msg.PopProtocolType();
 
             string protocolName = "Server." + protocol.ToString();
             IResponse response = (IResponse)Activator.CreateInstance(Type.GetType(protocolName));
@@ -105,7 +105,7 @@ namespace Server
 
         public void Destroy()
         {
-            Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.PlayerExit);
+            Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.PlayerExit);
             response.Push(GameUserID);
             SendAllWithoutMe(response);
 

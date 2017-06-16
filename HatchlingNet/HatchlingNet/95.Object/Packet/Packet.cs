@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Header;
+using System;
 using System.Text;
 
 
@@ -6,19 +7,18 @@ namespace HatchlingNet
 {
     public class Packet
     {
-        public IPeer Owner { get; private set; }
+        //다른 용도의 이유가 없기 때문에 const로 수정
+        public const int HeaderSize = 2;
+        public const int ProtocolSize = 2;
+
         public byte[] Buffer { get; private set; }
         public int Position { get; private set; }
 
-        public Int16 ProtocolType { get; private set; }
-        public Int16 SendType { get; private set; }
-
-        public Packet(byte[] buffer, IPeer owner)
+        public Packet(byte[] buffer)
         {
-            this.Owner = owner;
-            this.Buffer = buffer;
+            Buffer = buffer;
 
-            Position = Define.HeaderSize;
+            Reallocate();
         }
 
         //인자없는건 버퍼에 메모리 할당하고 인자 있는생성자는 메모리 할당 안한다는걸 주의
@@ -29,28 +29,34 @@ namespace HatchlingNet
             Buffer = new byte[1024];
         }
 
-        public Int16 PopProtocolType()
+        public void Reallocate()
         {
-            return PopInt16();
+            Position = HeaderSize + ProtocolSize;
         }
 
-        public Int16 PeekSendType()
+        public void SetProtocol(PROTOCOL protocolType)
         {
-            Int16 data = BitConverter.ToInt16(this.Buffer, Define.HeaderSize + Define.ProtocolSize);//this.buffer[this.position]에서 Int16만큼 변환
+            Position = HeaderSize;
+            Push((Int16)protocolType);
+        }
 
-            return data;
+        //패킷의 헤더부분에 body의 크기를 입력한다
+        public void RecordSize()
+        {
+            Int16 bodySize = (Int16)(Position - HeaderSize);
+            byte[] header = BitConverter.GetBytes(bodySize);
+            header.CopyTo(Buffer, 0);
         }
 
         public void CopyTo(Packet target)
         {
-            target.SetProtocol(this.ProtocolType);
-            target.OverWrite(this.Buffer, this.Position);
+            Buffer.CopyTo(target.Buffer, Position);
+            target.Position = Position;
         }
 
-        public void OverWrite(byte[] source, int position)
+        public PROTOCOL PopProtocolType()
         {
-            Array.Copy(source, this.Buffer, position);
-            this.Position = position;
+            return (PROTOCOL)PopInt16();
         }
 
         public byte PopByte()
@@ -64,24 +70,24 @@ namespace HatchlingNet
 
         public Int16 PopInt16()
         {
-            Int16 data = BitConverter.ToInt16(this.Buffer, this.Position);//this.buffer[this.position]에서 Int16만큼 변환
-            this.Position += sizeof(Int16);
+            Int16 data = BitConverter.ToInt16(Buffer, Position);
+            Position += sizeof(Int16);
 
             return data;
         }
 
         public Int32 PopInt32()
         {
-            Int32 data = BitConverter.ToInt32(this.Buffer, this.Position);
-            this.Position += sizeof(Int32);
+            Int32 data = BitConverter.ToInt32(Buffer, Position);
+            Position += sizeof(Int32);
 
             return data;
         }
 
         public float PopFloat()
         {
-            float data = BitConverter.ToSingle(this.Buffer, this.Position);
-            this.Position += sizeof(float);
+            float data = BitConverter.ToSingle(Buffer, Position);
+            Position += sizeof(float);
 
             return data;
         }
@@ -89,46 +95,30 @@ namespace HatchlingNet
         public MyVector3 PopVector()
         {
             MyVector3 data;
-            data.x = BitConverter.ToSingle(this.Buffer, this.Position); this.Position += sizeof(float);
-            data.y = BitConverter.ToSingle(this.Buffer, this.Position); this.Position += sizeof(float);
-            data.z = BitConverter.ToSingle(this.Buffer, this.Position); this.Position += sizeof(float);
+            data.x = BitConverter.ToSingle(Buffer, Position); Position += sizeof(float);
+            data.y = BitConverter.ToSingle(Buffer, Position); Position += sizeof(float);
+            data.z = BitConverter.ToSingle(Buffer, Position); Position += sizeof(float);
 
             return data;
         }
 
         public double PopDouble()
         {
-            double data = BitConverter.ToDouble(this.Buffer, this.Position);
-            this.Position += sizeof(double);
+            double data = BitConverter.ToDouble(Buffer, Position);
+            Position += sizeof(double);
 
             return data;
         }
 
         public string PopString()
         {
-            Int16 len = BitConverter.ToInt16(this.Buffer, this.Position);
-            this.Position += sizeof(Int16);
+            Int16 len = BitConverter.ToInt16(Buffer, Position);
+            Position += sizeof(Int16);
 
-            string data = Encoding.UTF8.GetString(this.Buffer, this.Position, len);
-            this.Position += len;
+            string data = Encoding.UTF8.GetString(Buffer, Position, len);
+            Position += len;
 
             return data;
-        }
-
-        public void SetProtocol(Int16 protocolType)
-        {
-            this.ProtocolType = protocolType;
-            this.Position = Define.HeaderSize;            //헤더는 나중에 넣을것이므로 데이터부터 넣을수 있도록 위치를 점프 시켜놓는다
-                                                            //RecordSize호출 위치 참고
-            Push(protocolType);
-        }
-
-        //패킷의 헤더부분에 body의 크기를 입력한다
-        public void RecordSize()
-        {
-            Int16 bodySize = (Int16)(Position - Define.HeaderSize);
-            byte[] header = BitConverter.GetBytes(bodySize);
-            header.CopyTo(Buffer, 0);
         }
 
         public void Push(byte[] data)

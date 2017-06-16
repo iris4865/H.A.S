@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Header;
+using System;
 using System.Collections.Generic;
 
 
@@ -34,7 +35,7 @@ namespace HatchlingNet
             }
         }
 
-        public Packet Pop(Int16 protocolType)
+        public Packet Pop(PROTOCOL protocolType)
         {
             lock (csBuffer)
             {

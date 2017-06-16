@@ -45,21 +45,23 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\Client\HAS\Library\UnityAssemblies\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="95.Object\ConnectorController\Connector\Connector.cs" />
     <Compile Include="95.Object\ConnectorController\ConnectorController.cs" />
     <Compile Include="95.Object\UserToken\UserTokenPool.cs" />
     <Compile Include="96.Manager\NumberingPool\NumberingPool.cs" />
-    <Compile Include="98.Header\MyStruct.cs" />
     <Compile Include="97.Interface\IPeer.cs" />
-    <Compile Include="98.Header\Define.cs" />
     <Compile Include="95.Object\Packet\MessageTranslator\MessageTranslator.cs" />
     <Compile Include="95.Object\Packet\Packet.cs" />
     <Compile Include="96.Manager\PacketBufferManager\PacketBufferManager.cs" />
     <Compile Include="95.Object\UserToken\UserToken.cs" />
     <Compile Include="96.Manager\BufferManager\BufferManager.cs" />
     <Compile Include="00.System\NetworkService\NetworkService.cs" />
+    <Compile Include="98.Header\MyVector3.cs" />
     <Compile Include="98.Header\PROTOCOL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

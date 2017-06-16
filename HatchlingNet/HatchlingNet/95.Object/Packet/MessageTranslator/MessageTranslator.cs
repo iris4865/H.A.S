@@ -32,9 +32,9 @@ namespace HatchlingNet
 
             while (remainBytes > 0)
             {
-                if (currentPosition < Define.HeaderSize)
+                if (currentPosition < Packet.HeaderSize)
                 {
-                    goalPosition = Define.HeaderSize;
+                    goalPosition = Packet.HeaderSize;
                     if (!IsHeaderPacket(buffer))
                         return;
                 }
@@ -53,7 +53,7 @@ namespace HatchlingNet
             if (ReadUntil(buffer))
             {
                 messageSize = GetBodySize();
-                goalPosition = messageSize + Define.HeaderSize;
+                goalPosition = messageSize + Packet.HeaderSize;
                 return true;
             }
             return false;

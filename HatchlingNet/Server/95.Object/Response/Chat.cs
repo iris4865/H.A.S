@@ -24,7 +24,7 @@ namespace Server
 
         public void Send()
         {
-            Packet response = PacketBufferManager.Instance.Pop((short)PROTOCOL.ChatAck);
+            Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.ChatAck);
             response.Push((short)sendType);
             response.Push(text);
             switch(sendType)

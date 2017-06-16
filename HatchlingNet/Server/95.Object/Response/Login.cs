@@ -34,9 +34,9 @@ namespace Server
         {
             Packet response;
             if (isSucess)
-                response = PacketBufferManager.Instance.Pop((short)PROTOCOL.LoginAck);
+                response = PacketBufferManager.Instance.Pop(PROTOCOL.LoginAck);
             else
-                response = PacketBufferManager.Instance.Pop((short)PROTOCOL.LoginRej);
+                response = PacketBufferManager.Instance.Pop(PROTOCOL.LoginRej);
 
             User.SendTo(User.UserID, response);
         }
