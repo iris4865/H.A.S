@@ -1,6 +1,6 @@
 ﻿using HatchlingNet;
 using Header;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace Server
 {
@@ -13,8 +13,8 @@ namespace Server
          * (갯수만큼 하는 방법)
          */
         int remoteId;
-        MyVector3 position;
-        short animationType;
+        int count;
+        Dictionary<short, short> inputEvent = new Dictionary<short, short>();
         float mouseAxis;
 
         public IGameUser Self { get; set; }
@@ -23,8 +23,10 @@ namespace Server
         {
             Self = user;
             remoteId = msg.PopInt32();
-            position = msg.PopVector();
-            animationType = msg.PopInt16();
+
+            count = msg.PopInt32();
+            for (int i = 0; i <= count; i++)
+                inputEvent[msg.PopInt16()] = msg.PopInt16();
             mouseAxis = msg.PopFloat();
         }
 
@@ -35,10 +37,16 @@ namespace Server
         public void Send()
         {
             Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.PositionAck);
+
             response.Push(remoteId);
-            response.Push(position);
-            response.Push(animationType);
+            response.Push(count);
+            foreach (var playerEvent in inputEvent)
+            {
+                response.Push(playerEvent.Key);
+                response.Push(playerEvent.Value);
+            }
             response.Push(mouseAxis);
+
             Self.SendAllWithoutMe(response);
         }
     }

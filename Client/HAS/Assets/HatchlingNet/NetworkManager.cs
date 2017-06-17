@@ -211,15 +211,18 @@ public sealed class NetworkManager : MonoBehaviour
                     int remoteID = msg.PopInt32();
                     lock (networkObj) //thread 안정적으로 사용하려고 
                     {
-                        if (networkObj.ContainsKey(remoteID) == true)
+                        if (networkObj.ContainsKey(remoteID))
                         {
-                            //Transform userForm = networkObj[remoteID].GetComponent<Transform>();
-
                             Player5 userPlayer = networkObj[remoteID].GetComponent<Player5>();
-                            userPlayer.transform.position = msg.PopVector().Vector;
-                            userPlayer.currentAnimation = (ANIMATION_TYPE)msg.PopInt16();
+                            int count = msg.PopInt32();
+                            for (int i = 0; i < count; i++)
+                            {
+                                KeyCode key = (KeyCode)msg.PopInt16();
 
-                            userPlayer.Turn(msg.PopFloat());
+                                bool press = msg.PopInt16() == 1;
+                                userPlayer.inputEventKey[key] = press;
+                            }
+                            userPlayer.mouseAxis = msg.PopFloat();
                         }
                     }
                 }

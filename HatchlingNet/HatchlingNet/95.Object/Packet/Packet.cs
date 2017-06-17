@@ -56,14 +56,6 @@ namespace HatchlingNet
             target.Position = Position;
         }
 
-        public byte PopByte()
-        {
-            byte data = Buffer[Position];
-            Position += sizeof(byte);
-
-            return data;
-        }
-
         public Int16 PopInt16()
         {
             Int16 data = BitConverter.ToInt16(Buffer, Position);
@@ -121,11 +113,6 @@ namespace HatchlingNet
         {
             data.CopyTo(Buffer, Position);
             Position += data.Length;
-        }
-
-        public void Push(byte data)
-        {
-            Push(BitConverter.GetBytes(data));
         }
 
         public void Push(Int16 data)
