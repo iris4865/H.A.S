@@ -1,17 +1,10 @@
-﻿using System;
+﻿using Management;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WpfServer
 {
@@ -20,6 +13,7 @@ namespace WpfServer
         StateObserver stateObserver = StateObserver.Instance;
 
         List<StateMenuItem> stateMenuInstance = new List<StateMenuItem>();
+        ServerMonitor monitor = ServerMonitor.Instance;
 
         public ServerStateDisplay()
         {
@@ -29,23 +23,19 @@ namespace WpfServer
 
         void StateMenuInitialize()
         {
-            StateMenuItem cpuUsageMenu = new StateMenuItem("CPU Usage", "cpuRate", stateObserver);
-            stateMenuInstance.Add(cpuUsageMenu);
-
-            StateMenuItem ramUsageMenu = new StateMenuItem("RAM Usage", "ramUsage", stateObserver);
-            stateMenuInstance.Add(ramUsageMenu);
-
-            StateMenuItem ramTotalMenu = new StateMenuItem("Total Ram", "ramTotal", stateObserver);
-            stateMenuInstance.Add(ramTotalMenu);
-            
+            foreach (string name in monitor.Names)
+            {
+                //StateMenuItem UsageMenu = new StateMenuItem(name, name, stateObserver);
+                stateMenuInstance.Add(new StateMenuItem(name, name, stateObserver));
+            }
 
             LeftStateList.ItemsSource = stateMenuInstance;
         }
 
-        private void RealtimeValueGraphBindingToObserver(object sender, RoutedEventArgs e)
+        void RealtimeValueGraphBindingToObserver(object sender, RoutedEventArgs e)
         {
             bool isGraphVisualizer = sender is GraphVisualizer;
-            FrameworkElement realtimeValueGraph 
+            FrameworkElement realtimeValueGraph
                 = isGraphVisualizer ? sender as GraphVisualizer : sender as FrameworkElement;
 
             StateMenuItem nowMenuInstance = realtimeValueGraph.DataContext as StateMenuItem;
@@ -72,7 +62,7 @@ namespace WpfServer
             };
             widthBindingToRealtimeValue.Bindings.Add(maxWidthBinding);
 
-            widthBindingToRealtimeValue.Converter 
+            widthBindingToRealtimeValue.Converter
                 = new PercentageValueToGraphWidthConverter();
 
             if (isGraphVisualizer)
@@ -86,39 +76,48 @@ namespace WpfServer
         {
             Run realtimeValueText = sender as Run;
 
-            if (realtimeValueText.Text.CompareTo("cpuRate") == 0)
+            ServerMonitor monitor = ServerMonitor.Instance;
+
+
+            foreach (string name in monitor.Names)
             {
-                Binding b = new Binding("cpuRate")
+                if (realtimeValueText.Text.CompareTo(name) == 0)
                 {
-                    Path = new PropertyPath("cpuRate"),
-                    Source = stateObserver,
-                    StringFormat = "{0:F2}%",
-                    Mode = BindingMode.OneWay
-                };
-                realtimeValueText.SetBinding(Run.TextProperty, b);
+                    Binding b = new Binding(name)
+                    {
+                        Path = new PropertyPath(name),
+                        Source = stateObserver,
+                        StringFormat = "{0:F2}%",
+                        Mode = BindingMode.OneWay
+                        
+                    };
+                    realtimeValueText.SetBinding(Run.TextProperty, b);
+                }
             }
-            else if (realtimeValueText.Text.CompareTo("ramUsage") == 0)
-            {
-                Binding b = new Binding("ramUsage")
-                {
-                    Path = new PropertyPath("ramUsage"),
-                    Source = stateObserver,
-                    StringFormat = "{0:F2}%",
-                    Mode = BindingMode.OneWay
-                };
-                realtimeValueText.SetBinding(Run.TextProperty, b);
-            }
-            else if (realtimeValueText.Text.CompareTo("ramTotal") == 0)
-            {
-                Binding b = new Binding("ramTotal")
-                {
-                    Path = new PropertyPath("ramTotal"),
-                    Source = stateObserver,
-                    StringFormat = "{0:F2}MB",
-                    Mode = BindingMode.OneWay
-                };
-                realtimeValueText.SetBinding(Run.TextProperty, b);
-            }
+
+
+            //if (realtimeValueText.Text.CompareTo("CpuUsage") == 0)
+            //{
+            //    Binding b = new Binding("CpuUsage")
+            //    {
+            //        Path = new PropertyPath("CpuUsage"),
+            //        Source = stateObserver,
+            //        StringFormat = "{0:F2}%",
+            //        Mode = BindingMode.OneWay
+            //    };
+            //    realtimeValueText.SetBinding(Run.TextProperty, b);
+            //}
+            //else if (realtimeValueText.Text.CompareTo("MemoryUsage") == 0)
+            //{
+            //    Binding b = new Binding("MemoryUsage")
+            //    {
+            //        Path = new PropertyPath("MemoryUsage"),
+            //        Source = stateObserver,
+            //        StringFormat = "{0:F2}%",
+            //        Mode = BindingMode.OneWay
+            //    };
+            //    realtimeValueText.SetBinding(Run.TextProperty, b);
+            //}
         }
     }
 }

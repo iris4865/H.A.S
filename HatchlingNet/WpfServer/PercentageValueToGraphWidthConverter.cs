@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace WpfServer
@@ -17,9 +11,9 @@ namespace WpfServer
             const int index_realtimeValue = 0;
             const int index_MaxWidthOfGraph = 1;
             
-            float percentageValue = (float)values[index_realtimeValue] / (float)100;
+            float percentageValue = (float)values[index_realtimeValue] / 100;
 
-            if(percentageValue < (float)0 || percentageValue > (float)1)
+            if(percentageValue < 0 || percentageValue > 1)
                 throw new ArgumentException("Getted percentageValue was " + percentageValue + ".");
 
             double maxWidthOfGraph = (double)values[index_MaxWidthOfGraph];

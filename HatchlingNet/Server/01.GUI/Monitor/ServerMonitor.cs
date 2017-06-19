@@ -8,29 +8,28 @@ namespace Management
 {
     public class ServerMonitor
     {
-        private static readonly Lazy<ServerMonitor> instance = new Lazy<ServerMonitor>(() => new ServerMonitor());
+        static readonly Lazy<ServerMonitor> instance = new Lazy<ServerMonitor>(() => new ServerMonitor());
         public static ServerMonitor Instance => instance.Value;
 
-        readonly Dictionary<string, Func<float>> monitorList = new Dictionary<string, Func<float>>();
+        readonly Dictionary<string, MonitorElement> monitorList = new Dictionary<string, MonitorElement>();
 
-        readonly PerformanceCounter cpuTotalUsage = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-        readonly PerformanceCounter memUsage = new PerformanceCounter("Process", "Working Set", Process.GetCurrentProcess().ProcessName);
+        readonly PerformanceCounter cpuTotalUsage = new PerformanceCounter("Processor", "% Processor Time", "_Total", true);
+        readonly PerformanceCounter memUsage = new PerformanceCounter("Memory", "Available MBytes");
         readonly ComputerInfo info = new ComputerInfo();
 
-        public float CpuUsage() => cpuTotalUsage.NextValue();
-        public float MemoryUsage() => memUsage.NextValue() / 1024 / 1024 / 8;
-        public float MemoryTotal() => (float)info.TotalPhysicalMemory / 1024 / 1024 / 1024;
-        
+        float CpuUsage() => cpuTotalUsage.NextValue();
+        float MemoryUsage() => MemoryTotal() - memUsage.NextValue();
+        float MemoryTotal() => (float)info.TotalPhysicalMemory / 1024 / 1024;
+
         public string[] Names => monitorList.Keys.ToArray();
-        public float this[string name] => monitorList[name].Invoke();
+        public MonitorElement this[string name] => monitorList[name];
 
-        private ServerMonitor()
+        ServerMonitor()
         {
-            AddList(CpuUsage);
-            AddList(MemoryUsage);
-            AddList(MemoryTotal);
+            AddList(CpuUsage, 100, "%");
+            AddList(MemoryUsage, MemoryTotal(), "MB");
         }
-        void AddList(Func<float> funcHandler) => monitorList[funcHandler.Method.Name] = funcHandler;
 
+        void AddList(Func<float> getMethod, float totalValue, string unit) => monitorList[getMethod.Method.Name] = new MonitorElement(getMethod, totalValue, unit);
     }
 }

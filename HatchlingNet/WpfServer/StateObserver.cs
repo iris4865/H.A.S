@@ -1,64 +1,63 @@
 ﻿using Management;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Threading;
-using System.Windows.Data;
-using System.Globalization;
-using System.Runtime.Remoting.Contexts;
-using System.Diagnostics;
 
 namespace WpfServer
 {
     public class StateObserver : INotifyPropertyChanged
     {
-        private static readonly Lazy<StateObserver> instance 
+        static readonly Lazy<StateObserver> instance
             = new Lazy<StateObserver>(() => new StateObserver());
 
         public static StateObserver Instance => instance.Value;
 
         DispatcherTimer refresher = new DispatcherTimer();
-        ServerMonitor serverState = ServerMonitor.Instance;
+        readonly ServerMonitor serverState = ServerMonitor.Instance;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private static double periodValueRefreshing = 500;
+        float serverCPURate;
+        float serverRAMUsage;
+        //readonly Dictionary<string, float> serverStateElement = new Dictionary<string, float>();
 
-        private float serverCPURate = (float)0.0;
-        private float serverRAMUsage = (float)0.0;
-        private float serverRAMTotal = (float)0.0;
+        volatile bool updaterIsOn;
 
-        volatile private bool updaterIsOn = false;
-
-        private StateObserver()
+        public static double PeriodValueRefreshing { get; private set; }
+        StateObserver()
         {
             refresher.Tick += UpdateServerState;
+            PeriodValueRefreshing = 500;
         }
 
-        private void OnPropertyChanged(String Property)
+        void OnPropertyChanged(String Property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(Property));
         }
 
-        public float cpuRate{
-            private set
-            {
-                serverCPURate = value;
-                OnPropertyChanged("cpuRate");
-            }
+        public float CpuUsage
+        {
             get
             {
                 if (!updaterIsOn)
                     UpdaterOn();
 
+                //return serverStateElement["CpuRate"];
                 return serverCPURate;
+            }
+            private set
+            {
+                serverCPURate = value;
+                OnPropertyChanged("CpuUsage");
             }
         }
 
-        public float ramUsage
+        public float MemoryUsage
         {
             private set
             {
                 serverRAMUsage = value;
-                OnPropertyChanged("ramUsage");
+                OnPropertyChanged("MemoryUsage");
             }
             get
             {
@@ -69,34 +68,9 @@ namespace WpfServer
             }
         }
 
-        public float ramTotal
-        {
-            private set
-            {
-                serverRAMTotal = value;
-                OnPropertyChanged("ramTotal");
-            }
-            get
-            {
-                if (!updaterIsOn)
-                    UpdaterOn();
-
-                return serverRAMTotal;
-            }
-        }
-
-        public static double Period
-        {
-            private set { periodValueRefreshing = value; }
-            get
-            {
-                return periodValueRefreshing;
-            }
-        }
-        
         void UpdaterOn()
         {
-            refresher.Interval = TimeSpan.FromMilliseconds(Period);
+            refresher.Interval = TimeSpan.FromMilliseconds(PeriodValueRefreshing);
             refresher.Start();
             updaterIsOn = true;
         }
@@ -109,9 +83,11 @@ namespace WpfServer
 
         void UpdateServerState(object sender, EventArgs e)
         {
-            cpuRate = serverState.CpuUsage();
-            ramUsage = serverState.MemoryUsage();
-            ramTotal = serverState.MemoryTotal();
+            //foreach(string name in serverState.Names)
+            //    serverStateElement[name] = serverState[name].Percentage;
+
+            CpuUsage = serverState["CpuUsage"].Percentage;
+            MemoryUsage = serverState["MemoryUsage"].Percentage;
         }
     }
 }

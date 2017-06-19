@@ -30,7 +30,7 @@ namespace WpfServer
             {
                 From = g.Width,
                 To = (double?)e.NewValue,
-                Duration = TimeSpan.FromMilliseconds(StateObserver.Period),
+                Duration = TimeSpan.FromMilliseconds(StateObserver.PeriodValueRefreshing),
                 AccelerationRatio = 0.5,
                 DecelerationRatio = 0.5
             };
