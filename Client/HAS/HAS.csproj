@@ -91,6 +91,7 @@
     <Compile Include="Assets\HatchlingNet\NetworkManager.cs" />
     <Compile Include="Assets\HatchlingNet\PROTOCOL.cs" />
     <Compile Include="Assets\Scripts\Item_Spawn.cs" />
+    <Compile Include="Assets\Scripts\NPC_Spawn.cs" />
     <Compile Include="Assets\Scripts\NetworkObj.cs" />
     <Compile Include="Assets\Scripts\Play_camera.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />

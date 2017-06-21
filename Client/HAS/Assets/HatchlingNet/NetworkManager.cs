@@ -149,7 +149,7 @@ public sealed class NetworkManager : MonoBehaviour
                 {
                     int current_user_count = msg.PopInt32();
 
-                    GameObject waitdisplay = GameObject.Find("wait_diaplay");
+                    GameObject waitdisplay = GameObject.Find("Wait");
                     game_wait_click wait_script = waitdisplay.GetComponent<game_wait_click>();
                     
                     wait_script.user_count = current_user_count;
