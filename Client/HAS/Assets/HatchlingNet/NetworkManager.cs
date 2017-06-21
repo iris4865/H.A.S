@@ -125,15 +125,12 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.LoginAck:
                 {
+                    SceneManager.LoadScene(3);
+
                     Packet sendmsg = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoom);
                     sendmsg.Push(0);
 
                     Send(sendmsg);
-
-
-                    SceneManager.LoadScene(3);
-
- 
                 }
                 break;
 
@@ -146,11 +143,18 @@ public sealed class NetworkManager : MonoBehaviour
             case PROTOCOL.JoinRoomRes:
                 {
                     int current_user_count = msg.PopInt32();
+                    Debug.Log("유저수 : " + current_user_count);
+                    //GameObject waitdisplay = GameObject.Find("wait_diaplay_user_count");
 
-                    GameObject waitdisplay = GameObject.Find("wait_diaplay");
-                    game_wait_click wait_script = waitdisplay.GetComponent<game_wait_click>();
-                    
+                    //game_wait_click wait_script = waitdisplay.GetComponent<game_wait_click>();
+
+                    GameObject g = GameObject.Find("Wait_test");
+                    Debug.Log("위치 : " + g.transform.position.x);
+                    game_wait_click wait_script = g.GetComponent<game_wait_click>();
+
                     wait_script.user_count = current_user_count;
+
+                    //wait_script.user_count = current_user_count;
                 }
                 break;
 

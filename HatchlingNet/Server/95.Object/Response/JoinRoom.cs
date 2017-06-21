@@ -31,7 +31,7 @@ namespace Server
 
             if (userCount < 4)
             {
-                UserList.Instance.roomUserCount++;
+                userCount = ++UserList.Instance.roomUserCount;
                 response = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoomRes);
                 response.Push(userCount);
             }
