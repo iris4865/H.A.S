@@ -125,17 +125,15 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.LoginAck:
                 {
-                    for (int i = 0; i < 4; i++)
-                    {
+                    Packet sendmsg = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoom);
+                    sendmsg.Push(0);
 
-                    }
+                    Send(sendmsg);
+
 
                     SceneManager.LoadScene(3);
 
-                    Packet sendmsg = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoom);
-                    sendmsg.Push(0);
-                    
-                    Send(msg);
+ 
                 }
                 break;
 

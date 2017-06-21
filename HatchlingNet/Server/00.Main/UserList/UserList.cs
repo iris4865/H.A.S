@@ -6,6 +6,9 @@ namespace Server
 {
     public sealed class UserList
     {
+        public int roomUserCount = 0;//임시로 방인원 셀려고 만듬 6월21일
+
+
         static readonly Lazy<UserList> instance = new Lazy<UserList>(() => new UserList());
         public static UserList Instance => instance.Value;
 
