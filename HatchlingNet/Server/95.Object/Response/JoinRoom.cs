@@ -10,9 +10,8 @@ namespace Server
         public IGameUser Self { get; set; }
         int roomNumber;
 
-        PROTOCOL responseState;
         UserList list = UserList.Instance;
-        List<int> playerPosition;
+        List<int> playerPositionList;
         List<int> itemList;
 
         public void Initialize(IGameUser user, Packet msg)
@@ -23,71 +22,72 @@ namespace Server
 
         public void Process()
         {
-            int userCount = list.roomUserList.Count + 1;
-            if (userCount < 4)
+            list.roomUserList.Add(Self.UserID);
+            int userCount = list.roomUserList.Count;
+
+            if (userCount == 4)
             {
-                list.roomUserList.Add(Self.UserID);
-                responseState = PROTOCOL.JoinRoomRes;
-            }
-            else if (userCount == 4)
-            {
-                //int allPlayerCount = 20 + userCount;
                 int playercount = 4;
-                int nonPlayerCount = 20;
                 int itemCount = 3;
 
-                Random rand = new Random();
-                //rand.Next(0, );
-
-                playerPosition = new List<int>(playercount);
+                playerPositionList = new List<int>(playercount);
                 itemList = new List<int>(itemCount);
 
-                for (int i = 0; i < playercount; i++)
-                {
-                    playerPosition[i] = rand.Next(0, playercount);
-                    if (playerPosition.Contains(i))
-                        i--;
-                }
+                FillwithRandom(playerPositionList);
+                FillwithRandom(itemList);
+            }
+        }
 
-                for (int i = 0; i < itemCount; i++)
-                {
-                    itemList[i] = rand.Next(0, itemCount);
-                    if (itemList.Contains(i))
-                        i--;
-                }
+        void FillwithRandom(List<int> objectList)
+        {
+            for (int i = 0; i < objectList.Capacity; i++)
+            {
+                int value = new Random().Next(0, objectList.Capacity);
+
+                if (objectList.Contains(value))
+                    i--;
+                else
+                    objectList.Add(value);
             }
         }
 
         public void Send()
         {
-            Packet response;
             int userCount = list.roomUserList.Count;
 
-            if (userCount < 4)
+            SendUserCount();
+            if (userCount == 4)
             {
-                response = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoomRes);
-                response.Push(userCount);
-            }
-            else if (userCount == 4)
-            {
-                response = PacketBufferManager.Instance.Pop(PROTOCOL.GameStart);
-                for( int i=0; i< playerPosition.Count; i++)
+                Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.GameStart);
+
+                for (int i = 0; i < playerPositionList.Count; i++)
                 {
-                    response.Push(playerPosition[i]);
+                    response.Push(playerPositionList[i]);
                     response.Push(list.roomUserList[i]);
                 }
 
                 for (int i = 0; i < itemList.Count; i++)
-                {
                     response.Push(itemList[i]);
-                }
+
+                Self.SendAll(response);
+            }
+        }
+
+        void SendUserCount()
+        {
+            Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoomRes);
+            int count = list.roomUserList.Count;
+
+            if (count > 4)
+            {
+                response.Push(-1);
+                Self.SendTo(Self.UserID, response);
             }
             else
             {
-                response = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoomRes);
-                response.Push(-1);
+                response.Push(count);
+                Self.SendAll(response);
             }
-            Self.SendAll(response);
         }
     }
 }
