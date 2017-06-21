@@ -189,6 +189,7 @@ public class Player5 : MonoBehaviour
 
     void NetUpdate()
     {
+
         if (hasEvent)
             Send();
         else if (!Equals(mouseAxis, prevAxis))

@@ -135,7 +135,7 @@ public sealed class NetworkManager : MonoBehaviour
                     Packet sendmsg = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoom);
                     sendmsg.Push(0);
                     
-                    Send(msg);
+                    Send(sendmsg);
                 }
                 break;
 
@@ -153,6 +153,9 @@ public sealed class NetworkManager : MonoBehaviour
                     game_wait_click wait_script = waitdisplay.GetComponent<game_wait_click>();
                     
                     wait_script.user_count = current_user_count;
+
+                    if (current_user_count == 4)
+                        SceneManager.LoadScene(4);
                 }
                 break;
 

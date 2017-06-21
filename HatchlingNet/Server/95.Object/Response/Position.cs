@@ -12,7 +12,7 @@ namespace Server
          * 마우스 각도
          * (갯수만큼 하는 방법)
          */
-        int remoteId;
+        string remoteId;
         int count;
         Dictionary<short, short> inputEvent = new Dictionary<short, short>();
         float mouseAxis;
@@ -22,7 +22,7 @@ namespace Server
         public void Initialize(IGameUser user, Packet msg)
         {
             Self = user;
-            remoteId = msg.PopInt32();
+            remoteId = msg.PopString();
 
             count = msg.PopInt32();
             for (int i = 0; i <= count; i++)
