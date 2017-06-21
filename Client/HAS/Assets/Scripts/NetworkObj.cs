@@ -3,6 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkObj : MonoBehaviour {
-    public int remoteId { get; set; }
+    public string remoteId { get; set; }
 
 }

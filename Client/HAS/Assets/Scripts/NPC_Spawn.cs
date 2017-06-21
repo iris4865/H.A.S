@@ -6,6 +6,10 @@ public class NPC_Spawn : MonoBehaviour {
 
     public GameObject npc;
 
+    public GameObject[] point;
+
+    public GameObject[] npc_numbering;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -15,4 +19,12 @@ public class NPC_Spawn : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    void create_npc()
+    {
+        for(int i = 0; i < 20; i++)
+        {
+            npc_numbering[i] = Instantiate(npc, point[i].transform.position, transform.rotation);
+        }
+    }
 }

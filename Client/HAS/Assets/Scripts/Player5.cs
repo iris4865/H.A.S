@@ -16,7 +16,7 @@ public class Player5 : MonoBehaviour
     public static int count;
 
     //경찰인지 도둑인지 구별...해야한다.
-    int player_job = 1; //1 or 2 = 도둑 or 경찰...
+    public int player_job = 1; //1 or 2 = 도둑 or 경찰...
 
     public GameObject pressE_key_canvas;
 

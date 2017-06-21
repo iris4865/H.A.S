@@ -51,7 +51,7 @@ public sealed class NetworkManager : MonoBehaviour
     }
 
     HatchlingNetUnityService gameserver;
-    public Dictionary<int, GameObject> networkObj;
+    public Dictionary<string, GameObject> networkObj;
     object csNetworkObj = new object();
     public Queue<string> numberingWaitObjTag { get; set; }
     object csNumberingWaitObj = new object();
@@ -66,7 +66,7 @@ public sealed class NetworkManager : MonoBehaviour
         this.gameserver = gameObject.AddComponent<HatchlingNetUnityService>();
         this.gameserver.callbackAppStatusChanged += CallStatusChange;
         this.gameserver.callbackAppReceiveMessage += CallMessage;
-        networkObj = new Dictionary<int, GameObject>();
+        networkObj = new Dictionary<string, GameObject>();
         numberingWaitObjTag = new Queue<string>();
 
 
@@ -76,7 +76,7 @@ public sealed class NetworkManager : MonoBehaviour
     void Start()
     {
         //Debug.Log("ㅇㅇㅁ");
-        userID = "test" + Random.Range(1, 100);
+        //userID = "test" + Random.Range(1, 100);
 
         Connect();
     }
@@ -158,79 +158,84 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.GameStart:
                 {
+                    for(int i = 0; i < 2; i++)
+                    {
+                        int user_position = msg.PopInt32();
+                        string msgUserLoginID = msg.PopString();
+
+
+                        GameObject objSpawner = GameObject.Find("Player_Spawn");
+                        Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
+
+                        //캐릭터 생성
+                        GameObject myPlayer = componentSpawner.CreateMyPlayer(1, user_position);
+                        //myPlayer.GetComponent<Player5>().headCamera.SetActive(false); //디폴트를 비활성화 시킴 
+                        NetworkObj objNetInfo = myPlayer.GetComponent<NetworkObj>();
+                        objNetInfo.remoteId = msgUserLoginID;
+
+                        lock (csNetworkObj)
+                        {
+                            networkObj.Add(objNetInfo.remoteId, myPlayer);
+                            print("추가됨");
+                        }
+
+                        if (userID == objNetInfo.remoteId)
+                        {
+                            myPlayer.GetComponent<Player5>().isPlayer = true;
+                            myPlayer.GetComponent<Player5>().main_camera.gameObject.SetActive(true);
+                        }
+                    }
+                    for (int i = 0; i < 2; i++)
+                    {
+                        int user_position = msg.PopInt32();
+                        string msgUserLoginID = msg.PopString();
+
+
+                        GameObject objSpawner = GameObject.Find("Player_Spawn");
+                        Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
+
+                        //캐릭터 생성
+                        GameObject myPlayer = componentSpawner.CreateMyPlayer(2, user_position);
+                        //myPlayer.GetComponent<Player5>().headCamera.SetActive(false); //디폴트를 비활성화 시킴 
+                        NetworkObj objNetInfo = myPlayer.GetComponent<NetworkObj>();
+                        objNetInfo.remoteId = msgUserLoginID;
+
+                        lock (csNetworkObj)
+                        {
+                            networkObj.Add(objNetInfo.remoteId, myPlayer);
+                            print("추가됨");
+                        }
+
+                        if (userID == objNetInfo.remoteId)
+                        {
+                            myPlayer.GetComponent<Player5>().isPlayer = true;
+                            myPlayer.GetComponent<Player5>().main_camera.gameObject.SetActive(true);
+                        }
+                    }
+
+                    for(int i = 0; i < 3; i++)
+                    {
+                        int item_position = msg.PopInt32();
+
+                        GameObject itemSpawner = GameObject.Find("Item_Spawn");
+                        Item_Spawn componentSpawner = itemSpawner.GetComponent<Item_Spawn>();
+                        
+                        componentSpawner.item_create(item_position);
+                    }
 
                 }
                 break;
 
             case PROTOCOL.ObjectNumberingAck:
                 {
-                    string numberingTag = msg.PopString();
-
-                    lock (csNumberingWaitObj)
-                    {
-                        //태그...큐에있는거랑 일치하나 검사 해줘야할것같긴 한디
-                        //numberingTag = numberingWaitObjTag.Dequeue();
-                    }
-
-                    Vector3 position = msg.PopVector().Vector;
-                    int remoteID = msg.PopInt32();
-                    string msgUserLoginID = msg.PopString();
-
-                    if (msgUserLoginID == userID)
-                    {
-                        print("내가 만듬: " + msgUserLoginID);
-                        //numberingWaitObjTag.Dequeue();
-                    }
-
-                    GameObject objSpawner = GameObject.Find("Player_Spawn");
-                    Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
-
-                    //캐릭터 생성
-                    switch (numberingTag)
-                    {
-                        case "Identify":
-                            GameObject myPlayer = componentSpawner.CreateMyPlayer(position);
-                            //myPlayer.GetComponent<Player5>().headCamera.SetActive(false); //디폴트를 비활성화 시킴 
-                            NetworkObj objNetInfo = myPlayer.GetComponent<NetworkObj>();
-                            objNetInfo.remoteId = remoteID;
-
-                            lock (csNetworkObj)
-                            {
-                                networkObj.Add(objNetInfo.remoteId, myPlayer);
-                                print("추가됨");
-                            }
-
-                            if (userID == msgUserLoginID)
-                            {
-                                myPlayer.GetComponent<Player5>().isPlayer = true;
-                                myPlayer.GetComponent<Player5>().main_camera.gameObject.SetActive(true);
-                                //npc나 remotePlayer의 경우에는 각각 별도의 스크립트를 만들어서 붙여주는게 낫지 않나?
-                                //그래야 로직 분리도 되고...
-                            }
-
-                            break;
-
-                    }
-
-
-
-                    //PacketBufferManager.Push(msg);
-                    //msg = PacketBufferManager.Pop((short)PROTOCOL.CreateObjReq, (short)SEND_TYPE.Single);
-                    //msg.Push(networkID);
-                    //msg.Push(obj.tag);//tag는 유니티 내에서 각 객체에 설정된거임...
-                    //                  //자세한건 유니티 실행 후  윈도우탭/inspector탭/  을 참고
-                    //msg.Push(transform.position.x, transform.position.y, transform.position.z);
-
-                    //Send(msg);
-
-
+                    
                 }
 
                 break;
 
             case PROTOCOL.PositionAck:
                 {
-                    int remoteID = msg.PopInt32();
+                    string remoteID = msg.PopString();
                     lock (networkObj) //thread 안정적으로 사용하려고 
                     {
                         if (networkObj.ContainsKey(remoteID))
@@ -251,7 +256,7 @@ public sealed class NetworkManager : MonoBehaviour
                 break;
             case PROTOCOL.PlayerExit:
                 {
-                    int remoteID = msg.PopInt32();
+                    string remoteID = msg.PopString();
                     lock (csNetworkObj)
                     {
                         Destroy(networkObj[remoteID]);
