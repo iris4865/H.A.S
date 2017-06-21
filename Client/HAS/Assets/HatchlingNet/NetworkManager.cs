@@ -147,10 +147,12 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.JoinRoomRes:
                 {
+                    int current_user_count = msg.PopInt32();
+
                     GameObject waitdisplay = GameObject.Find("wait_diaplay");
                     game_wait_click wait_script = waitdisplay.GetComponent<game_wait_click>();
-
                     
+                    wait_script.user_count = current_user_count;
                 }
                 break;
 

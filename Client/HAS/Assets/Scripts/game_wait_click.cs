@@ -8,7 +8,7 @@ public class game_wait_click : MonoBehaviour {
 
     object networkManager;
 
-    int user_count = 0;
+    public int user_count = 0;
 
     public Image[] user = new Image[4];
 
