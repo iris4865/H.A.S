@@ -8,7 +8,6 @@ namespace Server
     {
         public List<string> roomUserList = new List<string>();
 
-
         static readonly Lazy<UserList> instance = new Lazy<UserList>(() => new UserList());
         public static UserList Instance => instance.Value;
 
