@@ -130,13 +130,33 @@ public sealed class NetworkManager : MonoBehaviour
 
                     }
 
-                    SceneManager.LoadScene(4);
+                    SceneManager.LoadScene(3);
+
+                    Packet sendmsg = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoom);
+                    sendmsg.Push(0);
+                    
+                    Send(msg);
                 }
                 break;
 
             case PROTOCOL.LoginRej:
                 {
                     //다시입력하라고
+                }
+                break;
+
+            case PROTOCOL.JoinRoomRes:
+                {
+                    GameObject waitdisplay = GameObject.Find("wait_diaplay");
+                    game_wait_click wait_script = waitdisplay.GetComponent<game_wait_click>();
+
+                    
+                }
+                break;
+
+            case PROTOCOL.GameStart:
+                {
+
                 }
                 break;
 
@@ -234,7 +254,6 @@ public sealed class NetworkManager : MonoBehaviour
                     {
                         Destroy(networkObj[remoteID]);
                         networkObj.Remove(remoteID);
-                        print("추가됨");
                     }
                 }
                 break;

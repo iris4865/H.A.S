@@ -45,7 +45,7 @@ public class Player5 : MonoBehaviour
 
     void Start()
     {
-
+        audio = this.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -182,8 +182,8 @@ public class Player5 : MonoBehaviour
         }
         else
         {
-            //collider.isTrigger = false;
-            //player_animator.SetBool("isaction", false);
+            footCollider.isTrigger = false;
+            player_animator.SetBool("isaction", false);
         }
     }
 

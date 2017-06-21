@@ -8,6 +8,8 @@ namespace Header
         Login = 1000, LoginAck, LoginRej,
         SignUp = 1100, SignUpAck, SignUpRej,
 
+        JoinRoom = 1200, JoinRoomRes, GameStart,
+
         Chat = 2000, ChatAck,
         Position = 3000, PositionAck,
         CreateObj = 4000, CreateObjAck, CreateObjRej,
