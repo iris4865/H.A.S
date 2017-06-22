@@ -41,6 +41,7 @@ namespace Server
             {
                 Self.UserID = Id;
                 UserList.Instance.AddUser(Self as GameUser);
+                Trace.WriteLine($"{Self.UserID} is Login.");
             }
 
         }

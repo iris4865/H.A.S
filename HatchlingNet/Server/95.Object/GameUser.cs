@@ -34,7 +34,7 @@ namespace Server
             }
             catch
             {
-                Trace.WriteLine($"ip: {userToken.socket.LocalEndPoint} user: {UserID} protocol: {protocol.ToString()}");
+                Trace.WriteLine($"ip: {userToken.socket.RemoteEndPoint} user: {UserID} protocol: {protocol.ToString()}");
             }
         }
 
