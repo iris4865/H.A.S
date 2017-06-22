@@ -8,6 +8,8 @@ namespace Server
     public class RoomInfo
     {
         List<GameUser> userList = new List<GameUser>();
+        List<bool> userAlive = new List<bool>();
+        List<bool> itemAlive = new List<bool>();
 
         public bool IsFully => userList.Count == 4;
         public int Count => userList.Count;
