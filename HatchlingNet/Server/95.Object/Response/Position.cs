@@ -13,6 +13,8 @@ namespace Server
          * (갯수만큼 하는 방법)
          */
         string remoteId;
+        MyVector3 position;
+        MyVector3 rotation;
         int count;
         Dictionary<short, short> inputEvent = new Dictionary<short, short>();
         float mouseAxis;
@@ -24,10 +26,13 @@ namespace Server
             Self = user;
             remoteId = msg.PopString();
 
+            position = msg.PopVector();
+            rotation = msg.PopVector();
+
             count = msg.PopInt32();
             for (int i = 0; i <= count; i++)
                 inputEvent[msg.PopInt16()] = msg.PopInt16();
-            mouseAxis = msg.PopFloat();
+            //mouseAxis = msg.PopFloat();
         }
 
         public void Process()
@@ -39,13 +44,17 @@ namespace Server
             Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.PositionAck);
 
             response.Push(remoteId);
+
+            response.Push(position);
+            response.Push(rotation);
+
             response.Push(count);
             foreach (var playerEvent in inputEvent)
             {
                 response.Push(playerEvent.Key);
                 response.Push(playerEvent.Value);
             }
-            response.Push(mouseAxis);
+            //response.Push(mouseAxis);
 
             Self.SendAllWithoutMe(response);
         }

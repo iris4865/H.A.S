@@ -208,13 +208,19 @@ public class Player5 : MonoBehaviour
     {
 
         Packet msg = PacketBufferManager.Instance.Pop(PROTOCOL.Position);
-        msg.Push(GetComponent<NetworkObj>().remoteId);
 
-        /*
+        
+        msg.Push(GetComponent<NetworkObj>().remoteId);
+        
         MyVector3 position = new MyVector3();
         position.Vector = transform.position;
         msg.Push(position);
-        */
+
+        MyVector3 rotation = new MyVector3();
+        rotation.Vector = transform.rotation.eulerAngles;
+        msg.Push(rotation);
+
+        
 
         msg.Push(inputEventKey.Count);
         foreach (var playerEvent in inputEventKey)
@@ -224,7 +230,7 @@ public class Player5 : MonoBehaviour
             short value = (short)(playerEvent.Value ? 1 : 0);
             msg.Push(value);
         }
-        msg.Push(mouseAxis);
+        //msg.Push(mouseAxis);
 
         NetworkManager.GetInstance.Send(msg);
     }

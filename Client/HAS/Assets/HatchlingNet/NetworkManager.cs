@@ -127,11 +127,6 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.LoginAck:
                 {
-                    for (int i = 0; i < 4; i++)
-                    {
-
-                    }
-
                     SceneManager.LoadScene(3);
 
                     Packet sendmsg = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoom);
@@ -256,6 +251,15 @@ public sealed class NetworkManager : MonoBehaviour
                         if (networkObj.ContainsKey(remoteID))
                         {
                             Player5 userPlayer = networkObj[remoteID].GetComponent<Player5>();
+
+                            userPlayer.transform.position = msg.PopVector().Vector;
+                            //Quaternion rot = Quaternion.identity;
+                            //rot. = msg.PopVector().Vector;
+                            Quaternion rotation = userPlayer.transform.rotation;
+                            rotation.eulerAngles = msg.PopVector().Vector;
+                            userPlayer.transform.rotation = rotation;
+                            //userPlayer.transform.Rotate(msg.PopVector().Vector);
+
                             int count = msg.PopInt32();
                             for (int i = 0; i < count; i++)
                             {
@@ -264,7 +268,7 @@ public sealed class NetworkManager : MonoBehaviour
                                 bool press = msg.PopInt16() == 1;
                                 userPlayer.inputEventKey[key] = press;
                             }
-                            userPlayer.mouseAxis = msg.PopFloat();
+                            //userPlayer.mouseAxis = msg.PopFloat();
                         }
                     }
                 }
