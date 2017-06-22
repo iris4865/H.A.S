@@ -37,9 +37,9 @@ namespace Server
             for (int i = 0; i < npcTotalNumber; i++)
             {
                 if(ran.Next(0, 5) == 0)
-                    destination[i] = ran.Next(0, destination.Count);
-                else
                     destination[i] = -1;
+                else
+                    destination[i] = ran.Next(0, destination.Count);
             }
 
             Packet msg = PacketBufferManager.Instance.Pop(PROTOCOL.NPCPosition);
