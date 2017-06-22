@@ -241,13 +241,19 @@ public sealed class NetworkManager : MonoBehaviour
                 }
                 break;
 
-            case PROTOCOL.ObjectNumberingAck:
+            case PROTOCOL.NPCPosition:
                 {
-                    
+                    for(int i = 0; i < 10; i++)
+                    {
+                        int position = msg.PopInt32();
+
+                        numberingNPC[i].GetComponent<NPC>().way = position;
+                        numberingNPC[i + 10].GetComponent<NPC>().way = position;
+                    }
                 }
 
                 break;
-
+                
             case PROTOCOL.PositionAck:
                 {
                     string remoteID = msg.PopString();
