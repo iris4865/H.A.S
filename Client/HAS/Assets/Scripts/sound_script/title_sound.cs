@@ -16,8 +16,8 @@ public class title_sound : MonoBehaviour {
 	void Update () {
         if (Application.loadedLevel == 4)
         {
-            print("stop to play sound");
             source.Stop();
+            Destroy(this);
         }
 	}
 }

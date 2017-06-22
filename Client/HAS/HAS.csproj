@@ -91,6 +91,7 @@
     <Compile Include="Assets\HatchlingNet\NetworkManager.cs" />
     <Compile Include="Assets\HatchlingNet\PROTOCOL.cs" />
     <Compile Include="Assets\Scripts\Destroy_item.cs" />
+    <Compile Include="Assets\Scripts\Destroy_player.cs" />
     <Compile Include="Assets\Scripts\Item_Spawn.cs" />
     <Compile Include="Assets\Scripts\NPC.cs" />
     <Compile Include="Assets\Scripts\NPC_Spawn.cs" />

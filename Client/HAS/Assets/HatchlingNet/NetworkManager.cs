@@ -230,7 +230,7 @@ public sealed class NetworkManager : MonoBehaviour
                         
                         componentSpawner.item_create(item_position);
                     }
-                    /*
+                    
                     for (int i = 0; i < 20; i++)
                     {
                         GameObject npcSpawner = GameObject.Find("NPC_Spawn");
@@ -238,7 +238,6 @@ public sealed class NetworkManager : MonoBehaviour
 
                         numberingNPC[i] = componentSpawner.create_npc(i);
                     }
-                    */
                 }
                 break;
 
