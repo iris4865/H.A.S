@@ -8,29 +8,29 @@ namespace Server
     class JoinRoom : IResponse
     {
         public IGameUser Self { get; set; }
-        int roomNumber;
 
-        UserList list = UserList.Instance;
+        RoomList roomList = RoomList.Instance;
+        RoomInfo room;
         List<int> playerPositionList;
         List<int> itemList;
+
+        bool isEnter;
 
         public void Initialize(IGameUser user, Packet msg)
         {
             Self = user;
-            roomNumber = msg.PopInt32();
+            room = roomList[msg.PopInt32()];
         }
 
         public void Process()
         {
-            list.roomUserList.Add(Self.UserID);
-            int userCount = list.roomUserList.Count;
+            isEnter = room.EnterRoom(Self as GameUser);
 
-            if (userCount == 4)
+            if (room.IsFully)
             {
-                int playercount = 4;
                 int itemCount = 3;
 
-                playerPositionList = new List<int>(playercount);
+                playerPositionList = new List<int>(room.Count);
                 itemList = new List<int>(itemCount);
 
                 FillwithRandom(playerPositionList);
@@ -53,40 +53,37 @@ namespace Server
 
         public void Send()
         {
-            int userCount = list.roomUserList.Count;
-
             SendUserCount();
-            if (userCount == 4)
+            if (room.IsFully)
             {
                 Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.GameStart);
 
+                GameUser[] user = room.Array;
                 for (int i = 0; i < playerPositionList.Count; i++)
                 {
                     response.Push(playerPositionList[i]);
-                    response.Push(list.roomUserList[i]);
+                    response.Push(user[i].UserID);
                 }
 
                 for (int i = 0; i < itemList.Count; i++)
                     response.Push(itemList[i]);
 
-                Self.SendAll(response);
+                room.SendToAll(response);
             }
         }
 
         void SendUserCount()
         {
             Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoomRes);
-            int count = list.roomUserList.Count;
-
-            if (count > 4)
+            if (isEnter)
             {
-                response.Push(-1);
-                Self.SendTo(Self.UserID, response);
+                response.Push(room.Count);
+                room.SendToAll(response);
             }
             else
             {
-                response.Push(count);
-                Self.SendAll(response);
+                response.Push(-1);
+                Self.SendTo(Self, response);
             }
         }
     }

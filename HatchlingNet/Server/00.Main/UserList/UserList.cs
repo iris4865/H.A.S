@@ -6,8 +6,6 @@ namespace Server
 {
     public sealed class UserList
     {
-        public List<string> roomUserList = new List<string>();
-
         static readonly Lazy<UserList> instance = new Lazy<UserList>(() => new UserList());
         public static UserList Instance => instance.Value;
 

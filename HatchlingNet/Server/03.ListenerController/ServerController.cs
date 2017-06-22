@@ -8,12 +8,10 @@ namespace Server
     public class ServerController
     {
         NetworkService networkService = new NetworkService();
-        BufferManager buffer_manager;
 
         int maxConnection;//모든 리스너들의 연결 맥스
         //int connectionCount;//모든 리스너들의 연결 총합
         int bufferSize = 1024;
-        readonly int preAllocCount = 2;
 
         public Thread ListenerThread { get; private set; }
         Listener listener;
@@ -49,9 +47,6 @@ namespace Server
         void AllocateBuffer()
         {
             PacketBufferManager.Instance.Initialize(2000);
-
-            buffer_manager = new BufferManager(maxConnection * bufferSize * preAllocCount, bufferSize);
-            buffer_manager.InitBuffer();
         }
 
         void AllocateToken()

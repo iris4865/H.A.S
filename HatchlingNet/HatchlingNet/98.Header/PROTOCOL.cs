@@ -11,10 +11,9 @@ namespace Header
         JoinRoom = 1200, JoinRoomRes, GameStart,
 
         Chat = 2000, ChatAck,
-        Position = 3000, PositionAck,
+        Position = 3000, PositionAck, NPCPosition,
         CreateObj = 4000, CreateObjAck, CreateObjRej,
         DestroyObj, DestroyObjAck, DestroyObjRej,
-        ObjectNumbering, ObjectNumberingAck, ObjectNumberingRej,
         PlayerExit,
 
         END

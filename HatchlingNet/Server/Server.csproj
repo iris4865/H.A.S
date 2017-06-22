@@ -68,13 +68,15 @@
     <Compile Include="03.ListenerController\Listener\Listener.cs" />
     <Compile Include="03.ListenerController\ServerController.cs" />
     <Compile Include="95.Object\IGameUser.cs" />
+    <Compile Include="95.Object\NPCManager.cs" />
     <Compile Include="95.Object\Response\IResponse.cs" />
     <Compile Include="95.Object\Response\Chat.cs" />
     <Compile Include="95.Object\Response\JoinRoom.cs" />
     <Compile Include="95.Object\Response\Login.cs" />
-    <Compile Include="95.Object\Response\ObjectNumbering.cs" />
     <Compile Include="95.Object\Response\Position.cs" />
     <Compile Include="95.Object\Response\SignUp.cs" />
+    <Compile Include="95.Object\Roominfo.cs" />
+    <Compile Include="95.Object\RoomList.cs" />
     <Compile Include="96.DataBase\Core\DataBaseInventory.cs" />
     <Compile Include="96.DataBase\Core\MySqlAdapter.cs" />
     <Compile Include="96.DataBase\Core\DataBase.cs" />

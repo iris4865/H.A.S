@@ -1,30 +1,19 @@
 ﻿using HatchlingNet;
 using Header;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Server
 {
     public class GameUser : IPeer, IGameUser
     {
-        public static NumberingPool objNumberingPool;
-        public static Dictionary<int, string> objList = new Dictionary<int, string>();//<remoteID, 객체 태그>
-
         UserToken userToken;
         public string UserID { get; set; }
-        public int GameUserID { get; set; }
+        public int Job { get; set; }
 
         public GameUser(UserToken userToken)
         {
-            if (objNumberingPool == null)
-            {
-                objNumberingPool = new NumberingPool(20000);
-
-                for (int i = 0; i < objNumberingPool.Capacity; ++i)
-                    objNumberingPool.Push(i);
-            }
-
             this.userToken = userToken;
 
             userToken.Peer = this;
@@ -36,13 +25,25 @@ namespace Server
             PROTOCOL protocol = msg.Protocol;
 
             string protocolName = "Server." + protocol.ToString();
-            IResponse response = (IResponse)Activator.CreateInstance(Type.GetType(protocolName));
-            if (response != null)
+            try
             {
+                IResponse response = (IResponse)Activator.CreateInstance(Type.GetType(protocolName));
                 response.Initialize(this, msg);
                 response.Process();
                 response.Send();
             }
+            catch
+            {
+                Trace.WriteLine($"ip: {userToken.socket.LocalEndPoint} user: {UserID} protocol: {protocol.ToString()}");
+            }
+        }
+
+        public void SendTo(IGameUser target, Packet msg)
+        {
+            if (target is GameUser)
+                (target as GameUser).Send(msg);
+            else
+                Trace.TraceError("not find GameUser");
         }
 
         public void SendTo(string userId, Packet msg)
@@ -97,13 +98,10 @@ namespace Server
         public void Destroy()
         {
             Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.PlayerExit);
-            response.Push(GameUserID);
+            response.Push(UserID);
             SendAllWithoutMe(response);
 
-            objNumberingPool.Push(GameUserID);
             UserList.Instance.RemoveUser(this);
-            objList.Remove(GameUserID);
-            GameUserID = -1;
         }
 
         public void ProcessUserOperation()
