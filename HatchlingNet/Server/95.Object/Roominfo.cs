@@ -9,7 +9,7 @@ namespace Server
     {
         List<GameUser> userList = new List<GameUser>();
 
-        public bool IsFully => userList.Count == 2;
+        public bool IsFully => userList.Count == 4;
         public int Count => userList.Count;
         public GameUser[] Array => userList.ToArray();
         NPCManager npcManager;

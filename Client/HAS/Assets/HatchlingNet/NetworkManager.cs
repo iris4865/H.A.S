@@ -57,7 +57,7 @@ public sealed class NetworkManager : MonoBehaviour
     object csNumberingWaitObj = new object();
     public int networkID { get; set; }
     public string userID { get; set; }
-    int connectUserMax = 2;
+    int connectUserMax = 4;
 
     public GameObject[] numberingNPC = new GameObject[20];
 
@@ -86,7 +86,6 @@ public sealed class NetworkManager : MonoBehaviour
 
     void Connect()
     {
-        //this.gameserver.Connect("127.0.0.1", 7979);
         this.gameserver.Connect("192.168.0.3", 80);
     }
 
@@ -185,7 +184,7 @@ public sealed class NetworkManager : MonoBehaviour
 
                         componentSpawner.item_create(item_position);
                     }
-
+                    
                     for (int i = 0; i < 20; i++)
                     {
                         GameObject npcSpawner = GameObject.Find("NPC_Spawn");
@@ -198,14 +197,11 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.NPCPosition:
                 {
-                    for (int i = 0; i < 10; i++)
+                    for (int i = 0; i < 20; i++)
                     {
                         int position = msg.PopInt32();
 
-                        Debug.LogWarning(position);
-
                         numberingNPC[i].GetComponent<NPC>().way = position;
-                        numberingNPC[i + 10].GetComponent<NPC>().way = position;
                     }
                 }
 
@@ -326,6 +322,16 @@ public sealed class NetworkManager : MonoBehaviour
                 winlose winlose_component = winlose.GetComponent<winlose>();
 
                 winlose_component.user_job = myPlayer.GetComponent<Player5>().player_job;
+
+                myPlayer.GetComponent<Player5>().user_name.text = userID;
+                if (job == 1)
+                {
+                    myPlayer.GetComponent<Player5>().user_job.text = "경찰";
+                }
+                else if (job == 2)
+                {
+                    myPlayer.GetComponent<Player5>().user_job.text = "도둑";
+                }
             }
         }
     }
