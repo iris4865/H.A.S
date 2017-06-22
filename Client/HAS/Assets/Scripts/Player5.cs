@@ -46,6 +46,14 @@ public class Player5 : MonoBehaviour
     void Start()
     {
         audio = this.GetComponent<AudioSource>();
+
+        inputEventKey[KeyCode.W] = false;
+        inputEventKey[KeyCode.S] = false;
+        inputEventKey[KeyCode.A] = false;
+        inputEventKey[KeyCode.D] = false;
+        inputEventKey[KeyCode.E] = false;
+        inputEventKey[KeyCode.LeftShift] = false;
+
     }
 
     // Update is called once per frame
@@ -230,6 +238,14 @@ public class Player5 : MonoBehaviour
                 pressE_key_canvas.SetActive(true);
             }
         }
+        if(other.gameObject.tag == "foot")
+        {
+            if (player_job == 2)//도둑
+            {
+                player_animator.SetBool("isdie", true);
+                Destroy(this.gameObject, 3f);
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -239,7 +255,7 @@ public class Player5 : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (Input.GetKey(KeyCode.E) == true)
+        if (inputEventKey[KeyCode.E])
         {
             if (player_job == 2)//도둑
             {

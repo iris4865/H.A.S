@@ -58,6 +58,8 @@ public sealed class NetworkManager : MonoBehaviour
     public int networkID { get; set; }
     public string userID { get; set; }
 
+    public GameObject[] numberingNPC = new GameObject[20];
+
     void Awake()
     {
         //if (instance != null)
@@ -225,6 +227,16 @@ public sealed class NetworkManager : MonoBehaviour
                         
                         componentSpawner.item_create(item_position);
                     }
+
+                    /*
+                    for (int i = 0; i < 20; i++)
+                    {
+                        GameObject npcSpawner = GameObject.Find("NPC_Spawn");
+                        NPC_Spawn componentSpawner = npcSpawner.GetComponent<NPC_Spawn>();
+
+                        numberingNPC[i] = componentSpawner.create_npc(i);
+                    }
+                    */
 
                 }
                 break;

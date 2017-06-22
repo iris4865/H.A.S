@@ -20,11 +20,10 @@ public class NPC_Spawn : MonoBehaviour {
 		
 	}
 
-    void create_npc()
+    public GameObject create_npc(int position)
     {
-        for(int i = 0; i < 20; i++)
-        {
-            npc_numbering[i] = Instantiate(npc, point[i].transform.position, transform.rotation);
-        }
+        Instantiate(npc, point[position].transform.position, transform.rotation);
+
+        return npc;
     }
 }
