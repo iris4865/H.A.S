@@ -36,8 +36,7 @@ public class Player5 : MonoBehaviour
     public float mouseAxis;
     bool hasEvent;
     float prevAxis;
-
-
+    
     public Text user_name;
     public Text user_job;
 
@@ -89,6 +88,8 @@ public class Player5 : MonoBehaviour
                 player_animator.SetFloat("speed", player_speed);
                 break;
             case ANIMATION_TYPE.Walk:
+                this.audio.clip = this.walk_sound;
+                audio.Play();
                 player_animator.SetBool("isforwarding", true);
                 player_animator.SetBool("isRunning", false);
                 player_animator.SetFloat("speed", player_speed);

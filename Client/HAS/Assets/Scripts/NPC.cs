@@ -23,27 +23,27 @@ public class NPC : MonoBehaviour {
 
         way = 0;
 
-        way_point[0] = new Vector3(0f, 0f, 40f);
-        way_point[1] = new Vector3(15f, 0f, 40f);
-        way_point[2] = new Vector3(30f, 0f, 40f);
-        way_point[3] = new Vector3(-15f, 0f, 40f);
-        way_point[4] = new Vector3(-30f, 0f, 40f);
-        way_point[5] = new Vector3(0f, 0f, -40f);
-        way_point[6] = new Vector3(15f, 0f, -40f);
-        way_point[7] = new Vector3(30f, 0f, -40f);
-        way_point[8] = new Vector3(-15f, 0f, -40f);
-        way_point[9] = new Vector3(-30f, 0f, -40f);
+        way_point[0] = new Vector3(60f, 0f, 0f);
+        way_point[1] = new Vector3(60f, 0f, 15f);
+        way_point[2] = new Vector3(60f, 0f, 30f);
+        way_point[3] = new Vector3(60f, 0f, -15f);
+        way_point[4] = new Vector3(60f, 0f, -30f);
+        way_point[5] = new Vector3(-60f, 0f, 0f);
+        way_point[6] = new Vector3(-60f, 0f, 15f);
+        way_point[7] = new Vector3(-60f, 0f, 30f);
+        way_point[8] = new Vector3(-60f, 0f, -15f);
+        way_point[9] = new Vector3(-60f, 0f, -30f);
 
-        way_point[10] = new Vector3(0f, 0f, 20f);
-        way_point[11] = new Vector3(15f, 0f, 20f);
-        way_point[12] = new Vector3(30f, 0f, 20f);
-        way_point[13] = new Vector3(-15f, 0f, 20f);
-        way_point[14] = new Vector3(-30f, 0f, 20f);
-        way_point[15] = new Vector3(0f, 0f, -20f);
-        way_point[16] = new Vector3(15f, 0f, -20f);
-        way_point[17] = new Vector3(30f, 0f, -20f);
-        way_point[18] = new Vector3(-15f, 0f, -20f);
-        way_point[19] = new Vector3(-30f, 0f, -20f);
+        way_point[10] = new Vector3(0f, 0f, 60f);
+        way_point[11] = new Vector3(15f, 0f, 60f);
+        way_point[12] = new Vector3(30f, 0f, 60f);
+        way_point[13] = new Vector3(-15f, 0f, 60f);
+        way_point[14] = new Vector3(-30f, 0f, 60f);
+        way_point[15] = new Vector3(0f, 0f, -60f);
+        way_point[16] = new Vector3(15f, 0f, -60f);
+        way_point[17] = new Vector3(30f, 0f, -60f);
+        way_point[18] = new Vector3(-15f, 0f, -60f);
+        way_point[19] = new Vector3(-30f, 0f, -60f);
     }
 	
 	// Update is called once per frame
