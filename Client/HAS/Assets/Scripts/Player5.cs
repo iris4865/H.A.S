@@ -3,6 +3,7 @@ using Header;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player5 : MonoBehaviour
 {
@@ -35,6 +36,10 @@ public class Player5 : MonoBehaviour
     public float mouseAxis;
     bool hasEvent;
     float prevAxis;
+
+
+    public Text user_name;
+    public Text user_job;
 
     void Awake()
     {

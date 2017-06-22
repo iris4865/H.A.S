@@ -171,7 +171,7 @@ public sealed class NetworkManager : MonoBehaviour
 
                         componentSpawner.item_create(item_position);
                     }
-
+                    
                     for (int i = 0; i < 20; i++)
                     {
                         GameObject npcSpawner = GameObject.Find("NPC_Spawn");
@@ -312,6 +312,16 @@ public sealed class NetworkManager : MonoBehaviour
                 winlose winlose_component = winlose.GetComponent<winlose>();
 
                 winlose_component.user_job = myPlayer.GetComponent<Player5>().player_job;
+
+                myPlayer.GetComponent<Player5>().user_name.text = userID;
+                if (job == 1)
+                {
+                    myPlayer.GetComponent<Player5>().user_job.text = "경찰";
+                }
+                else if (job == 2)
+                {
+                    myPlayer.GetComponent<Player5>().user_job.text = "도둑";
+                }
             }
         }
     }
