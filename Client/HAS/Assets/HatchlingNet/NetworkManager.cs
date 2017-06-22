@@ -184,14 +184,11 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.NPCPosition:
                 {
-                    for (int i = 0; i < 10; i++)
+                    for (int i = 0; i < 20; i++)
                     {
                         int position = msg.PopInt32();
 
-                        Debug.LogWarning(position);
-
                         numberingNPC[i].GetComponent<NPC>().way = position;
-                        numberingNPC[i + 10].GetComponent<NPC>().way = position;
                     }
                 }
 
