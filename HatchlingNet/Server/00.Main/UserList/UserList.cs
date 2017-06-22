@@ -37,15 +37,9 @@ namespace Server
             }
         }
 
-        public bool IsLoginUser(string userId)
-        {
-            return userList.ContainsKey(userId);
-        }
+        public bool IsLoginUser(string userId) => userList.ContainsKey(userId);
 
-        public GameUser GetUser(string userId)
-        {
-            return userList[userId];
-        }
+        public GameUser GetUser(string userId) => userList[userId];
 
         public GameUser[] GetAllUser()
         {

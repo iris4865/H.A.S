@@ -5,7 +5,7 @@ namespace HatchlingNet
 {
     public class UserTokenPool
     {
-        public static UserTokenPool Instance { get { return CreateInstance.Instance; } }
+        public static UserTokenPool Instance => CreateInstance.Instance;
         Stack<UserToken> pool;
 
         class CreateInstance

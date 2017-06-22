@@ -85,14 +85,6 @@ namespace Server
                         user.Value.Send(msg);
                 }
             );
-
-            /*
-            foreach(var user in tokenList)
-            {
-                if (user.Key != withOut)
-                    user.Value.Send(msg);
-            }
-            */
         }
 
         public void Disconnect(UserToken token)
@@ -111,8 +103,6 @@ namespace Server
         /// <summary>
         /// IPAddress객체로 변환
         /// </summary>
-        /// <param name="host"></param>
-        /// <returns></returns>
         IPAddress GetServerIP(string host)
         {
             return (host == "0.0.0.0" ? IPAddress.Any : IPAddress.Parse(host));
@@ -121,8 +111,6 @@ namespace Server
         /// <summary>
         /// 접속성공 확인
         /// </summary>
-        /// <param name="socketError"></param>
-        /// <returns></returns>
         bool CanAcceptSuccess(SocketError socketError)
         {
             return socketError == SocketError.Success;

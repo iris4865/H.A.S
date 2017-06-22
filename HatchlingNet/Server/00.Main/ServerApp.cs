@@ -6,6 +6,9 @@ namespace Server
     public class ServerApp
     {
         ServerController network;
+        string ip = "0.0.0.0";
+        int port = 7979;
+
         public Thread GetThread
         {
             get
@@ -33,7 +36,7 @@ namespace Server
 
         public void Update()//콘솔용
         {
-            network.Listen("0.0.0.0", 7979, maxConnection);
+            network.Listen(ip, port, maxConnection);
 
             //Thread.Sleep(Timeout.Infinite);
             while (true)
@@ -42,7 +45,7 @@ namespace Server
 
         public void Start()//gui용
         {
-            network.Listen("0.0.0.0", 7979, maxConnection);
+            network.Listen(ip, port, maxConnection);
         }
     }
 }

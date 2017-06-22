@@ -36,6 +36,8 @@ namespace Server
             {
                 if(ran.Next(0, 2) == 1)
                     destination[i] = ran.Next(0, destination.Count);
+                else
+                    destination[i] = -1;
             }
 
             Packet msg = PacketBufferManager.Instance.Pop(PROTOCOL.NPCPosition);

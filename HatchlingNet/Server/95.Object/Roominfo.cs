@@ -61,6 +61,9 @@ namespace Server
 
         public void GameStart(int npcNumber)
         {
+            for (int i = 0; i < userList.Count; i++)
+                userList[i].Job = i / (userList.Count / 2);
+
             npcManager = new NPCManager(npcNumber)
             {
                 Send = SendToAll
