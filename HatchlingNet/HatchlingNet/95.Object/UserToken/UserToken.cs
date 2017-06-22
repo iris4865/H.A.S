@@ -92,7 +92,8 @@ namespace HatchlingNet
             {
                 //0이하가 되는경우는 없지만 혹시모를 예외처리
                 if (sendingQueue.Count <= 0)
-                    throw new Exception("Sedning queue count is less than zero!");
+                    return;
+                    //throw new Exception("Sedning queue count is less than zero!");
 
                 int size = sendingQueue.Peek().Position;
                 if (sendArgs.BytesTransferred != size)
