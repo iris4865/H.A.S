@@ -7,8 +7,7 @@ using UnityEngine.SceneManagement;
 //클라에게 제공하게될 인터페이스가 되겠네
 
 
-public sealed class NetworkManager : MonoBehaviour
-{
+public sealed class NetworkManager : MonoBehaviour {
     private static NetworkManager instance = null;
     private static GameObject container = null;
     private static readonly object padlock = new object();
@@ -17,10 +16,8 @@ public sealed class NetworkManager : MonoBehaviour
     {
         get
         {
-            lock (padlock)
-            {
-                if (instance == null)
-                {
+            lock (padlock) {
+                if (instance == null) {
 
                     //   instance = tag(typeof(NetworkManager)) as NetworkManager;
                     //instance = new NetworkManager();                    출처: http://unityindepth.tistory.com/38 [UNITY IN DEPTH]
@@ -46,8 +43,7 @@ public sealed class NetworkManager : MonoBehaviour
         }
     }
 
-    private NetworkManager()
-    {
+    private NetworkManager() {
     }
 
     HatchlingNetUnityService gameserver;
@@ -57,11 +53,11 @@ public sealed class NetworkManager : MonoBehaviour
     object csNumberingWaitObj = new object();
     public int networkID { get; set; }
     public string userID { get; set; }
+    int connectUserMax = 2;
 
     public GameObject[] numberingNPC = new GameObject[20];
 
-    void Awake()
-    {
+    void Awake() {
         //if (instance != null)
         //    return;
         DontDestroyOnLoad(this);
@@ -75,25 +71,20 @@ public sealed class NetworkManager : MonoBehaviour
         //Debug.Log("ㅇㅇ");
     }
 
-    void Start()
-    {
+    void Start() {
         //Debug.Log("ㅇㅇㅁ");
         //userID = "test" + Random.Range(1, 100);
 
         Connect();
     }
 
-    void Connect()
-    {
+    void Connect() {
         this.gameserver.Connect("127.0.0.1", 7979);
     }
 
-    void CallStatusChange(NETWORK_EVENT status)
-    {
-        switch (status)
-        {
-            case NETWORK_EVENT.connected:
-                {
+    void CallStatusChange(NETWORK_EVENT status) {
+        switch (status) {
+            case NETWORK_EVENT.connected: {
                     //뭐여 이건
                     //Packet msg = PacketBufferManager.Instance.Pop((short)PROTOCOL.Chat);
                     //msg.Push("Hello~!");
@@ -102,8 +93,7 @@ public sealed class NetworkManager : MonoBehaviour
                 }
                 break;
 
-            case NETWORK_EVENT.disconnected:
-                {
+            case NETWORK_EVENT.disconnected: {
 
                 }
                 break;
@@ -116,123 +106,58 @@ public sealed class NetworkManager : MonoBehaviour
 
         //Debug.Log("콜메세지 " + protocolType);
 
-        switch (protocolType)
-        {
-            case PROTOCOL.ChatAck:
-                {
+        switch (protocolType) {
+            case PROTOCOL.ChatAck: {
                     SEND_TYPE sendType = (SEND_TYPE)msg.PopInt16();
                     string text = msg.PopString();
                 }
                 break;
 
-            case PROTOCOL.LoginAck:
-                {
+            case PROTOCOL.LoginAck: {
                     SceneManager.LoadScene(3);
 
                     Packet sendmsg = PacketBufferManager.Instance.Pop(PROTOCOL.JoinRoom);
                     sendmsg.Push(0);
-                    
+
                     Send(sendmsg);
                 }
                 break;
 
-            case PROTOCOL.LoginRej:
-                {
+            case PROTOCOL.LoginRej: {
                     //다시입력하라고
                 }
                 break;
 
-            case PROTOCOL.JoinRoomRes:
-                {
+            case PROTOCOL.JoinRoomRes: {
                     int current_user_count = msg.PopInt32();
 
                     GameObject waitdisplay = GameObject.Find("Wait");
                     game_wait_click wait_script = waitdisplay.GetComponent<game_wait_click>();
-                    
+
                     wait_script.user_count = current_user_count;
 
-                    if (current_user_count == 4)
+                    if (current_user_count == connectUserMax)
                         SceneManager.LoadScene(4);
                 }
                 break;
 
-            case PROTOCOL.GameStart:
-                {
-                    for(int i = 0; i < 1; i++)
-                    {
-                        int user_position = msg.PopInt32();
-                        string msgUserLoginID = msg.PopString();
-                        
-                        GameObject objSpawner = GameObject.Find("Player_Spawn");
-                        Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
+            case PROTOCOL.GameStart: {
 
-                        //캐릭터 생성
-                        GameObject myPlayer = componentSpawner.CreateMyPlayer(1, user_position);
-                        //myPlayer.GetComponent<Player5>().headCamera.SetActive(false); //디폴트를 비활성화 시킴 
-                        NetworkObj objNetInfo = myPlayer.GetComponent<NetworkObj>();
-                        objNetInfo.remoteId = msgUserLoginID;
+                    CreateChracter(1, connectUserMax / 2, msg);
+                    CreateChracter(2, connectUserMax / 2, msg);
 
-                        lock (csNetworkObj)
-                        {
-                            networkObj.Add(objNetInfo.remoteId, myPlayer);
-                            print("추가됨");
-                        }
 
-                        if (userID == objNetInfo.remoteId)
-                        {
-                            myPlayer.GetComponent<Player5>().isPlayer = true;
-                            myPlayer.GetComponent<Player5>().main_camera.gameObject.SetActive(true);
 
-                            GameObject winlose = GameObject.Find("WinLose");
-                            winlose winlose_component = winlose.GetComponent<winlose>();
-
-                            winlose_component.user_job = myPlayer.GetComponent<Player5>().player_job;
-                        }
-                    }
-                    for (int i = 0; i < 1; i++)
-                    {
-                        int user_position = msg.PopInt32();
-                        string msgUserLoginID = msg.PopString();
-                        
-                        GameObject objSpawner = GameObject.Find("Player_Spawn");
-                        Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
-
-                        //캐릭터 생성
-                        GameObject myPlayer = componentSpawner.CreateMyPlayer(2, user_position);
-                        //myPlayer.GetComponent<Player5>().headCamera.SetActive(false); //디폴트를 비활성화 시킴 
-                        NetworkObj objNetInfo = myPlayer.GetComponent<NetworkObj>();
-                        objNetInfo.remoteId = msgUserLoginID;
-
-                        lock (csNetworkObj)
-                        {
-                            networkObj.Add(objNetInfo.remoteId, myPlayer);
-                            print("추가됨");
-                        }
-
-                        if (userID == objNetInfo.remoteId)
-                        {
-                            myPlayer.GetComponent<Player5>().isPlayer = true;
-                            myPlayer.GetComponent<Player5>().main_camera.gameObject.SetActive(true);
-
-                            GameObject winlose = GameObject.Find("WinLose");
-                            winlose winlose_component = winlose.GetComponent<winlose>();
-
-                            winlose_component.user_job = myPlayer.GetComponent<Player5>().player_job;
-                        }
-                    }
-
-                    for(int i = 0; i < 3; i++)
-                    {
+                    for (int i = 0; i < 3; i++) {
                         int item_position = msg.PopInt32();
 
                         GameObject itemSpawner = GameObject.Find("Item_Spawn");
                         Item_Spawn componentSpawner = itemSpawner.GetComponent<Item_Spawn>();
-                        
+
                         componentSpawner.item_create(item_position);
                     }
-                    
-                    for (int i = 0; i < 20; i++)
-                    {
+
+                    for (int i = 0; i < 20; i++) {
                         GameObject npcSpawner = GameObject.Find("NPC_Spawn");
                         NPC_Spawn componentSpawner = npcSpawner.GetComponent<NPC_Spawn>();
 
@@ -241,26 +166,18 @@ public sealed class NetworkManager : MonoBehaviour
                 }
                 break;
 
-            case PROTOCOL.NPCPosition:
+            case PROTOCOL.ObjectNumberingAck:
                 {
-                    for(int i = 0; i < 10; i++)
-                    {
-                        int position = msg.PopInt32();
 
-                        numberingNPC[i].GetComponent<NPC>().way = position;
-                        numberingNPC[i + 10].GetComponent<NPC>().way = position;
-                    }
                 }
 
                 break;
-                
-            case PROTOCOL.PositionAck:
-                {
+
+            case PROTOCOL.PositionAck: {
                     string remoteID = msg.PopString();
                     lock (networkObj) //thread 안정적으로 사용하려고 
                     {
-                        if (networkObj.ContainsKey(remoteID))
-                        {
+                        if (networkObj.ContainsKey(remoteID)) {
                             Player5 userPlayer = networkObj[remoteID].GetComponent<Player5>();
 
                             userPlayer.transform.position = msg.PopVector().Vector;
@@ -272,8 +189,7 @@ public sealed class NetworkManager : MonoBehaviour
                             //userPlayer.transform.Rotate(msg.PopVector().Vector);
 
                             int count = msg.PopInt32();
-                            for (int i = 0; i < count; i++)
-                            {
+                            for (int i = 0; i < count; i++) {
                                 KeyCode key = (KeyCode)msg.PopInt16();
 
                                 bool press = msg.PopInt16() == 1;
@@ -285,11 +201,9 @@ public sealed class NetworkManager : MonoBehaviour
                 }
                 break;
 
-            case PROTOCOL.PlayerExit:
-                {
+            case PROTOCOL.PlayerExit: {
                     string remoteID = msg.PopString();
-                    lock (csNetworkObj)
-                    {
+                    lock (csNetworkObj) {
                         Destroy(networkObj[remoteID]);
                         networkObj.Remove(remoteID);
                     }
@@ -322,8 +236,7 @@ public sealed class NetworkManager : MonoBehaviour
             //    }
             //    break;
 
-            default:
-                {
+            default: {
                     string text = msg.PopString();
                     Debug.Log("그외 " + text);
                 }
@@ -333,10 +246,38 @@ public sealed class NetworkManager : MonoBehaviour
         }
     }
 
-    public void Send(Packet msg)
-    {
+    public void Send(Packet msg) {
         this.gameserver.Send(msg);
     }
 
+    void CreateChracter(int job, int userNumber, Packet msg) {
+        for (int i = 0; i < userNumber; i++) {
+            int user_position = msg.PopInt32();
+            string msgUserLoginID = msg.PopString();
 
+            GameObject objSpawner = GameObject.Find("Player_Spawn");
+            Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
+
+            //캐릭터 생성
+            GameObject myPlayer = componentSpawner.CreateMyPlayer(job, user_position);
+            //myPlayer.GetComponent<Player5>().headCamera.SetActive(false); //디폴트를 비활성화 시킴 
+            NetworkObj objNetInfo = myPlayer.GetComponent<NetworkObj>();
+            objNetInfo.remoteId = msgUserLoginID;
+
+            lock (csNetworkObj) {
+                networkObj.Add(objNetInfo.remoteId, myPlayer);
+                print("추가됨");
+            }
+
+            if (userID == objNetInfo.remoteId) {
+                myPlayer.GetComponent<Player5>().isPlayer = true;
+                myPlayer.GetComponent<Player5>().main_camera.gameObject.SetActive(true);
+
+                GameObject winlose = GameObject.Find("WinLose");
+                winlose winlose_component = winlose.GetComponent<winlose>();
+
+                winlose_component.user_job = myPlayer.GetComponent<Player5>().player_job;
+            }
+        }
+    }
 }
