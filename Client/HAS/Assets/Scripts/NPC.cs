@@ -8,7 +8,7 @@ public class NPC : MonoBehaviour {
     Animator npc_animator;
     NavMeshAgent move_agent;
     
-    Vector3[] way_point = new Vector3[10];
+    Vector3[] way_point = new Vector3[20];
 
     float npc_speed;
 
@@ -33,10 +33,33 @@ public class NPC : MonoBehaviour {
         way_point[7] = new Vector3(30f, 0f, -40f);
         way_point[8] = new Vector3(-15f, 0f, -40f);
         way_point[9] = new Vector3(-30f, 0f, -40f);
+
+        way_point[10] = new Vector3(0f, 0f, 20f);
+        way_point[11] = new Vector3(15f, 0f, 20f);
+        way_point[12] = new Vector3(30f, 0f, 20f);
+        way_point[13] = new Vector3(-15f, 0f, 20f);
+        way_point[14] = new Vector3(-30f, 0f, 20f);
+        way_point[15] = new Vector3(0f, 0f, -20f);
+        way_point[16] = new Vector3(15f, 0f, -20f);
+        way_point[17] = new Vector3(30f, 0f, -20f);
+        way_point[18] = new Vector3(-15f, 0f, -20f);
+        way_point[19] = new Vector3(-30f, 0f, -20f);
     }
 	
 	// Update is called once per frame
 	void Update () {
+        if(way == -1)
+        {
+            npc_speed = 0f;
+            npc_animator.SetFloat("speed", npc_speed);
+            //move_agent.Stop();
+            move_agent.destination = transform.position;
+            return;
+        }else
+        {
+            //move_agent.Resume();
+        }
+
         if (this.transform.position.x == way_point[way].x && this.transform.position.y == way_point[way].y)
         {
             npc_speed = 0f;
