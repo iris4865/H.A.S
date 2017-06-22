@@ -69,6 +69,7 @@ namespace Server
                     response.Push(itemList[i]);
 
                 room.SendToAll(response);
+                room.GameStart(10);
             }
         }
 
