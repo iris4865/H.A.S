@@ -158,7 +158,7 @@ public sealed class NetworkManager : MonoBehaviour
 
             case PROTOCOL.GameStart:
                 {
-                    for(int i = 0; i < 2; i++)
+                    for(int i = 0; i < 1; i++)
                     {
                         int user_position = msg.PopInt32();
                         string msgUserLoginID = msg.PopString();
@@ -189,7 +189,7 @@ public sealed class NetworkManager : MonoBehaviour
                             winlose_component.user_job = myPlayer.GetComponent<Player5>().player_job;
                         }
                     }
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 0; i < 1; i++)
                     {
                         int user_position = msg.PopInt32();
                         string msgUserLoginID = msg.PopString();

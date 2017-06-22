@@ -4,13 +4,15 @@ using System.Threading.Tasks;
 
 namespace Server
 {
+    //후에 대기방, 게임방 분리가능
     public class RoomInfo
     {
         List<GameUser> userList = new List<GameUser>();
 
-        public bool IsFully => userList.Count == 4;
+        public bool IsFully => userList.Count == 2;
         public int Count => userList.Count;
         public GameUser[] Array => userList.ToArray();
+        NPCManager npcManager;
 
         public bool EnterRoom(GameUser user)
         {
@@ -56,5 +58,16 @@ namespace Server
                 }
             );
         }
+
+        public void GameStart(int npcNumber)
+        {
+            npcManager = new NPCManager(npcNumber)
+            {
+                Send = SendToAll
+            };
+            npcManager.Start();
+        }
+
+        public void GameEnd() => npcManager.Stop();
     }
 }
