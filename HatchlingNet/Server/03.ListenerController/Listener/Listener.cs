@@ -42,7 +42,7 @@ namespace Server
 
         public void AcceptComplete(Object sender, SocketAsyncEventArgs args)
         {
-            Trace.WriteLine("Client Accept");
+            Trace.WriteLine($"connect: {args.AcceptSocket.RemoteEndPoint}");
 
             if (CanAcceptSuccess(args.SocketError))
             {
