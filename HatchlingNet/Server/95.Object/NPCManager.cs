@@ -9,7 +9,7 @@ namespace Server
     public class NPCManager
     {
         List<int> destination;
-        int milliSecond = 5000;
+        int milliSecond = 100;
         Timer timerEvent;
         int npcTotalNumber;
         public Action<Packet> Send;
@@ -21,8 +21,9 @@ namespace Server
             destination = new List<int>();
             for (int i = 0; i < npcTotalNumber; i++)
                 destination.Add(0);
-
-            timerEvent = new Timer(milliSecond);
+            
+            timerEvent = new Timer();
+            timerEvent.Interval = milliSecond;
             timerEvent.Elapsed += SendRandomDestination;
         }
 
@@ -32,9 +33,10 @@ namespace Server
         void SendRandomDestination(object sender, ElapsedEventArgs e)
         {
             Random ran = new Random();
+            timerEvent.Interval = ran.Next(1, 6) * 1000;
             for (int i = 0; i < npcTotalNumber; i++)
             {
-                if(ran.Next(0, 2) == 1)
+                if(ran.Next(0, 5) == 0)
                     destination[i] = ran.Next(0, destination.Count);
                 else
                     destination[i] = -1;
