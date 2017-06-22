@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class game_title_click : MonoBehaviour {
+public class game_lose_click : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -14,10 +15,6 @@ public class game_title_click : MonoBehaviour {
 	}
 
     public void click()
-    {
-        SceneManager.LoadScene(1);
-    }
-    public void click_1()
     {
         Application.Quit();
     }
