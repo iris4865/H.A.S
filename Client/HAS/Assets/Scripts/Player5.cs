@@ -175,6 +175,7 @@ public class Player5 : MonoBehaviour
     {
         player_rotateVector = new Vector3(0, mouseAxis, 0);
         transform.Rotate(player_rotateVector * 2.0f);
+        
     }
 
     void Motion()
@@ -183,10 +184,10 @@ public class Player5 : MonoBehaviour
 
         if (inputEventKey[KeyCode.E])
         {
-            this.audio.clip = this.attack_sound;
-            audio.Play();
             footCollider.isTrigger = true;
             currentAnimation = ANIMATION_TYPE.Attack;
+            this.audio.clip = this.attack_sound;
+            audio.Play();
         }
         else
         {
@@ -237,37 +238,53 @@ public class Player5 : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "item1")
+        if(isPlayer == true)
         {
-            if (player_job == 2)//도둑
+            if (other.gameObject.tag == "item1")
             {
-                pressE_key_canvas.SetActive(true);
+                if (player_job == 2)//도둑
+                {
+                    pressE_key_canvas.SetActive(true);
+                }
             }
         }
-        if(other.gameObject.tag == "foot")
+        if (other.gameObject.tag == "foot")
         {
             if (player_job == 2)//도둑
             {
                 player_animator.SetBool("isdie", true);
                 Destroy(this.gameObject, 3f);
+
+                GameObject winlose = GameObject.Find("WinLose");
+                winlose winlose_component = winlose.GetComponent<winlose>();
+
+                winlose_component.thief_count -= 1;
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        pressE_key_canvas.SetActive(false);
+        if (isPlayer == true)
+        {
+            pressE_key_canvas.SetActive(false);
+        }
+        
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (inputEventKey[KeyCode.E])
+        if(isPlayer == true)
         {
-            if (player_job == 2)//도둑
+            if (inputEventKey[KeyCode.E])
             {
-                Destroy(other.gameObject);
-                pressE_key_canvas.SetActive(false);
+                if (player_job == 2)//도둑
+                {
+                    Destroy(other.gameObject);
+                    pressE_key_canvas.SetActive(false);
+                }
             }
         }
+        
     }
 }

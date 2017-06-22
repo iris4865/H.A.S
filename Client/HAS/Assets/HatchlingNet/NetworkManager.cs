@@ -162,8 +162,7 @@ public sealed class NetworkManager : MonoBehaviour
                     {
                         int user_position = msg.PopInt32();
                         string msgUserLoginID = msg.PopString();
-
-
+                        
                         GameObject objSpawner = GameObject.Find("Player_Spawn");
                         Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
 
@@ -183,14 +182,18 @@ public sealed class NetworkManager : MonoBehaviour
                         {
                             myPlayer.GetComponent<Player5>().isPlayer = true;
                             myPlayer.GetComponent<Player5>().main_camera.gameObject.SetActive(true);
+
+                            GameObject winlose = GameObject.Find("WinLose");
+                            winlose winlose_component = winlose.GetComponent<winlose>();
+
+                            winlose_component.user_job = myPlayer.GetComponent<Player5>().player_job;
                         }
                     }
                     for (int i = 0; i < 2; i++)
                     {
                         int user_position = msg.PopInt32();
                         string msgUserLoginID = msg.PopString();
-
-
+                        
                         GameObject objSpawner = GameObject.Find("Player_Spawn");
                         Player_Spawn componentSpawner = objSpawner.GetComponent<Player_Spawn>();
 
@@ -210,6 +213,11 @@ public sealed class NetworkManager : MonoBehaviour
                         {
                             myPlayer.GetComponent<Player5>().isPlayer = true;
                             myPlayer.GetComponent<Player5>().main_camera.gameObject.SetActive(true);
+
+                            GameObject winlose = GameObject.Find("WinLose");
+                            winlose winlose_component = winlose.GetComponent<winlose>();
+
+                            winlose_component.user_job = myPlayer.GetComponent<Player5>().player_job;
                         }
                     }
 
@@ -222,7 +230,6 @@ public sealed class NetworkManager : MonoBehaviour
                         
                         componentSpawner.item_create(item_position);
                     }
-
                     /*
                     for (int i = 0; i < 20; i++)
                     {
@@ -232,7 +239,6 @@ public sealed class NetworkManager : MonoBehaviour
                         numberingNPC[i] = componentSpawner.create_npc(i);
                     }
                     */
-
                 }
                 break;
 
@@ -273,6 +279,7 @@ public sealed class NetworkManager : MonoBehaviour
                     }
                 }
                 break;
+
             case PROTOCOL.PlayerExit:
                 {
                     string remoteID = msg.PopString();

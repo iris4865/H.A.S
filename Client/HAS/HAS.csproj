@@ -90,6 +90,7 @@
     <Compile Include="Assets\HatchlingNet\Engine\RemoteServerPeer.cs" />
     <Compile Include="Assets\HatchlingNet\NetworkManager.cs" />
     <Compile Include="Assets\HatchlingNet\PROTOCOL.cs" />
+    <Compile Include="Assets\Scripts\Destroy_item.cs" />
     <Compile Include="Assets\Scripts\Item_Spawn.cs" />
     <Compile Include="Assets\Scripts\NPC.cs" />
     <Compile Include="Assets\Scripts\NPC_Spawn.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Assets\Scripts\sound_script\title_sound.cs" />
     <Compile Include="Assets\Scripts\sound_script\title_start_button_sound.cs" />
     <Compile Include="Assets\Scripts\sound_script\wait_sound.cs" />
+    <Compile Include="Assets\Scripts\winlose.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Fonts\Documentation\JazzCreateAltKeys_BubbleFont.txt" />
