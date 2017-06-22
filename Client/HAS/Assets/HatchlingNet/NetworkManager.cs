@@ -57,7 +57,7 @@ public sealed class NetworkManager : MonoBehaviour
     object csNumberingWaitObj = new object();
     public int networkID { get; set; }
     public string userID { get; set; }
-    int connectUserMax = 2;
+    int connectUserMax = 4;
 
     public GameObject[] numberingNPC = new GameObject[20];
 
@@ -86,7 +86,7 @@ public sealed class NetworkManager : MonoBehaviour
 
     void Connect()
     {
-        this.gameserver.Connect("127.0.0.1", 7979);
+        this.gameserver.Connect("192.168.0.3", 80);
     }
 
     void CallStatusChange(NETWORK_EVENT status)
