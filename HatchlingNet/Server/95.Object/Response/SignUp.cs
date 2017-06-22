@@ -40,7 +40,7 @@ namespace Server
             else
                 response = PacketBufferManager.Instance.Pop(PROTOCOL.SignUpRej);
 
-            Self.SendTo(Self.UserID, response);
+            Self.SendTo(Self, response);
         }
     }
 }

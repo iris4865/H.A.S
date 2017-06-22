@@ -1,7 +1,6 @@
 ﻿using HatchlingNet;
 using Header;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -9,10 +8,9 @@ namespace Server
 {
     public class GameUser : IPeer, IGameUser
     {
-        public static Dictionary<int, string> objList = new Dictionary<int, string>();//<remoteID, 객체 태그>
-
         UserToken userToken;
         public string UserID { get; set; }
+        public int Job { get; set; }
 
         public GameUser(UserToken userToken)
         {
@@ -36,8 +34,16 @@ namespace Server
             }
             catch
             {
-                Trace.WriteLine("ip: " + userToken.socket.LocalEndPoint+" user: "+UserID);
+                Trace.WriteLine($"ip: {userToken.socket.LocalEndPoint} user: {UserID} protocol: {protocol.ToString()}");
             }
+        }
+
+        public void SendTo(IGameUser target, Packet msg)
+        {
+            if (target is GameUser)
+                (target as GameUser).Send(msg);
+            else
+                Trace.TraceError("not find GameUser");
         }
 
         public void SendTo(string userId, Packet msg)

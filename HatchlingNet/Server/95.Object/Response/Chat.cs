@@ -30,7 +30,7 @@ namespace Server
             switch(sendType)
             {
                 case SEND_TYPE.Single:
-                    Self.SendTo(Self.UserID, response);
+                    Self.SendTo(Self, response);
                     break;
                 case SEND_TYPE.BroadcastWithMe:
                     //
