@@ -8,8 +8,6 @@ public class NPC_Spawn : MonoBehaviour {
 
     public GameObject[] point;
 
-    public GameObject[] npc_numbering;
-
 	// Use this for initialization
 	void Start () {
 		

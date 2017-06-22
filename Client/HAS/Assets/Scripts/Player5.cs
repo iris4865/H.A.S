@@ -254,11 +254,6 @@ public class Player5 : MonoBehaviour
             {
                 player_animator.SetBool("isdie", true);
                 Destroy(this.gameObject, 3f);
-
-                GameObject winlose = GameObject.Find("WinLose");
-                winlose winlose_component = winlose.GetComponent<winlose>();
-
-                winlose_component.thief_count -= 1;
             }
         }
     }
@@ -274,17 +269,16 @@ public class Player5 : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(isPlayer == true)
+        if (inputEventKey[KeyCode.E])
         {
-            if (inputEventKey[KeyCode.E])
+            if (player_job == 2)//도둑
             {
-                if (player_job == 2)//도둑
+                if (other.gameObject.tag == "item1")
                 {
                     Destroy(other.gameObject);
                     pressE_key_canvas.SetActive(false);
                 }
             }
         }
-        
     }
 }
