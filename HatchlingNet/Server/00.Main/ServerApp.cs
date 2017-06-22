@@ -7,7 +7,7 @@ namespace Server
     {
         ServerController network;
         string ip = "0.0.0.0";
-        int port = 7979;
+        int port = 80;
 
         public Thread GetThread
         {

@@ -73,9 +73,16 @@ namespace HatchlingNet
                 Array.Copy(msg.Buffer, 0, sendEventArgs.Buffer, sendEventArgs.Offset, msg.Position);
 
                 //전송!
-                bool isAsync = socket.SendAsync(sendEventArgs);
-                if (!isAsync)
-                    ProcessSend(sendEventArgs);
+                try
+                {
+                    bool isAsync = socket.SendAsync(sendEventArgs);
+                    if (!isAsync)
+                        ProcessSend(sendEventArgs);
+                }
+                catch
+                {
+                    Trace.WriteLine("Send Fail, Maybe Client Exited.");
+                }
             }
         }
 
@@ -93,7 +100,7 @@ namespace HatchlingNet
                 //0이하가 되는경우는 없지만 혹시모를 예외처리
                 if (sendingQueue.Count <= 0)
                     return;
-                    //throw new Exception("Sedning queue count is less than zero!");
+                //throw new Exception("Sedning queue count is less than zero!");
 
                 int size = sendingQueue.Peek().Position;
                 if (sendArgs.BytesTransferred != size)
