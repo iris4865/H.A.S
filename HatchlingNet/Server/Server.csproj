@@ -72,7 +72,6 @@
     <Compile Include="95.Object\Response\Chat.cs" />
     <Compile Include="95.Object\Response\JoinRoom.cs" />
     <Compile Include="95.Object\Response\Login.cs" />
-    <Compile Include="95.Object\Response\ObjectNumbering.cs" />
     <Compile Include="95.Object\Response\Position.cs" />
     <Compile Include="95.Object\Response\SignUp.cs" />
     <Compile Include="96.DataBase\Core\DataBaseInventory.cs" />
