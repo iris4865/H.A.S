@@ -25,16 +25,19 @@ namespace Server
             }
         }
 
-        public void RemoveUser(GameUser user)
+        //public void RemoveUser(GameUser user)
+        public bool RemoveUser(string userID)
         {
             lock (syncObj)
             {
                 try
                 {
-                    userList.Remove(user.UserID);
+                    return userList.Remove(userID);
                 }
                 catch { }
             }
+
+            return false;
         }
 
         public bool IsLoginUser(string userId) => userList.ContainsKey(userId);

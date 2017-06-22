@@ -17,7 +17,7 @@ namespace client
         public void Initialize(int i = 12)
         {
             index = i;
-            PacketBufferManager.Initialize(2000);
+            PacketBufferManager.Instance.Initialize(2000);
 
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7979);
 

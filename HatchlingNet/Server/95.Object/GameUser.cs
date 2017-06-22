@@ -101,7 +101,7 @@ namespace Server
             response.Push(UserID);
             SendAllWithoutMe(response);
 
-            UserList.Instance.RemoveUser(this);
+            UserList.Instance.RemoveUser(this.UserID);
         }
 
         public void ProcessUserOperation()

@@ -254,6 +254,7 @@ public class Player5 : MonoBehaviour
                 }
             }
         }
+
         if (other.gameObject.tag == "foot")
         {
             if (player_job == 2)//도둑
@@ -281,6 +282,10 @@ public class Player5 : MonoBehaviour
             {
                 if (other.gameObject.tag == "item1")
                 {
+                    Packet destroyMsg = PacketBufferManager.Instance.Pop(PROTOCOL.DestroyObj);
+                    destroyMsg.Push(GetComponent<NetworkObj>().remoteId);
+                    NetworkManager.GetInstance.Send(destroyMsg);
+
                     Destroy(other.gameObject);
                     pressE_key_canvas.SetActive(false);
                 }

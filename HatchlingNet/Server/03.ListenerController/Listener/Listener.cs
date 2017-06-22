@@ -96,7 +96,7 @@ namespace Server
             {
                 tokenList.Remove(token.TokenID);
             }
-            UserList.Instance.RemoveUser(token.Peer as GameUser);
+            UserList.Instance.RemoveUser((token.Peer as GameUser).UserID);
             UserTokenPool.Instance.Push(token);
         }
 
