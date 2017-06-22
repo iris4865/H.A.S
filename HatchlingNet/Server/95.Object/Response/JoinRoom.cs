@@ -8,7 +8,6 @@ namespace Server
     class JoinRoom : IResponse
     {
         public IGameUser Self { get; set; }
-        int roomNumber;
 
         RoomList roomList = RoomList.Instance;
         RoomInfo room;
@@ -20,13 +19,11 @@ namespace Server
         public void Initialize(IGameUser user, Packet msg)
         {
             Self = user;
-            roomNumber = msg.PopInt32();
+            room = roomList[msg.PopInt32()];
         }
 
         public void Process()
         {
-            room = roomList[roomNumber];
-
             isEnter = room.EnterRoom(Self as GameUser);
 
             if (room.IsFully)

@@ -68,6 +68,7 @@
     <Compile Include="03.ListenerController\Listener\Listener.cs" />
     <Compile Include="03.ListenerController\ServerController.cs" />
     <Compile Include="95.Object\IGameUser.cs" />
+    <Compile Include="95.Object\NPCManager.cs" />
     <Compile Include="95.Object\Response\IResponse.cs" />
     <Compile Include="95.Object\Response\Chat.cs" />
     <Compile Include="95.Object\Response\JoinRoom.cs" />

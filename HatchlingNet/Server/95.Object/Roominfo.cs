@@ -26,9 +26,7 @@ namespace Server
         {
             if (user == null)
                 return false;
-            if (userList.Count == 4)
-                return false;
-            if (userList.Contains(user))
+            if (IsFully || userList.Contains(user))
                 return false;
             return true;
         }
