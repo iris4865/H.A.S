@@ -1,5 +1,7 @@
 ﻿using HatchlingNet;
 using Header;
+using MySqlDataBase;
+using System.Diagnostics;
 
 namespace Server
 {
@@ -21,13 +23,26 @@ namespace Server
         public void Process()
         {
             //isSucess = command.CheckLogin(id, password);
-            isSucess = true;
+            //isSucess = true;
 
-            if(isSucess)
+            MysqlCommand command = new MysqlCommand();
+            //db id, password 입력
+            if (command.ConnectMysql("localhost", "root", "apmsetup"))
+            {
+                command.OpenDatabase("hatchlingdb");
+                command.OpenTable("userinfo");
+
+                //isSucess = command.CheckLogin(Id, Password);
+                isSucess = command.CheckLogin(Id, Password);
+            }
+
+           
+            if (isSucess)
             {
                 Self.UserID = Id;
                 UserList.Instance.AddUser(Self as GameUser);
             }
+
         }
 
         public void Send()

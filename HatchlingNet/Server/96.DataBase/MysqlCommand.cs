@@ -61,9 +61,9 @@ namespace MySqlDataBase
             return table.IsField($"id='{id}' AND password='{password}'");
         }
 
-        public bool SignUp(string id, string password)
+        public bool SignUp(string id, string password, string lastName, string firstName, string mail, string birthDay)
         {
-            return table.AddField(id, password);
+            return table.AddField(id, password, lastName, firstName, mail, birthDay);
         }
     }
 }

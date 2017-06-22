@@ -15,6 +15,7 @@ public class game_login_click : MonoBehaviour
 
     NetworkManager networkManager = null;
 
+
     void Awake()
     {
         networkManager = NetworkManager.GetInstance;

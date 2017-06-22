@@ -86,7 +86,8 @@ public sealed class NetworkManager : MonoBehaviour
 
     void Connect()
     {
-        this.gameserver.Connect("127.0.0.1", 7979);
+        //this.gameserver.Connect("127.0.0.1", 7979);
+        this.gameserver.Connect("192.168.0.3", 80);
     }
 
     void CallStatusChange(NETWORK_EVENT status)
@@ -142,6 +143,19 @@ public sealed class NetworkManager : MonoBehaviour
                     //다시입력하라고
                 }
                 break;
+
+            case PROTOCOL.SignUpAck:
+                {
+                    SceneManager.LoadScene(1);
+                }
+                break;
+
+            case PROTOCOL.SignUpRej:
+                {
+                    SceneManager.LoadScene(1);
+                }
+                break;
+
 
             case PROTOCOL.JoinRoomRes:
                 {

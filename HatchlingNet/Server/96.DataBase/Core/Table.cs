@@ -54,9 +54,9 @@ namespace MySqlDataBase.Core
             return SendQueryNoData($"alter table {name} drop {columnName}");
         }
 
-        public bool AddField(string id, string password)
+        public bool AddField(string id, string password, string lastName, string firstName, string mail, string birthDay)
         {
-            return SendQueryNoData($"INSERT INTO {name} (id, password) VALUES ('{id}','{password}');");
+            return SendQueryNoData($"INSERT INTO {name} (id, password, lastName, firstName, mail, birthDay) VALUES ('{id}','{password}','{lastName}','{firstName}','{mail}','{birthDay}');");
         }
 
         public bool IsField(string whereQuery)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using HatchlingNet;
 
 public class game_join_click : MonoBehaviour {
 
@@ -42,7 +43,10 @@ public class game_join_click : MonoBehaviour {
         mail_s = mail.text;
         brithday_s = brithday.text;
 
-        if(password_s == password_submit_s)
+
+        Debug.Log("보냄!");
+
+        if (password_s != password_submit_s)
         {
             //패스워드가 같지 않다고 메시지 출력.
             return;
@@ -53,6 +57,17 @@ public class game_join_click : MonoBehaviour {
             //입력하지 않은 내용 있다고 메시지 출력.
             return;
         }
-        SceneManager.LoadScene(1);
+
+        Packet msg = PacketBufferManager.Instance.Pop(Header.PROTOCOL.SignUp);
+        msg.Push(id_s);
+        msg.Push(password_s);
+        msg.Push(last_name_s);
+        msg.Push(first_name_s);
+        msg.Push(mail_s);
+        msg.Push(brithday_s);
+        NetworkManager.GetInstance.Send(msg);
+
+        Debug.Log("보냄!");
+        //SceneManager.LoadScene(1);
     }
 }
