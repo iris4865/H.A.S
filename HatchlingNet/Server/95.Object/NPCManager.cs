@@ -19,7 +19,7 @@ namespace Server
             npcTotalNumber = npcNumber;
 
             destination = new List<int>();
-            for (int i = 0; i < npcNumber; i++)
+            for (int i = 0; i < npcTotalNumber; i++)
                 destination.Add(0);
 
             timerEvent = new Timer(milliSecond);
@@ -31,10 +31,11 @@ namespace Server
 
         void SendRandomDestination(object sender, ElapsedEventArgs e)
         {
+            Random ran = new Random();
             for (int i = 0; i < npcTotalNumber; i++)
             {
-                if(new Random().Next(0, 2) == 1)
-                    destination[i] = new Random().Next(0, destination.Count);
+                if(ran.Next(0, 2) == 1)
+                    destination[i] = ran.Next(0, destination.Count);
             }
 
             Packet msg = PacketBufferManager.Instance.Pop(PROTOCOL.NPCPosition);
