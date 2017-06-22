@@ -8,7 +8,7 @@ namespace Server
 {
     public class NPCManager
     {
-        int[] destination;
+        List<int> destination;
         int milliSecond = 5000;
         Timer timerEvent;
         int npcTotalNumber;
@@ -17,6 +17,11 @@ namespace Server
         public NPCManager(int npcNumber)
         {
             npcTotalNumber = npcNumber;
+
+            destination = new List<int>();
+            for (int i = 0; i < npcNumber; i++)
+                destination.Add(0);
+
             timerEvent = new Timer(milliSecond);
             timerEvent.Elapsed += SendRandomDestination;
         }
@@ -29,7 +34,7 @@ namespace Server
             for (int i = 0; i < npcTotalNumber; i++)
             {
                 if(new Random().Next(0, 2) == 1)
-                    destination[i] = new Random().Next(0, destination.Length);
+                    destination[i] = new Random().Next(0, destination.Count);
             }
 
             Packet msg = PacketBufferManager.Instance.Pop(PROTOCOL.NPCPosition);
