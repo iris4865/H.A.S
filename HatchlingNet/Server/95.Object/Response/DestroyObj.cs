@@ -6,15 +6,14 @@ namespace Server
 {
     public class DestroyObj : IResponse
     {
-
+        string type;
         string remoteId;
         public IGameUser Self { get; set; }
-        bool removeResult = false;
-
 
         public void Initialize(IGameUser user, Packet msg)
         {
             Self = user;
+            type = msg.PopString();
             remoteId = msg.PopString();
 
  
@@ -22,23 +21,16 @@ namespace Server
 
         public void Process()
         {
-            removeResult = UserList.Instance.RemoveUser(remoteId);
+//            removeResult = UserList.Instance.RemoveUser(remoteId);
         }
 
         public void Send()
         {
             Packet msg;
-
-            if (removeResult)
-            {
-                msg = PacketBufferManager.Instance.Pop(PROTOCOL.DestroyObjAck);
-            }
-            else
-            {
-                msg = PacketBufferManager.Instance.Pop(PROTOCOL.DestroyObjRej);
-            }
-
-            Self.SendTo(Self, msg);
+            msg = PacketBufferManager.Instance.Pop(PROTOCOL.DestroyObjAck);
+            msg.Push(type);
+            msg.Push(remoteId);
+            Self.SendAllWithoutMe(msg);
         }
     }
 }

@@ -259,6 +259,11 @@ public class Player5 : MonoBehaviour
         {
             if (player_job == 2)//도둑
             {
+                Packet destroyMsg = PacketBufferManager.Instance.Pop(PROTOCOL.DestroyObj);
+                destroyMsg.Push("thief");
+                destroyMsg.Push(GetComponent<NetworkObj>().remoteId);
+                NetworkManager.GetInstance.Send(destroyMsg);
+
                 player_animator.SetBool("isdie", true);
                 Destroy(this.gameObject, 3f);
             }
@@ -283,7 +288,8 @@ public class Player5 : MonoBehaviour
                 if (other.gameObject.tag == "item1")
                 {
                     Packet destroyMsg = PacketBufferManager.Instance.Pop(PROTOCOL.DestroyObj);
-                    destroyMsg.Push(GetComponent<NetworkObj>().remoteId);
+                    destroyMsg.Push("item");
+                    destroyMsg.Push(other.gameObject.GetComponent<NetworkObj>().remoteId);
                     NetworkManager.GetInstance.Send(destroyMsg);
 
                     Destroy(other.gameObject);

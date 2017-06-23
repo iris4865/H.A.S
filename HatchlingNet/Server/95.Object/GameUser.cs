@@ -97,6 +97,9 @@ namespace Server
 
         public void Destroy()
         {
+            if (UserID == null)
+                return;
+
             Packet response = PacketBufferManager.Instance.Pop(PROTOCOL.PlayerExit);
             response.Push(UserID);
             SendAllWithoutMe(response);

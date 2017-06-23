@@ -31,5 +31,9 @@ public class Item_Spawn : MonoBehaviour {
         ((BoxCollider)collider).size = new Vector3(2f, 2f, 2f);
 
         Instantiate(item_object, spawn_position, transform.rotation);
+
+        item_object.AddComponent<NetworkObj>();
+        NetworkManager.GetInstance.networkObj.Add("" + position, item_object);
+        item_object.GetComponent<NetworkObj>().remoteId = "" + position;
     }
 }

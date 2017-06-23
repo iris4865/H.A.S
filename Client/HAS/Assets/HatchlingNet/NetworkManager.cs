@@ -86,7 +86,8 @@ public sealed class NetworkManager : MonoBehaviour
 
     void Connect()
     {
-        this.gameserver.Connect("192.168.0.3", 80);
+        //        this.gameserver.Connect("192.168.0.3", 80);
+        this.gameserver.Connect("192.168.0.4", 80);
     }
 
     void CallStatusChange(NETWORK_EVENT status)
@@ -237,6 +238,30 @@ public sealed class NetworkManager : MonoBehaviour
                     }
                 }
                 break;
+
+            case PROTOCOL.DestroyObjAck:
+                {
+                    string type = msg.PopString();
+                    string destroyDest = msg.PopString();
+
+                    if (string.Compare(type, "item") == 0)
+                    {
+                        Destroy(networkObj[destroyDest], 3f);
+                    }
+                    else if(string.Compare(type, "thief") == 0)
+                    {
+                        Destroy(networkObj[destroyDest], 3f);
+                    }
+
+                }
+                break;
+
+            case PROTOCOL.DestroyObjRej:
+                {
+
+                }
+                break;
+
 
             case PROTOCOL.PlayerExit:
                 {

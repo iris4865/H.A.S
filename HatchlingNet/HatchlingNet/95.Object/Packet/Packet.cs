@@ -150,6 +150,7 @@ namespace HatchlingNet
 
         public void Push(string data)
         {
+
             byte[] tempBuffer = Encoding.UTF8.GetBytes(data);
             Int16 len = (Int16)tempBuffer.Length;
 
